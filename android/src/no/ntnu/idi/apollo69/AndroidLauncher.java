@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import no.ntnu.idi.apollo69.Apollo69;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
