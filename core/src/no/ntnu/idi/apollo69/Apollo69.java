@@ -2,11 +2,10 @@ package no.ntnu.idi.apollo69;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.esotericsoftware.kryonet.Client;
 
 import no.ntnu.idi.apollo69.network.GameClient;
-import no.ntnu.idi.apollo69.screens.Navigator;
-import no.ntnu.idi.apollo69.screens.ScreenType;
+import no.ntnu.idi.apollo69.navigation.Navigator;
+import no.ntnu.idi.apollo69.navigation.ScreenType;
 
 public class Apollo69 extends ApplicationAdapter {
 	private Navigator navigator;

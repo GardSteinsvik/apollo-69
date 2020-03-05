@@ -1,4 +1,4 @@
-package no.ntnu.idi.apollo69.screens.main_menu;
+package no.ntnu.idi.apollo69.view;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -7,10 +7,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import no.ntnu.idi.apollo69.controller.MainMenuController;
+import no.ntnu.idi.apollo69.model.MainMenuModel;
+
 public class MainMenuView extends ApplicationAdapter implements Screen {
 
-    private MainMenuController mainMenuController;
-    private MainMenuModel mainMenuModel;
+    private no.ntnu.idi.apollo69.controller.MainMenuController mainMenuController;
+    private no.ntnu.idi.apollo69.model.MainMenuModel mainMenuModel;
 
     private Stage stage;
 

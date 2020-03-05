@@ -1,12 +1,12 @@
-package no.ntnu.idi.apollo69.screens;
+package no.ntnu.idi.apollo69.navigation;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 
-import no.ntnu.idi.apollo69.screens.main_menu.MainMenuController;
-import no.ntnu.idi.apollo69.screens.main_menu.MainMenuModel;
-import no.ntnu.idi.apollo69.screens.main_menu.MainMenuView;
+import no.ntnu.idi.apollo69.controller.MainMenuController;
+import no.ntnu.idi.apollo69.model.MainMenuModel;
+import no.ntnu.idi.apollo69.view.MainMenuView;
 
 public class Navigator implements Disposable {
 

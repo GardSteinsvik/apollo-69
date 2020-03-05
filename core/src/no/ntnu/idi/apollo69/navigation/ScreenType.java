@@ -1,4 +1,4 @@
-package no.ntnu.idi.apollo69.screens;
+package no.ntnu.idi.apollo69.navigation;
 
 public enum ScreenType {
     MAIN_MENU,
