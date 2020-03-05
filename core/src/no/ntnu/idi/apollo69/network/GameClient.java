@@ -6,8 +6,8 @@ import com.esotericsoftware.kryonet.Listener;
 
 import java.io.IOException;
 
-import no.ntnu.idi.apollo69framework.SomeRequest;
-import no.ntnu.idi.apollo69framework.SomeResponse;
+import no.ntnu.idi.apollo69framework.network_messages.SomeRequest;
+import no.ntnu.idi.apollo69framework.network_messages.SomeResponse;
 
 public class GameClient {
     private NetworkClientSingleton networkClientSingleton;

@@ -2,7 +2,7 @@ package no.ntnu.idi.apollo69.network;
 
 import com.esotericsoftware.kryonet.Client;
 
-import no.ntnu.idi.apollo69framework.MessageClassLister;
+import no.ntnu.idi.apollo69framework.Apollo69Framework;
 
 public final class NetworkClientSingleton {
     private static volatile NetworkClientSingleton networkClientSingleton = null;
@@ -18,7 +18,7 @@ public final class NetworkClientSingleton {
             synchronized (NetworkClientSingleton.class) {
                 if (networkClientSingleton == null) {
                     networkClientSingleton = new NetworkClientSingleton();
-                    MessageClassLister.getMessageClasses().forEach(networkClientSingleton.getClient().getKryo()::register);
+                    Apollo69Framework.getMessageClasses().forEach(networkClientSingleton.getClient().getKryo()::register);
                 }
             }
         }

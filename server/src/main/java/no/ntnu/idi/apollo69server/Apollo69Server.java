@@ -1,24 +1,20 @@
 package no.ntnu.idi.apollo69server;
 
-import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
-import java.util.List;
 
-import no.ntnu.idi.apollo69framework.MessageClassLister;
-import no.ntnu.idi.apollo69framework.SomeRequest;
-import no.ntnu.idi.apollo69framework.SomeResponse;
+import no.ntnu.idi.apollo69framework.Apollo69Framework;
+import no.ntnu.idi.apollo69framework.network_messages.SomeRequest;
+import no.ntnu.idi.apollo69framework.network_messages.SomeResponse;
 
 public class Apollo69Server {
     public static void main(String[] args) {
         Server server = new Server();
 
-        Kryo kryo = server.getKryo();
-
-        MessageClassLister.getMessageClasses().forEach(server.getKryo()::register);
+        Apollo69Framework.getMessageClasses().forEach(server.getKryo()::register);
 
         server.start();
 
