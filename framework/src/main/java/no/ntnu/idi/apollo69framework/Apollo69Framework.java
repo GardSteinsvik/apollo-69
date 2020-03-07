@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import no.ntnu.idi.apollo69framework.network_messages.DeviceInfo;
-import no.ntnu.idi.apollo69framework.network_messages.MatchmakingCancelled;
+import no.ntnu.idi.apollo69framework.network_messages.CancelMatchmaking;
 import no.ntnu.idi.apollo69framework.network_messages.ServerMessage;
 
 public class Apollo69Framework {
@@ -15,7 +15,7 @@ public class Apollo69Framework {
                 ArrayList.class,
                 DeviceInfo.class,
                 ServerMessage.class,
-                MatchmakingCancelled.class
+                CancelMatchmaking.class
         ));
     }
 

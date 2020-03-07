@@ -1,42 +1,28 @@
 package no.ntnu.idi.apollo69server;
 
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.kryonet.Server;
-
-import java.io.IOException;
-
-import no.ntnu.idi.apollo69framework.Apollo69Framework;
 import no.ntnu.idi.apollo69framework.network_messages.DeviceInfo;
-import no.ntnu.idi.apollo69framework.network_messages.MatchmakingCancelled;
 import no.ntnu.idi.apollo69framework.network_messages.ServerMessage;
+import no.ntnu.idi.apollo69server.network.GameServer;
+import no.ntnu.idi.apollo69server.network.MessageHandlerDelegator;
+import no.ntnu.idi.apollo69server.network.PlayerState;
 
 public class Apollo69Server {
     public static void main(String[] args) {
-        Server server = new Server();
+        no.ntnu.idi.apollo69server.network.MessageHandlerDelegator messageHandlerDelegator = new MessageHandlerDelegator();
 
-        Apollo69Framework.getMessageClasses().forEach(server.getKryo()::register);
+        no.ntnu.idi.apollo69server.network.GameServer gameServer = new GameServer(54555, 54777, messageHandlerDelegator);
 
-        server.start();
+        ThreadGroup connectionThreadGroup = new ThreadGroup("Connection");
+        Thread serverThread = new Thread(connectionThreadGroup, gameServer, "GameServer");
 
-        try {
-            server.bind(54555, 54777);
-        } catch (IOException ex) {
-            System.err.println("Server binding failed. Exiting.");
-            System.exit(69);
-        }
+        messageHandlerDelegator.registerHandler((connection, deviceInfo) -> {
+            System.out.println("Player " + deviceInfo.getDeviceId() + " wants to join the game!");
+            connection.setPlayerState(PlayerState.IN_MATCHMAKING);
+            ServerMessage serverMessage = new ServerMessage("Welcome, " + deviceInfo.getDeviceId());
+            connection.sendTCP(serverMessage);
+        }, DeviceInfo.class);
 
-        server.addListener(new Listener() {
-            public void received(Connection connection, Object object) {
-                System.out.println("Connection from ID " + connection.getID() + ". Data: " + object.toString());
-                if (object instanceof DeviceInfo) {
-                    DeviceInfo deviceInfo = (DeviceInfo) object;
-                    ServerMessage serverMessage = new ServerMessage("Hello, " + deviceInfo.getDeviceId(), deviceInfo.getDeviceId());
-                    connection.sendTCP(serverMessage);
-                } else if (object instanceof MatchmakingCancelled) {
-                    System.out.println("A client has cancelled matchmaking!");
-                }
-            }
-        });
+        serverThread.setDaemon(false);
+        serverThread.start();
     }
 }

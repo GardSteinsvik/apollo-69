@@ -12,7 +12,7 @@ import no.ntnu.idi.apollo69.navigation.Navigator;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.DeviceInfo;
-import no.ntnu.idi.apollo69framework.network_messages.MatchmakingCancelled;
+import no.ntnu.idi.apollo69framework.network_messages.CancelMatchmaking;
 import no.ntnu.idi.apollo69framework.network_messages.ServerMessage;
 
 public class MatchmakingController implements Disposable {
@@ -34,7 +34,7 @@ public class MatchmakingController implements Disposable {
             public void received(final Connection connection, final Object message) {
                 if (message instanceof ServerMessage) {
                     ServerMessage serverMessage = (ServerMessage) message;
-                    if (serverMessage.getRecipientDeviceId().equals(Device.DEVICE_ID)) {
+                    if (serverMessage.isForDevice(Device.DEVICE_ID)) {
                         System.out.println(serverMessage.getMessage());
                     }
                 }
@@ -72,7 +72,7 @@ public class MatchmakingController implements Disposable {
     }
 
     public void cancelMatchmaking() {
-        gameClient.sendMessage(new MatchmakingCancelled());
+        gameClient.sendMessage(new CancelMatchmaking());
         gameClient.disconnectClient();
 
 //        navigator.changeScreen(ScreenType.MAIN_MENU);

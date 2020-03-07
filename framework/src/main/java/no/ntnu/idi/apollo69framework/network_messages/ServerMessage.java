@@ -16,6 +16,14 @@ public class ServerMessage {
         this.recipientDeviceId = recipientDeviceId;
     }
 
+    public boolean isForDevice(String deviceId) {
+        if (recipientDeviceId == null) {
+            return true;
+        } else {
+            return recipientDeviceId.equals(deviceId);
+        }
+    }
+
     public String getMessage() {
         return message;
     }
