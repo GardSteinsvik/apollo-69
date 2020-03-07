@@ -7,8 +7,9 @@ import com.esotericsoftware.kryonet.Server;
 import java.io.IOException;
 
 import no.ntnu.idi.apollo69framework.Apollo69Framework;
-import no.ntnu.idi.apollo69framework.network_messages.SomeRequest;
-import no.ntnu.idi.apollo69framework.network_messages.SomeResponse;
+import no.ntnu.idi.apollo69framework.network_messages.DeviceInfo;
+import no.ntnu.idi.apollo69framework.network_messages.MatchmakingCancelled;
+import no.ntnu.idi.apollo69framework.network_messages.ServerMessage;
 
 public class Apollo69Server {
     public static void main(String[] args) {
@@ -27,13 +28,13 @@ public class Apollo69Server {
 
         server.addListener(new Listener() {
             public void received(Connection connection, Object object) {
-                if (object instanceof SomeRequest) {
-                    SomeRequest request = (SomeRequest) object;
-                    System.out.println(request.text);
-
-                    SomeResponse response = new SomeResponse();
-                    response.text = "Thanks";
-                    connection.sendTCP(response);
+                System.out.println("Connection from ID " + connection.getID() + ". Data: " + object.toString());
+                if (object instanceof DeviceInfo) {
+                    DeviceInfo deviceInfo = (DeviceInfo) object;
+                    ServerMessage serverMessage = new ServerMessage("Hello, " + deviceInfo.getDeviceId(), deviceInfo.getDeviceId());
+                    connection.sendTCP(serverMessage);
+                } else if (object instanceof MatchmakingCancelled) {
+                    System.out.println("A client has cancelled matchmaking!");
                 }
             }
         });

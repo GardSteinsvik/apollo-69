@@ -12,8 +12,8 @@ import no.ntnu.idi.apollo69.model.MainMenuModel;
 
 public class MainMenuView extends ApplicationAdapter implements Screen {
 
-    private no.ntnu.idi.apollo69.controller.MainMenuController mainMenuController;
-    private no.ntnu.idi.apollo69.model.MainMenuModel mainMenuModel;
+    private MainMenuController mainMenuController;
+    private MainMenuModel mainMenuModel;
 
     private Stage stage;
 

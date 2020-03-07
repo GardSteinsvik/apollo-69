@@ -1,41 +1,67 @@
 package no.ntnu.idi.apollo69.network;
 
 import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 
 import java.io.IOException;
 
-import no.ntnu.idi.apollo69framework.network_messages.SomeRequest;
-import no.ntnu.idi.apollo69framework.network_messages.SomeResponse;
-
 public class GameClient {
-    private NetworkClientSingleton networkClientSingleton;
 
-    public GameClient() {
-        this.networkClientSingleton = NetworkClientSingleton.getInstance();
+    private Client client;
+    private String serverIp;
+    private int tcpPort;
+    private int udpPort;
 
-        Client client = networkClientSingleton.getClient();
+    private static volatile boolean clientConnecting = false;
+
+    public GameClient(Client client, String serverIp, int tcpPort, int udpPort) {
+        this.client = client;
+        this.serverIp = serverIp;
+        this.tcpPort = tcpPort;
+        this.udpPort = udpPort;
+    }
+
+    public static boolean isClientConnecting() {
+        return clientConnecting;
+    }
+
+    public boolean isConnected() {
+        return client.isConnected();
+    }
+
+    public synchronized void connectClient() throws IOException {
+        clientConnecting = true;
+        boolean failed = true;
+        long waitTimeMs = 400;
+        long maxWaitMs = 15000;
 
         client.start();
-
-        try {
-            client.connect(5000, "127.0.0.1", 54555, 54777);
-        } catch (IOException ex) {
-            System.err.println("Failed to connect client");
-        }
-
-        client.addListener(new Listener() {
-            public void received (Connection connection, Object object) {
-                if (object instanceof SomeResponse) {
-                    SomeResponse response = (SomeResponse)object;
-                    System.out.println(response.text);
+        while (failed) {
+            try {
+                client.connect(5000, serverIp, tcpPort, udpPort);
+                failed = false;
+            } catch (IOException e) {
+                System.err.println("Unable to connect to " + serverIp + " after " + waitTimeMs + "ms");
+                try {
+                    Thread.sleep(waitTimeMs);
+                    waitTimeMs *= 1.5f; // Retry with exponential backoff
+                    if (waitTimeMs > maxWaitMs) {
+                        client.stop();
+                        clientConnecting = false;
+                        throw new IOException("Unable to connectBlocking after too many retries", e);
+                    }
+                } catch (InterruptedException ex) {
+                    System.err.println("Connecting interrupted: " + ex);
                 }
             }
-        });
+        }
+        clientConnecting = false;
+    }
 
-        SomeRequest request = new SomeRequest();
-        request.text = "Here is the request";
-        client.sendTCP(request);
+    public void sendMessage(Object message) {
+        client.sendTCP(message);
+    }
+
+    public void disconnectClient() {
+        client.stop();
     }
 }
