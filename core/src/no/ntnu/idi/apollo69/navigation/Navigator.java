@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 import no.ntnu.idi.apollo69.controller.MainMenuController;
 import no.ntnu.idi.apollo69.model.MainMenuModel;
+import no.ntnu.idi.apollo69.view.GameView;
 import no.ntnu.idi.apollo69.view.MainMenuView;
 
 public class Navigator implements Disposable {
@@ -26,6 +27,8 @@ public class Navigator implements Disposable {
                 break;
 
             case GAME:
+                GameView gameView = new GameView();
+                this.setScreen(gameView);
                 break;
         }
     }
