@@ -11,10 +11,14 @@ import no.ntnu.idi.apollo69framework.Apollo69Framework;
 
 public class GameServer implements Runnable {
 
+    public static final int MAX_PLAYERS = 1;
+
     private int tcpPort;
     private int udpPort;
 
     private List<PlayerConnection> connections = new ArrayList<>();
+    private List<PlayerConnection> activePlayers = new ArrayList<>();
+
     private Server server;
     private MessageHandlerDelegator messageHandlerDelegator;
 
@@ -35,7 +39,7 @@ public class GameServer implements Runnable {
 
     @Override
     public void run() {
-        server.addListener(new PlayerConnectionListener(connections, messageHandlerDelegator));
+        server.addListener(new PlayerConnectionListener(connections, activePlayers, messageHandlerDelegator));
 
         try {
             server.bind(tcpPort, udpPort);

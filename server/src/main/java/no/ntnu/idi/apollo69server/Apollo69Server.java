@@ -8,9 +8,8 @@ import no.ntnu.idi.apollo69server.network.PlayerState;
 
 public class Apollo69Server {
     public static void main(String[] args) {
-        no.ntnu.idi.apollo69server.network.MessageHandlerDelegator messageHandlerDelegator = new MessageHandlerDelegator();
-
-        no.ntnu.idi.apollo69server.network.GameServer gameServer = new GameServer(54555, 54777, messageHandlerDelegator);
+        MessageHandlerDelegator messageHandlerDelegator = new MessageHandlerDelegator();
+        GameServer gameServer = new GameServer(54555, 54777, messageHandlerDelegator);
 
         ThreadGroup connectionThreadGroup = new ThreadGroup("Connection");
         Thread serverThread = new Thread(connectionThreadGroup, gameServer, "GameServer");

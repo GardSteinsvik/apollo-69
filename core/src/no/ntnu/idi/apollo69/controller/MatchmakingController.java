@@ -9,10 +9,13 @@ import java.io.IOException;
 import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.model.MatchmakingModel;
 import no.ntnu.idi.apollo69.navigation.Navigator;
+import no.ntnu.idi.apollo69.navigation.ScreenType;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.DeviceInfo;
 import no.ntnu.idi.apollo69framework.network_messages.CancelMatchmaking;
+import no.ntnu.idi.apollo69framework.network_messages.PlayerInQueue;
+import no.ntnu.idi.apollo69framework.network_messages.PlayerMatchmade;
 import no.ntnu.idi.apollo69framework.network_messages.ServerMessage;
 
 public class MatchmakingController implements Disposable {
@@ -37,6 +40,12 @@ public class MatchmakingController implements Disposable {
                     if (serverMessage.isForDevice(Device.DEVICE_ID)) {
                         System.out.println(serverMessage.getMessage());
                     }
+                } else if (message instanceof PlayerInQueue) {
+                    PlayerInQueue playerInQueue = (PlayerInQueue) message;
+                    System.out.println("Game is full! You are in queue: " + playerInQueue.getPosition() + "/" + playerInQueue.getQueueSize());
+                } else if (message instanceof PlayerMatchmade) {
+                    System.out.println("You have joined the game!");
+                    // TODO: Navigate to spawn screen
                 }
             }
         };
