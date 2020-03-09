@@ -3,27 +3,29 @@ package no.ntnu.idi.apollo69.view;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
-
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import no.ntnu.idi.apollo69.controller.GameController;
 import no.ntnu.idi.apollo69.model.GameModel;
+import no.ntnu.idi.apollo69.model.Spaceship;
 
 public class GameView extends ApplicationAdapter implements Screen {
 
     private GameModel model;
     private GameController controller;
-
     private SpriteBatch spriteBatch;
     private Texture background;
-    private Sprite spaceship;
-    private float spaceshipDim, touchpadDim, centerX, centerY;
+    private float spaceshipDim;
     private int width, height;
-
+    private Spaceship spaceship;
     private Touchpad touchpad;
     private Stage stage;
 
@@ -33,24 +35,33 @@ public class GameView extends ApplicationAdapter implements Screen {
         this.spriteBatch = new SpriteBatch();
     }
 
-
     @Override
     public void show() {
         // Parameters
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
         spaceshipDim = height / 15f;
-        touchpadDim = height / 10f;
-        centerX = width / 2f - spaceshipDim / 2;
-        centerY = height / 2f - spaceshipDim / 2;
+        float touchpadDim = height / 10f;
+        float centerX = width / 2f - spaceshipDim / 2;
+        float centerY = height / 2f - spaceshipDim / 2;
 
         // Textures
         background = new Texture(Gdx.files.internal("game/background.jpg"));
-        spaceship = new Sprite(new Texture(Gdx.files.internal("game/spaceship.png")));
+
+        // TODO: Move to model?
+        spaceship = new Spaceship(new Vector2(centerX, centerY), new Vector2(0, 0),
+                new Sprite(new Texture(Gdx.files.internal("game/spaceship.png"))));
 
         // Touchpad
-        touchpad = new Touchpad(0, new Skin(Gdx.files.internal("skin/uiskin.json")));
+        touchpad = new Touchpad(10,new Skin(Gdx.files.internal("skin/uiskin.json")));
         touchpad.setBounds(touchpadDim / 4, height - touchpadDim * 4/3, touchpadDim, touchpadDim);
+        touchpad.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                spaceship.setDirection(new Vector2(
+                        ((Touchpad)actor).getKnobPercentX(), ((Touchpad)actor).getKnobPercentY()));
+            }
+        });
 
         // Create stage and add touchpad
         stage = new Stage();
@@ -60,14 +71,22 @@ public class GameView extends ApplicationAdapter implements Screen {
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         // Draw background and spaceship
         spriteBatch.begin();
         spriteBatch.draw(background, 0, 0, width, height);
-        spriteBatch.draw(spaceship, centerX, centerY, spaceshipDim, spaceshipDim);
+        spriteBatch.draw(spaceship.getSprite(), spaceship.getPosition().x,
+                spaceship.getPosition().y, spaceshipDim, spaceshipDim);
         spriteBatch.end();
 
         // Draw touchpad
         stage.draw();
+
+        if (spaceship.getDirection().x != 0 || spaceship.getDirection().y != 0) {
+            spaceship.updatePosition();
+        }
     }
 
     @Override
