@@ -5,4 +5,5 @@ public enum ScreenType {
     SETTINGS,
     MATCHMAKING,
     GAME,
+    LOBBY,
 }
