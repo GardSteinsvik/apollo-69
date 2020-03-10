@@ -4,8 +4,11 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -19,13 +22,20 @@ public class GameView extends ApplicationAdapter implements Screen {
 
     private GameModel model;
     private GameController controller;
-
     private SpriteBatch spriteBatch;
     private Texture background;
     private float spaceshipDim;
     private int width, height;
     private Spaceship spaceship;
     private Stage stage;
+
+    // Constants for the screen orthographic camera
+    private final float SCREEN_WIDTH = Gdx.graphics.getWidth();
+    private final float SCREEN_HEIGHT = Gdx.graphics.getHeight();
+    private final float ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
+    private final float HEIGHT = 480;
+    private final float WIDTH = HEIGHT * ASPECT_RATIO;
+    private final OrthographicCamera orthoCamera = new OrthographicCamera(WIDTH, HEIGHT);
 
     public GameView(GameModel model, GameController controller) {
         this.model = model;
@@ -60,6 +70,9 @@ public class GameView extends ApplicationAdapter implements Screen {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         stage.addActor(touchpad);
+
+        // Move camera to the initial position of the spacecraft.
+        orthoCamera.translate(centerX, centerY);
     }
 
     @Override
@@ -68,6 +81,10 @@ public class GameView extends ApplicationAdapter implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         controller.updateSpaceship();
+
+        // Set and update camera
+        spriteBatch.setProjectionMatrix(orthoCamera.combined);
+        orthoCamera.update();
 
         // Draw background and spaceship
         spriteBatch.begin();
@@ -79,6 +96,11 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Draw touchpad
         stage.draw();
 
+        // move spaceship and camera
+        if (spaceship.getDirection().x != 0 || spaceship.getDirection().y != 0) {
+            spaceship.updatePosition();
+            orthoCamera.translate(spaceship.getDirection().cpy().scl(5));
+        }
     }
 
     @Override
