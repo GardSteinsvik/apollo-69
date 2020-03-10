@@ -30,21 +30,13 @@ public class GameView extends ApplicationAdapter implements Screen {
     private Touchpad touchpad;
     private Stage stage;
 
-    // Relevant for the screen orthographic camera
+    // Constants for the screen orthographic camera
     private final float SCREEN_WIDTH = Gdx.graphics.getWidth();
     private final float SCREEN_HEIGHT = Gdx.graphics.getHeight();
     private final float ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
-
-    private float HEIGHT = 480;
-    private float WIDTH = HEIGHT * ASPECT_RATIO;
-
-    private OrthographicCamera orthoCamera = new OrthographicCamera(WIDTH, HEIGHT);
-
-    public void setCamera(float moveWidth, float moveHeight) {
-        //WIDTH = WIDTH + moveWidth;
-        //HEIGHT = HEIGHT + moveHeight;
-        orthoCamera.translate(moveWidth, moveHeight);
-    }
+    private final float HEIGHT = 480;
+    private final float WIDTH = HEIGHT * ASPECT_RATIO;
+    private final OrthographicCamera orthoCamera = new OrthographicCamera(WIDTH, HEIGHT);
 
     public GameView(GameModel model, GameController controller) {
         this.model = model;
@@ -108,6 +100,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Draw touchpad
         stage.draw();
 
+        // move spaceship and camera
         if (spaceship.getDirection().x != 0 || spaceship.getDirection().y != 0) {
             spaceship.updatePosition();
             orthoCamera.translate(spaceship.getDirection().cpy().scl(5));
