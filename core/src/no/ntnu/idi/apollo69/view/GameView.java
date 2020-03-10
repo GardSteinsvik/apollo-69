@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -28,6 +29,22 @@ public class GameView extends ApplicationAdapter implements Screen {
     private Spaceship spaceship;
     private Touchpad touchpad;
     private Stage stage;
+
+    // Relevant for the screen orthographic camera
+    private final float SCREEN_WIDTH = Gdx.graphics.getWidth();
+    private final float SCREEN_HEIGHT = Gdx.graphics.getHeight();
+    private final float ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
+
+    private float HEIGHT = 480;
+    private float WIDTH = HEIGHT * ASPECT_RATIO;
+
+    private OrthographicCamera orthoCamera = new OrthographicCamera(WIDTH, HEIGHT);
+
+    public void setCamera(float moveWidth, float moveHeight) {
+        //WIDTH = WIDTH + moveWidth;
+        //HEIGHT = HEIGHT + moveHeight;
+        orthoCamera.translate(moveWidth, moveHeight);
+    }
 
     public GameView(GameModel model, GameController controller) {
         this.model = model;
@@ -67,12 +84,19 @@ public class GameView extends ApplicationAdapter implements Screen {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         stage.addActor(touchpad);
+
+        // Move camera to the initial position of the spacecraft.
+        orthoCamera.translate(centerX, centerY);
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Set and update camera
+        spriteBatch.setProjectionMatrix(orthoCamera.combined);
+        orthoCamera.update();
 
         // Draw background and spaceship
         spriteBatch.begin();
@@ -86,6 +110,7 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         if (spaceship.getDirection().x != 0 || spaceship.getDirection().y != 0) {
             spaceship.updatePosition();
+            orthoCamera.translate(spaceship.getDirection().cpy().scl(5));
         }
     }
 
