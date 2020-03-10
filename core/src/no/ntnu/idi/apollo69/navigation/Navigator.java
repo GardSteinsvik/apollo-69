@@ -4,10 +4,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 
+import no.ntnu.idi.apollo69.controller.GameController;
 import no.ntnu.idi.apollo69.controller.MainMenuController;
 import no.ntnu.idi.apollo69.controller.MatchmakingController;
+import no.ntnu.idi.apollo69.model.GameModel;
 import no.ntnu.idi.apollo69.model.MainMenuModel;
 import no.ntnu.idi.apollo69.model.MatchmakingModel;
+import no.ntnu.idi.apollo69.view.GameView;
 import no.ntnu.idi.apollo69.view.MainMenuView;
 import no.ntnu.idi.apollo69.view.MatchmakingView;
 
@@ -36,6 +39,10 @@ public class Navigator implements Disposable {
                 break;
 
             case GAME:
+                GameModel gameModel = new GameModel();
+                GameController gameController = new GameController();
+                GameView gameView = new GameView(new GameModel(), new GameController());
+                this.setScreen(gameView);
                 break;
         }
     }
