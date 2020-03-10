@@ -55,10 +55,15 @@ public class MatchmakingView implements Screen {
         spriteBatch.begin();
         bitmapFont.draw(spriteBatch, model.isConnecting() ? "CONNECTING" : "NOT CONNECTING", 100, 100);
         bitmapFont.draw(spriteBatch, model.isConnected() ? "CONNECTED" : "NOT CONNECTED", 100, 200);
+        bitmapFont.draw(spriteBatch, model.isMatchmakingDone() ? "MM DONE" : "MM NOT DONE", 100, 300);
         spriteBatch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
+
+        if (model.isMatchmakingDone()) {
+            controller.onMatchmakingDone();
+        }
     }
 
     @Override
@@ -83,6 +88,6 @@ public class MatchmakingView implements Screen {
 
     @Override
     public void dispose() {
-
+        spriteBatch.dispose();
     }
 }
