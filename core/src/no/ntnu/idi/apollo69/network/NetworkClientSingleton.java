@@ -4,13 +4,21 @@ import com.esotericsoftware.kryonet.Client;
 
 import no.ntnu.idi.apollo69framework.Apollo69Framework;
 
-public final class NetworkClientSingleton {
+public class NetworkClientSingleton {
     private static volatile NetworkClientSingleton networkClientSingleton = null;
 
     private Client client;
+    private String defaultServerHost;
+    private int tcpPort;
+    private int udpPort;
+    private GameClient gameClient;
 
     private NetworkClientSingleton() {
         this.client = new Client(8192 * 2, 2048 * 2);
+        this.defaultServerHost = "localhost";
+        this.tcpPort = 54555;
+        this.udpPort = 54777;
+        this.gameClient = new GameClient(client, getHost(), tcpPort, udpPort);
     }
 
     public static NetworkClientSingleton getInstance() {
@@ -27,5 +35,26 @@ public final class NetworkClientSingleton {
 
     public Client getClient() {
         return client;
+    }
+
+    private String getHost() {
+        String environmentIp = System.getenv("SERVER_IP");
+        if (environmentIp != null && !environmentIp.trim().isEmpty()) {
+            System.out.println("Using ip address {}" + environmentIp);
+            return environmentIp.trim();
+        }
+        return defaultServerHost;
+    }
+
+    public int getTcpPort() {
+        return tcpPort;
+    }
+
+    public int getUdpPort() {
+        return udpPort;
+    }
+
+    public GameClient getGameClient() {
+        return gameClient;
     }
 }

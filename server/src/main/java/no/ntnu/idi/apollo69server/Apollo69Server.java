@@ -1,41 +1,27 @@
 package no.ntnu.idi.apollo69server;
 
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.kryonet.Server;
-
-import java.io.IOException;
-
-import no.ntnu.idi.apollo69framework.Apollo69Framework;
-import no.ntnu.idi.apollo69framework.network_messages.SomeRequest;
-import no.ntnu.idi.apollo69framework.network_messages.SomeResponse;
+import no.ntnu.idi.apollo69framework.network_messages.DeviceInfo;
+import no.ntnu.idi.apollo69framework.network_messages.ServerMessage;
+import no.ntnu.idi.apollo69server.network.GameServer;
+import no.ntnu.idi.apollo69server.network.MessageHandlerDelegator;
+import no.ntnu.idi.apollo69server.network.PlayerState;
 
 public class Apollo69Server {
     public static void main(String[] args) {
-        Server server = new Server();
+        MessageHandlerDelegator messageHandlerDelegator = new MessageHandlerDelegator();
+        GameServer gameServer = new GameServer(54555, 54777, messageHandlerDelegator);
 
-        Apollo69Framework.getMessageClasses().forEach(server.getKryo()::register);
+        ThreadGroup connectionThreadGroup = new ThreadGroup("Connection");
+        Thread serverThread = new Thread(connectionThreadGroup, gameServer, "GameServer");
 
-        server.start();
+        messageHandlerDelegator.registerHandler((connection, deviceInfo) -> {
+            System.out.println("Player " + deviceInfo.getDeviceId() + " wants to join the game!");
+            connection.setPlayerState(PlayerState.IN_MATCHMAKING);
+            ServerMessage serverMessage = new ServerMessage("Welcome, " + deviceInfo.getDeviceId());
+            connection.sendTCP(serverMessage);
+        }, DeviceInfo.class);
 
-        try {
-            server.bind(54555, 54777);
-        } catch (IOException ex) {
-            System.err.println("Server binding failed. Exiting.");
-            System.exit(69);
-        }
-
-        server.addListener(new Listener() {
-            public void received(Connection connection, Object object) {
-                if (object instanceof SomeRequest) {
-                    SomeRequest request = (SomeRequest) object;
-                    System.out.println(request.text);
-
-                    SomeResponse response = new SomeResponse();
-                    response.text = "Thanks";
-                    connection.sendTCP(response);
-                }
-            }
-        });
+        serverThread.setDaemon(false);
+        serverThread.start();
     }
 }
