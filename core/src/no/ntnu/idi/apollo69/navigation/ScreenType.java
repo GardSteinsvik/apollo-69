@@ -4,4 +4,5 @@ public enum ScreenType {
     MAIN_MENU,
     SETTINGS,
     GAME,
+    LOBBY,
 }

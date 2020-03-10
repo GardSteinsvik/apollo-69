@@ -4,8 +4,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 
+import no.ntnu.idi.apollo69.controller.LobbyController;
 import no.ntnu.idi.apollo69.controller.MainMenuController;
+import no.ntnu.idi.apollo69.model.LobbyModel;
 import no.ntnu.idi.apollo69.model.MainMenuModel;
+import no.ntnu.idi.apollo69.view.LobbyView;
 import no.ntnu.idi.apollo69.view.MainMenuView;
 
 public class Navigator implements Disposable {
@@ -27,6 +30,11 @@ public class Navigator implements Disposable {
 
             case GAME:
                 break;
+            case LOBBY:
+                LobbyModel lobbyModel = new LobbyModel();
+                LobbyController lobbyController = new LobbyController();
+                LobbyView lobbyView = new LobbyView(lobbyController,lobbyModel, new SpriteBatch());
+                this.setScreen(lobbyView);
         }
     }
 

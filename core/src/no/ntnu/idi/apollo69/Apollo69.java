@@ -13,7 +13,7 @@ public class Apollo69 extends ApplicationAdapter {
 	@Override
 	public void create () {
 		navigator = new Navigator();
-		navigator.changeScreen(ScreenType.MAIN_MENU);
+		navigator.changeScreen(ScreenType.LOBBY);
 
 		GameClient gameClient = new GameClient();
 	}
