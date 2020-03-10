@@ -44,7 +44,7 @@ public class Navigator implements Disposable {
             case GAME:
                 GameModel gameModel = new GameModel();
                 GameController gameController = new GameController();
-                GameView gameView = new GameView(new GameModel(), new GameController());
+                GameView gameView = new GameView(gameModel, gameController);
                 this.setScreen(gameView);
                 break;
             case LOBBY:
