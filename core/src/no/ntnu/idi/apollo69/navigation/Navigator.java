@@ -5,11 +5,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 
 import no.ntnu.idi.apollo69.controller.LobbyController;
+import no.ntnu.idi.apollo69.controller.GameController;
 import no.ntnu.idi.apollo69.controller.MainMenuController;
 import no.ntnu.idi.apollo69.model.LobbyModel;
+import no.ntnu.idi.apollo69.controller.MatchmakingController;
+import no.ntnu.idi.apollo69.model.GameModel;
 import no.ntnu.idi.apollo69.model.MainMenuModel;
 import no.ntnu.idi.apollo69.view.LobbyView;
+import no.ntnu.idi.apollo69.model.MatchmakingModel;
+import no.ntnu.idi.apollo69.view.GameView;
 import no.ntnu.idi.apollo69.view.MainMenuView;
+import no.ntnu.idi.apollo69.view.MatchmakingView;
 
 public class Navigator implements Disposable {
 
@@ -28,7 +34,18 @@ public class Navigator implements Disposable {
             case SETTINGS:
                 break;
 
+            case MATCHMAKING:
+                MatchmakingModel matchmakingModel = new MatchmakingModel();
+                MatchmakingController matchmakingController = new MatchmakingController(this, matchmakingModel);
+                MatchmakingView matchmakingView = new MatchmakingView(matchmakingController, matchmakingModel, new SpriteBatch());
+                this.setScreen(matchmakingView);
+                break;
+
             case GAME:
+                GameModel gameModel = new GameModel();
+                GameController gameController = new GameController();
+                GameView gameView = new GameView(new GameModel(), new GameController());
+                this.setScreen(gameView);
                 break;
             case LOBBY:
                 LobbyModel lobbyModel = new LobbyModel();
