@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import no.ntnu.idi.apollo69.controller.GameController;
 import no.ntnu.idi.apollo69.model.GameModel;
-import no.ntnu.idi.apollo69.model.Spaceship;
+import no.ntnu.idi.apollo69framework.data.Spaceship;
 
 public class GameView extends ApplicationAdapter implements Screen {
 

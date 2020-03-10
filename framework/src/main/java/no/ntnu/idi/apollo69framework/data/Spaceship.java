@@ -1,4 +1,4 @@
-package no.ntnu.idi.apollo69.model;
+package no.ntnu.idi.apollo69framework.data;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -43,7 +43,6 @@ public class Spaceship {
         direction.nor();
         Vector2 velocity = direction.cpy().scl(5);
         position.add(velocity);
-        this.sprite.rotate(90);
     }
 
 }
