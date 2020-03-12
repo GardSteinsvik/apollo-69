@@ -12,9 +12,11 @@ import no.ntnu.idi.apollo69framework.network_messages.ServerMessage;
 
 public class MatchmakingModel implements Disposable {
 
-    private boolean connecting = false;
-    private boolean matchmaking = false;
+    private volatile boolean connecting = false;
     private volatile boolean matchmakingDone = false;
+    private volatile boolean connectingFailed = false;
+    private volatile int positionInQueue = 0;
+    private volatile int queueSize = 0;
 
     private Listener matchmakingListener;
 
@@ -29,6 +31,8 @@ public class MatchmakingModel implements Disposable {
                     }
                 } else if (message instanceof PlayerInQueue) {
                     PlayerInQueue playerInQueue = (PlayerInQueue) message;
+                    setPositionInQueue(playerInQueue.getPosition());
+                    setQueueSize(playerInQueue.getQueueSize());
                     System.out.println("Game is full! You are in queue: " + playerInQueue.getPosition() + "/" + playerInQueue.getQueueSize());
                 } else if (message instanceof PlayerMatchmade) {
                     System.out.println("You have joined the game!");
@@ -51,20 +55,36 @@ public class MatchmakingModel implements Disposable {
         return NetworkClientSingleton.getInstance().getClient().isConnected();
     }
 
-    public boolean isMatchmaking() {
-        return matchmaking;
-    }
-
-    public void setMatchmaking(boolean matchmaking) {
-        this.matchmaking = matchmaking;
-    }
-
     public boolean isMatchmakingDone() {
         return matchmakingDone;
     }
 
     public void setMatchmakingDone(boolean matchmakingDone) {
         this.matchmakingDone = matchmakingDone;
+    }
+
+    public boolean isConnectingFailed() {
+        return connectingFailed;
+    }
+
+    public void setConnectingFailed(boolean connectingFailed) {
+        this.connectingFailed = connectingFailed;
+    }
+
+    public int getPositionInQueue() {
+        return positionInQueue;
+    }
+
+    public void setPositionInQueue(int positionInQueue) {
+        this.positionInQueue = positionInQueue;
+    }
+
+    public int getQueueSize() {
+        return queueSize;
+    }
+
+    public void setQueueSize(int queueSize) {
+        this.queueSize = queueSize;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package no.ntnu.idi.apollo69.controller;
 
-import com.badlogic.gdx.utils.Disposable;
-
 import java.io.IOException;
 
 import no.ntnu.idi.apollo69.Device;
@@ -10,7 +8,6 @@ import no.ntnu.idi.apollo69.navigation.Navigator;
 import no.ntnu.idi.apollo69.navigation.ScreenType;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
-import no.ntnu.idi.apollo69framework.network_messages.CancelMatchmaking;
 import no.ntnu.idi.apollo69framework.network_messages.DeviceInfo;
 
 public class MatchmakingController {
@@ -36,8 +33,10 @@ public class MatchmakingController {
             public void run() {
                 try {
                     model.setConnecting(true);
+                    model.setMatchmakingDone(false);
                     gameClient.connectClient();
                 } catch (IOException ex) {
+                    model.setConnectingFailed(true);
                     System.err.println("Couldn't connect to the server. " + ex);
                 }
 
@@ -55,7 +54,6 @@ public class MatchmakingController {
     }
 
     public void cancelMatchmaking() {
-        gameClient.sendMessage(new CancelMatchmaking());
         gameClient.disconnectClient();
 
 //        navigator.changeScreen(ScreenType.MAIN_MENU);

@@ -11,7 +11,7 @@ import no.ntnu.idi.apollo69framework.Apollo69Framework;
 
 public class GameServer implements Runnable {
 
-    public static final int MAX_PLAYERS = 2;
+    public static final int MAX_PLAYERS = 1;
 
     private int tcpPort;
     private int udpPort;

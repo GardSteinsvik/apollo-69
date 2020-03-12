@@ -53,16 +53,28 @@ public class MatchmakingView implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         spriteBatch.begin();
-        bitmapFont.draw(spriteBatch, model.isConnecting() ? "CONNECTING" : "NOT CONNECTING", 100, 100);
-        bitmapFont.draw(spriteBatch, model.isConnected() ? "CONNECTED" : "NOT CONNECTED", 100, 200);
-        bitmapFont.draw(spriteBatch, model.isMatchmakingDone() ? "MM DONE" : "MM NOT DONE", 100, 300);
+        if (model.isConnectingFailed()) {
+            bitmapFont.draw(spriteBatch, "CONNECTION FAILED", 100, 100);
+        } else {
+            if (model.isConnecting()) {
+                bitmapFont.draw(spriteBatch, "CONNECTING TO SERVER...", 100, 100);
+            } else if (model.isConnected() && model.isMatchmakingDone()) {
+                bitmapFont.draw(spriteBatch, "IN-GAME", 100, 100);
+            } else if (model.isConnected() && !model.isMatchmakingDone()){
+                bitmapFont.draw(spriteBatch, "SERVER IS FULL.", 100, 150);
+                bitmapFont.draw(spriteBatch, "YOUR POSITION IN QUEUE: " + model.getPositionInQueue() + " OF " + model.getQueueSize(), 100, 100);
+            } else if (!model.isConnected()) {
+                bitmapFont.draw(spriteBatch, "CONNECTION LOST", 100, 100);
+            }
+        }
+
         spriteBatch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
         if (model.isMatchmakingDone()) {
-            controller.onMatchmakingDone();
+//            controller.onMatchmakingDone();
         }
     }
 
