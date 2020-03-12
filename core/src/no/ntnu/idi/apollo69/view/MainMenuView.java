@@ -33,6 +33,7 @@ public class MainMenuView extends ApplicationAdapter implements Screen {
 
     @Override
     public void render(float delta) {
+        //moveCamera(700, 700);
         spriteBatch.begin();
         spriteBatch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         spriteBatch.end();
