@@ -50,6 +50,8 @@ public class GameView extends ApplicationAdapter implements Screen {
         height = Gdx.graphics.getHeight();
         spaceshipDim = height / 15f;
         float touchpadDim = height / 10f;
+        float centerX = width / 2f - spaceshipDim / 2f;
+        float centerY = height / 2f - spaceshipDim / 2f;
 
         // Textures
         background = new Texture(Gdx.files.internal("game/background.jpg"));
@@ -80,7 +82,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        controller.updateSpaceship();
+        //controller.updateSpaceship();
 
         // Set and update camera
         spriteBatch.setProjectionMatrix(orthoCamera.combined);
@@ -96,6 +98,8 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Draw touchpad
         stage.draw();
 
+
+        // TODO: Move this to controller
         // move spaceship and camera
         if (spaceship.getDirection().x != 0 || spaceship.getDirection().y != 0) {
             spaceship.updatePosition();
