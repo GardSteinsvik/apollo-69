@@ -20,14 +20,16 @@ public class GameController {
         return spaceship;
     }
 
-    public GameController() {int width = Gdx.graphics.getWidth();
-        int height = Gdx.graphics.getHeight();
-        int spaceshipDim = height / 15;
-        float centerX = width / 2f - spaceshipDim / 2f;
-        float centerY = height / 2f - spaceshipDim / 2f;
+    public GameController() {
+        float spaceshipDim = Gdx.graphics.getHeight() / 15f;
+        float centerX = Gdx.graphics.getWidth() / 2f - spaceshipDim / 2;
+        float centerY = Gdx.graphics.getHeight() / 2f - spaceshipDim / 2;
 
-        spaceship = new Spaceship(new Vector2(centerX, centerY), new Vector2(0, 0),
-                new Sprite(new Texture(Gdx.files.internal("game/spaceship.png"))));
+        spaceship = new Spaceship(spaceshipDim, spaceshipDim,
+                new Vector2(centerX, centerY), new Vector2(0, 0),
+                new Sprite(new Texture(Gdx.files.internal("game/spaceship.png")))
+        );
+
         model = new GameModel();
     }
 
