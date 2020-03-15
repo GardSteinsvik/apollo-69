@@ -5,16 +5,18 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Spaceship {
 
-    private float width, height;
+    private float width, height, rotation;
     private Vector2 position, direction;
     private Sprite sprite;
 
     public Spaceship(float width, float height, Vector2 positon, Vector2 velocity, Sprite sprite) {
         this.width = width;
         this.height = height;
+        this.rotation = 0;
         this.position = positon;
         this.direction = velocity;
         this.sprite = sprite;
+        this.sprite.setOrigin(this.width / 2, this.height/ 2);
     }
 
     public Vector2 getPosition() {
@@ -63,4 +65,11 @@ public class Spaceship {
         this.height = height;
     }
 
+    public float getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(float rotation) {
+        this.rotation = rotation;
+    }
 }

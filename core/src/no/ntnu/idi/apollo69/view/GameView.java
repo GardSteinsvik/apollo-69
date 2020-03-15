@@ -85,8 +85,13 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Draw background and spaceship
         spriteBatch.begin();
         spriteBatch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        spriteBatch.draw(spaceship.getSprite(), spaceship.getPosition().x, spaceship.getPosition().y,
-                spaceship.getWidth(), spaceship.getHeight());
+
+        // sprite, posX, posY, originX, originY, width, height, scaleX, scaleY, rotation
+         spriteBatch.draw(spaceship.getSprite(), spaceship.getPosition().x, spaceship.getPosition().y,
+                 spaceship.getWidth() / 2, spaceship.getHeight() / 2,
+                 spaceship.getWidth(), spaceship.getHeight(), 1, 1,
+                 spaceship.getRotation());
+
         spriteBatch.end();
 
         // Draw touchpad

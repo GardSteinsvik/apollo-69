@@ -18,8 +18,7 @@ public class GameModel {
         float centerX = width / 2f - spaceshipDim / 2f;
         float centerY = height / 2f - spaceshipDim / 2f;
 
-        spaceship = new Spaceship(new Vector2(centerX, centerY), new Vector2(0, 0),
-                new Sprite(new Texture(Gdx.files.internal("game/spaceship.png"))));
+        //spaceship = new Spaceship(new Vector2(centerX, centerY), new Vector2(0, 0), new Sprite(new Texture(Gdx.files.internal("game/spaceship.png"))));
     }
 
     public Spaceship getSpaceship() {
