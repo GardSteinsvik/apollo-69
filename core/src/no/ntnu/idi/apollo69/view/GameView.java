@@ -78,7 +78,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         stage.addActor(touchpad);
 
         // Move camera to the initial position of the spacecraft.
-        orthoCamera.translate(centerX, centerY);
+        orthoCamera.translate(centerX + (spaceshipDim / 2), centerY + (spaceshipDim / 2));
     }
 
     @Override
@@ -104,6 +104,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         if (spaceship.getDirection().x != 0 || spaceship.getDirection().y != 0) {
             spaceship.updatePosition();
             orthoCamera.translate(spaceship.getDirection().cpy().scl(5));
+            orthoCamera.update();
         }
     }
 
