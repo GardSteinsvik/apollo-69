@@ -9,13 +9,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
+import no.ntnu.idi.apollo69.view.Background;
 import no.ntnu.idi.apollo69framework.data.Shot;
 import no.ntnu.idi.apollo69framework.data.Spaceship;
 
 public class GameModel {
 
     private Spaceship spaceship;
-    private Texture background;
+    private Background parallaxBackground;
     private ArrayList<Shot> shots;
 
     public GameModel() {
@@ -27,7 +28,7 @@ public class GameModel {
                 new Vector2(centerX, centerY), new Vector2(0, 0),
                 new Sprite(new Texture(Gdx.files.internal("game/spaceship.png"))));
 
-        background = new Texture(Gdx.files.internal("game/space.jpg"));
+        parallaxBackground = new Background();
 
         shots = new ArrayList<>();
     }
@@ -56,8 +57,8 @@ public class GameModel {
         }
     }
 
-    public void renderBackground(SpriteBatch batch) {
-        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    public void renderParallax(SpriteBatch batch) {
+        parallaxBackground.render(spaceship, batch);
     }
 
     public void renderSpaceships(SpriteBatch batch) {
@@ -80,15 +81,14 @@ public class GameModel {
         shots.add(new Shot(position, direction, 10, 2, 1));
     }
 
-    public void renderShots() {
+    // TODO: Split into moveShots and renderShots
+    public void renderShots(ShapeRenderer shapeRenderer) {
         if (shots.size() > 0) {
-            ShapeRenderer shapeRenderer = new ShapeRenderer();
             shapeRenderer.setColor(Color.RED);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-            ArrayList<Shot> kill = new ArrayList<>();
-
             float dX, dY;
+            ArrayList<Shot> kill = new ArrayList<>();
 
             for (Shot shot : shots) {
                 dX = Math.abs(shot.getPosition().x - spaceship.getPosition().x);

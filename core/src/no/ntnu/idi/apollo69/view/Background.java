@@ -1,10 +1,12 @@
 package no.ntnu.idi.apollo69.view;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import no.ntnu.idi.apollo69framework.data.Spaceship;
 
 public class Background {
-    private SpriteBatch spriteBatch;
+
     private Texture background, bigplanet, planets, ringplanet, stars;
 
     // Constants for the screen orthographic camera
@@ -34,9 +36,7 @@ public class Background {
     private float planetsYoffset = -MIDDLE_HEIGHT;
 
 
-    Background(SpriteBatch spriteBatch) {
-        this.spriteBatch = spriteBatch;
-
+    public Background() {
         this.background = new Texture(Gdx.files.internal("game/bg.png"));
         this.bigplanet = new Texture(Gdx.files.internal("game/bigplanet.png"));
         this.planets = new Texture(Gdx.files.internal("game/planets.png"));
@@ -44,20 +44,26 @@ public class Background {
         this.stars = new Texture(Gdx.files.internal("game/stars.png"));
     }
 
-    public void render(float Xcoords, float Ycoords, float Xdirection, float Ydirection) {
-        if (Xdirection != 0) {
+    public void render(Spaceship spaceship, SpriteBatch spriteBatch) {
+
+        float xCoords = spaceship.getPosition().x;
+        float yCoords = spaceship.getPosition().y;
+        float xDirection = spaceship.getDirection().x;
+        float yDirection = spaceship.getDirection().y;
+
+        if (xDirection != 0) {
             // -->
-            bigplanetXoffset -= (0.3f * Xdirection);
-            ringplanetXoffset -= (0.1f * Xdirection);
-            planetsXoffset -= (0.05f * Xdirection);
-            starsXoffset -= (0.02f * Xdirection);
+            bigplanetXoffset -= (0.3f * xDirection);
+            ringplanetXoffset -= (0.1f * xDirection);
+            planetsXoffset -= (0.05f * xDirection);
+            starsXoffset -= (0.02f * xDirection);
         }
-        if (Ydirection != 0) {
+        if (yDirection != 0) {
             //  7\
-            bigplanetYoffset -= 0.3f * Ydirection;
-            ringplanetYoffset -= 0.1f * Ydirection;
-            planetsYoffset -= 0.05f * Ydirection;
-            starsYoffset -= 0.02f * Ydirection;
+            bigplanetYoffset -= 0.3f * yDirection;
+            ringplanetYoffset -= 0.1f * yDirection;
+            planetsYoffset -= 0.05f * yDirection;
+            starsYoffset -= 0.02f * yDirection;
         }
 
         // Sample - HEAVILY DELAYED loop of planet, adjust bigplanetXoffset multiplier to 11 to see the effect clearly.
@@ -69,11 +75,12 @@ public class Background {
         //    bigplanetXoffset = WIDTH;
         //}
 
-        spriteBatch.draw(background, Xcoords - MIDDLE_WIDTH, Ycoords - MIDDLE_HEIGHT, WIDTH, HEIGHT);
-        spriteBatch.draw(stars, Xcoords + starsXoffset, Ycoords + starsYoffset, WIDTH, HEIGHT);
-        spriteBatch.draw(planets, Xcoords + planetsXoffset, Ycoords + planetsYoffset, WIDTH, HEIGHT);
-        spriteBatch.draw(bigplanet, Xcoords + bigplanetXoffset, Ycoords + bigplanetYoffset, BIGPLANET_WIDTH, BIGPLANET_HEIGHT);
-        spriteBatch.draw(ringplanet, Xcoords + ringplanetXoffset, Ycoords + ringplanetYoffset, RINGPLANET_WIDTH, RINGPLANET__HEIGHT);
+        // TODO: Background renders lower and more left than it should
+        spriteBatch.draw(background, xCoords - MIDDLE_WIDTH, yCoords - MIDDLE_HEIGHT, WIDTH, HEIGHT);
+        spriteBatch.draw(stars, xCoords + starsXoffset, yCoords + starsYoffset, WIDTH, HEIGHT);
+        spriteBatch.draw(planets, xCoords + planetsXoffset, yCoords + planetsYoffset, WIDTH, HEIGHT);
+        spriteBatch.draw(bigplanet, xCoords + bigplanetXoffset, yCoords + bigplanetYoffset, BIGPLANET_WIDTH, BIGPLANET_HEIGHT);
+        spriteBatch.draw(ringplanet, xCoords + ringplanetXoffset, yCoords + ringplanetYoffset, RINGPLANET_WIDTH, RINGPLANET__HEIGHT);
     }
 
 }
