@@ -3,9 +3,11 @@ package no.ntnu.idi.apollo69.view;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -23,12 +25,12 @@ public class GameView extends ApplicationAdapter implements Screen {
     private GameModel model;
     private GameController controller;
     private SpriteBatch spriteBatch;
-    private Texture background;
     private float spaceshipDim;
     private int width, height;
     private Spaceship spaceship;
     private Touchpad touchpad;
     private Stage stage;
+    private Texture background;
 
     // Constants for the screen orthographic camera
     private final float SCREEN_WIDTH = Gdx.graphics.getWidth();
@@ -38,10 +40,15 @@ public class GameView extends ApplicationAdapter implements Screen {
     private final float WIDTH = HEIGHT * ASPECT_RATIO;
     private final OrthographicCamera orthoCamera = new OrthographicCamera(WIDTH, HEIGHT);
 
+    // Debug written to font
+    private static BitmapFont font = new BitmapFont();
+    private Background parallaxBackground;
+
     public GameView(GameModel model, GameController controller) {
         this.model = model;
         this.controller = controller;
         this.spriteBatch = new SpriteBatch();
+        this.parallaxBackground = new Background(spriteBatch);
     }
 
     @Override
@@ -58,7 +65,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         background = new Texture(Gdx.files.internal("game/background.jpg"));
 
         // TODO: Move to model?
-        spaceship = new Spaceship(new Vector2(centerX, centerY), new Vector2(0, 0),
+        spaceship = new Spaceship(new Vector2(0, 0), new Vector2(0, 0),
                 new Sprite(new Texture(Gdx.files.internal("game/spaceship.png"))));
 
         // Touchpad
@@ -78,7 +85,12 @@ public class GameView extends ApplicationAdapter implements Screen {
         stage.addActor(touchpad);
 
         // Move camera to the initial position of the spacecraft.
-        orthoCamera.translate(centerX, centerY);
+        //orthoCamera.translate(centerX + (spaceshipDim / 2), centerY + (spaceshipDim / 2));
+        orthoCamera.translate((spaceship.getSprite().getScaleX() / 2), (spaceship.getSprite().getScaleY() / 2));
+
+        // Debug written to font
+        font.setColor(Color.MAROON);
+        font.getData().setScale(1.2f);
     }
 
     @Override
@@ -92,9 +104,15 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         // Draw background and spaceship
         spriteBatch.begin();
-        spriteBatch.draw(background, 0, 0, width, height);
+        //spriteBatch.draw(background, -(width/2), -(height/2), width, height);
+        parallaxBackground.render(spaceship.getPosition().x, spaceship.getPosition().y, spaceship.getDirection().x, spaceship.getDirection().y);
         spriteBatch.draw(spaceship.getSprite(), spaceship.getPosition().x,
                 spaceship.getPosition().y, spaceshipDim, spaceshipDim);
+
+        // Debug written to font
+        font.draw(spriteBatch,"WIDTH: " + Math.round(WIDTH) + "  X: " + Math.round(spaceship.getPosition().x), spaceship.getPosition().x - 400, spaceship.getPosition().y - 130);
+        font.draw(spriteBatch,"HEIGHT: " + Math.round(HEIGHT) + "  Y: " + Math.round(spaceship.getPosition().y),spaceship.getPosition().x - 400, spaceship.getPosition().y - 160);
+
         spriteBatch.end();
 
         // Draw touchpad
@@ -104,6 +122,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         if (spaceship.getDirection().x != 0 || spaceship.getDirection().y != 0) {
             spaceship.updatePosition();
             orthoCamera.translate(spaceship.getDirection().cpy().scl(5));
+            orthoCamera.update();
         }
     }
 
