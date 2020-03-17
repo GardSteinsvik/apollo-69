@@ -22,7 +22,7 @@ public class GameModel {
                 new Vector2(centerX, centerY), new Vector2(0, 0),
                 new Sprite(new Texture(Gdx.files.internal("game/spaceship.png"))));
 
-        background = new Texture(Gdx.files.internal("game/background.jpg"));
+        background = new Texture(Gdx.files.internal("game/space.jpg"));
     }
 
     public Spaceship getSpaceship() {
@@ -63,6 +63,7 @@ public class GameModel {
 
     public void moveCamera(OrthographicCamera cam, Vector2 pos) {
         cam.translate(pos);
+        cam.update();
     }
 
 }
