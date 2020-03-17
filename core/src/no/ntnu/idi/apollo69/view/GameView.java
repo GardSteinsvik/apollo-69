@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import no.ntnu.idi.apollo69.controller.GameController;
@@ -44,15 +46,12 @@ public class GameView extends ApplicationAdapter implements Screen {
 
     @Override
     public void show() {
-        Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-        Skin skin2 = new Skin(Gdx.files.internal("skin/glassy/glassy-ui.json"));
-
         // Touchpad parameters
         float touchpadPos = Gdx.graphics.getHeight() / 15f; // Distance from edge
         float touchpadDim = Gdx.graphics.getHeight() / 5f; // Width & height
 
         // Touchpad
-        Touchpad touchpad = new Touchpad(10, skin);
+        Touchpad touchpad = new Touchpad(10, new Skin(Gdx.files.internal("skin/uiskin.json")));
         touchpad.setBounds(touchpadPos, touchpadPos, touchpadDim, touchpadDim);
         touchpad.addListener(new ChangeListener() {
             @Override
@@ -61,27 +60,53 @@ public class GameView extends ApplicationAdapter implements Screen {
             }
         });
 
+        // Button parameters
         float btnDim = Gdx.graphics.getWidth() / 12f;
         float shootBtnX = Gdx.graphics.getWidth() - btnDim * 5 / 4;
         float shootBtnY = btnDim * 1;
-        float boostBtnX = shootBtnX - btnDim;
+        float boostBtnX = shootBtnX - btnDim * 5/4;
         float boostBtnY = btnDim / 4;
 
-        ImageButton shootBtn = new ImageButton(skin2);
+        // Shoot button
+        ImageButton shootBtn = new ImageButton(new Skin(Gdx.files.internal("skin/uiskin.json")));
         shootBtn.setSize(btnDim, btnDim);
         shootBtn.getStyle().imageUp = new TextureRegionDrawable(
-                new Texture(Gdx.files.internal("switch_off.png")));
+                new Texture(Gdx.files.internal("game/shoot_blue_light.png")));
         shootBtn.getStyle().imageDown = new TextureRegionDrawable(
-                new Texture(Gdx.files.internal("switch_on.png")));
+                new Texture(Gdx.files.internal("game/shoot_blue_dark.png")));
         shootBtn.setPosition(shootBtnX, shootBtnY);
+        shootBtn.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                controller.shootButtonPressed();
+                return true;
+            }
 
-        ImageButton boostBtn = new ImageButton(skin2);
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                controller.shootButtonReleased();
+            }
+        });
+
+        // Boost button
+        ImageButton boostBtn = new ImageButton(new Skin(Gdx.files.internal("skin/uiskin.json")));
         boostBtn.setSize(btnDim, btnDim);
         boostBtn.getStyle().imageUp = new TextureRegionDrawable(
-                new Texture(Gdx.files.internal("switch_off.png")));
+                new Texture(Gdx.files.internal("game/boost_orange.png")));
         boostBtn.getStyle().imageDown = new TextureRegionDrawable(
-                new Texture(Gdx.files.internal("switch_on.png")));
+                new Texture(Gdx.files.internal("game/boost_red.png")));
         boostBtn.setPosition(boostBtnX, boostBtnY);
+        boostBtn.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return controller.boostButtonPressed();
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                controller.boostButtonReleased();
+            }
+        });
 
         // Create stage and add actors
         stage = new Stage();
@@ -108,9 +133,11 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         model.renderBackground(spriteBatch);
         model.renderSpaceships(spriteBatch);
-        model.moveSpaceship(orthoCamera);
 
         spriteBatch.end();
+
+        model.renderShots();
+        model.moveSpaceship(orthoCamera);
 
         stage.draw();
     }

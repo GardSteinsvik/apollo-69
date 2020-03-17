@@ -8,6 +8,8 @@ public class Spaceship {
     private float width, height, rotation;
     private Vector2 position, direction;
     private Sprite sprite;
+    private Shot shot;
+    private Vector2 lastDirection;
 
     public Spaceship(float width, float height, Vector2 positon, Vector2 velocity, Sprite sprite) {
         this.width = width;
@@ -17,6 +19,8 @@ public class Spaceship {
         this.direction = velocity;
         this.sprite = sprite;
         this.sprite.setOrigin(this.width / 2, this.height/ 2);
+        this.shot = new BasicShot();
+        lastDirection = new Vector2(0,1);
     }
 
     public Vector2 getPosition() {
@@ -71,5 +75,21 @@ public class Spaceship {
 
     public void setRotation(float rotation) {
         this.rotation = rotation;
+    }
+
+    public Shot getShot() {
+        return shot;
+    }
+
+    public void setShot(Shot shot) {
+        this.shot = shot;
+    }
+
+    public Vector2 getLastDirection() {
+        return lastDirection;
+    }
+
+    public void setLastDirection(Vector2 lastDirection) {
+        this.lastDirection = lastDirection;
     }
 }

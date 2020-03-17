@@ -19,11 +19,20 @@ public class GameController {
     }
 
     public void shootButtonPressed() {
-        // Handle shots
+        model.shoot();
     }
 
-    public void boostButtonPressed() {
-        // Handle boost
+    public void shootButtonReleased() {
+        // Add functionality once auto-mode works
+    }
+
+    public boolean boostButtonPressed() {
+        System.out.println("Boost");
+        return true;
+    }
+
+    public void boostButtonReleased() {
+        System.out.println("Boost released");
     }
 
 }

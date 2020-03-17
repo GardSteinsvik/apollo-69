@@ -1,17 +1,26 @@
 package no.ntnu.idi.apollo69.model;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+
+import java.awt.Shape;
+import java.util.ArrayList;
+
+import no.ntnu.idi.apollo69framework.data.BasicShot;
+import no.ntnu.idi.apollo69framework.data.Shot;
 import no.ntnu.idi.apollo69framework.data.Spaceship;
 
 public class GameModel {
 
     private Spaceship spaceship;
     private Texture background;
+    private ArrayList<Shot> shots;
 
     public GameModel() {
         float spaceshipDim = Gdx.graphics.getHeight() / 15f;
@@ -23,6 +32,8 @@ public class GameModel {
                 new Sprite(new Texture(Gdx.files.internal("game/spaceship.png"))));
 
         background = new Texture(Gdx.files.internal("game/space.jpg"));
+
+        shots = new ArrayList<>();
     }
 
     public Spaceship getSpaceship() {
@@ -30,6 +41,7 @@ public class GameModel {
     }
 
     public void handleSpaceshipMovement(float x, float y) {
+        spaceship.setLastDirection(spaceship.getDirection());
         spaceship.setDirection(new Vector2(x, y));
 
         // Only update rotation while spaceship is moving.
@@ -64,6 +76,46 @@ public class GameModel {
     public void moveCamera(OrthographicCamera cam, Vector2 pos) {
         cam.translate(pos);
         cam.update();
+    }
+
+    public void shoot() {
+        Shot shot = new BasicShot();
+        Vector2 dir = spaceship.getDirection();
+        shot.setDirection(dir.x == 0 && dir.y == 0 ? spaceship.getLastDirection() : dir);
+        shot.setPosition(spaceship.getPosition().cpy());
+        shots.add(shot);
+    }
+
+    public void renderShots() {
+        if (shots.size() > 0) {
+            ShapeRenderer shapeRenderer = new ShapeRenderer();
+            shapeRenderer.setColor(Color.RED);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+            ArrayList<Shot> kill = new ArrayList<>();
+
+            float dX, dY;
+
+            for (Shot shot : shots) {
+                dX = Math.abs(shot.getPosition().x - spaceship.getPosition().x);
+                dY = Math.abs(shot.getPosition().y - spaceship.getPosition().y);
+
+                // TODO: Set these values to game bounds rather than relative distances
+                if (dX > Gdx.graphics.getWidth() * 4 || dY > Gdx.graphics.getHeight() * 4) {
+                    kill.add(shot);
+                }
+                shot.updatePosition();
+                System.out.println(shot.getDirection());
+                shapeRenderer.circle(shot.getPosition().x, shot.getPosition().y, shot.getSize());
+            }
+
+            shapeRenderer.end();
+
+            // Remove shots after rendering to avoid ConcurrentModificationException
+            for (Shot k : kill) {
+                shots.remove(k);
+            }
+        }
     }
 
 }
