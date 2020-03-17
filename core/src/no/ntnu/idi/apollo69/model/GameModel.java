@@ -8,11 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-
-import java.awt.Shape;
 import java.util.ArrayList;
-
-import no.ntnu.idi.apollo69framework.data.BasicShot;
 import no.ntnu.idi.apollo69framework.data.Shot;
 import no.ntnu.idi.apollo69framework.data.Spaceship;
 
@@ -27,7 +23,7 @@ public class GameModel {
         float centerX = Gdx.graphics.getWidth() / 2f - spaceshipDim / 2;
         float centerY = Gdx.graphics.getHeight() / 2f - spaceshipDim / 2;
 
-        spaceship = new Spaceship(spaceshipDim, spaceshipDim,
+        spaceship = new Spaceship(spaceshipDim, spaceshipDim, 5,
                 new Vector2(centerX, centerY), new Vector2(0, 0),
                 new Sprite(new Texture(Gdx.files.internal("game/spaceship.png"))));
 
@@ -41,7 +37,7 @@ public class GameModel {
     }
 
     public void handleSpaceshipMovement(float x, float y) {
-        spaceship.setLastDirection(spaceship.getDirection());
+        spaceship.setLastDirection(spaceship.getDirection().cpy());
         spaceship.setDirection(new Vector2(x, y));
 
         // Only update rotation while spaceship is moving.
@@ -79,11 +75,9 @@ public class GameModel {
     }
 
     public void shoot() {
-        Shot shot = new BasicShot();
-        Vector2 dir = spaceship.getDirection();
-        shot.setDirection(dir.x == 0 && dir.y == 0 ? spaceship.getLastDirection() : dir);
-        shot.setPosition(spaceship.getPosition().cpy());
-        shots.add(shot);
+        Vector2 position = new Vector2(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
+        Vector2 direction = spaceship.getDirection().x == 0 || spaceship.getDirection().y == 0 ? spaceship.getLastDirection().cpy() : spaceship.getDirection().cpy();
+        shots.add(new Shot(position, direction, 10, 2, 1));
     }
 
     public void renderShots() {
@@ -104,8 +98,8 @@ public class GameModel {
                 if (dX > Gdx.graphics.getWidth() * 4 || dY > Gdx.graphics.getHeight() * 4) {
                     kill.add(shot);
                 }
+
                 shot.updatePosition();
-                System.out.println(shot.getDirection());
                 shapeRenderer.circle(shot.getPosition().x, shot.getPosition().y, shot.getSize());
             }
 

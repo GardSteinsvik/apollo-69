@@ -6,14 +6,14 @@ public class Shot {
 
     private Vector2 position, direction;
     private float size;
-    private int damage, frequency;
+    private int speed, damage;
 
-    Shot() {}
-
-    Shot(float size, int damage, int frequency) {
+    public Shot(Vector2 position, Vector2 direction, float size, int speed, int damage) {
+        this.position = position;
+        this.direction = direction;
         this.size = size;
+        this.speed = speed;
         this.damage = damage;
-        this.frequency = frequency;
     }
 
     public Vector2 getPosition() {
@@ -46,20 +46,20 @@ public class Shot {
         this.size = size;
     }
 
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
     public int getDamage() {
         return damage;
     }
 
     public void setDamage(int damage) {
         this.damage = damage;
-    }
-
-    public int getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(int frequency) {
-        this.frequency = frequency;
     }
 
 }
