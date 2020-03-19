@@ -74,7 +74,7 @@ public class MatchmakingView implements Screen {
         stage.draw();
 
         if (model.isMatchmakingDone()) {
-//            controller.onMatchmakingDone();
+            controller.onMatchmakingDone();
         }
     }
 

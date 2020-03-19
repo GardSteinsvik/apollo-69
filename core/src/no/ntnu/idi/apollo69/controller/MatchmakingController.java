@@ -55,8 +55,7 @@ public class MatchmakingController {
 
     public void cancelMatchmaking() {
         gameClient.disconnectClient();
-
-//        navigator.changeScreen(ScreenType.MAIN_MENU);
+        navigator.changeScreen(ScreenType.MAIN_MENU);
     }
 
     public void onMatchmakingDone() {
