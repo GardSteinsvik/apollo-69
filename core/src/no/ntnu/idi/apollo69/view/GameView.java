@@ -36,8 +36,8 @@ public class GameView extends ApplicationAdapter implements Screen {
     private final float SCREEN_WIDTH = Gdx.graphics.getWidth();
     private final float SCREEN_HEIGHT = Gdx.graphics.getHeight();
     private final float ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
-    private final float HEIGHT = 480;
-    private final float WIDTH = HEIGHT * ASPECT_RATIO;
+    private final float HEIGHT = SCREEN_HEIGHT;
+    private final float WIDTH = SCREEN_WIDTH;
     private final OrthographicCamera orthoCamera = new OrthographicCamera(WIDTH, HEIGHT);
 
     // Debug written to font
