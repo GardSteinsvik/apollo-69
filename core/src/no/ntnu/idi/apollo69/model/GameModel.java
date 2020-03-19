@@ -58,7 +58,7 @@ public class GameModel {
     }
 
     public void renderParallax(SpriteBatch batch) {
-        parallaxBackground.render(spaceship, batch);
+        parallaxBackground.render(batch, spaceship);
     }
 
     public void renderSpaceships(SpriteBatch batch) {
