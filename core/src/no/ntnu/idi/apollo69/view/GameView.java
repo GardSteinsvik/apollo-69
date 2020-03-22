@@ -141,8 +141,8 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         spriteBatch.begin();
 
-        // Draw parallax background and spaceship
-        model.renderParallax(spriteBatch);
+        // Draw background and spaceship
+        model.renderBackground(spriteBatch);
         model.renderSpaceships(spriteBatch);
 
         // Debug written to font =======================

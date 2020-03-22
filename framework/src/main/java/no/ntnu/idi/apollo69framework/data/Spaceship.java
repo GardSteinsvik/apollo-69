@@ -1,26 +1,37 @@
 package no.ntnu.idi.apollo69framework.data;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
-public class Spaceship {
+public class Spaceship implements Component {
 
+    private String deviceId;
     private float width, height, rotation;
     private int speed;
     private Vector2 position, direction;
     private Sprite sprite;
     private Vector2 lastDirection;
 
-    public Spaceship(float width, float height, int speed, Vector2 positon, Vector2 direction, Sprite sprite) {
+    public Spaceship(String deviceId, float width, float height, int speed, Vector2 position, Vector2 direction, Sprite sprite) {
+        this.deviceId = deviceId;
         this.width = width;
         this.height = height;
         this.speed = speed;
         this.rotation = 0;
-        this.position = positon;
+        this.position = position;
         this.direction = direction;
         this.sprite = sprite;
         this.sprite.setOrigin(this.width / 2, this.height/ 2);
         lastDirection = new Vector2(0,1);
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
     public Vector2 getPosition() {

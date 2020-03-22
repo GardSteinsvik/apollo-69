@@ -44,19 +44,19 @@ public class Background {
 
         backgroundObjects.add(new BackgroundObject(
                 new Texture(Gdx.files.internal("game/planets.png")),
-                new Vector3(0, 0, 30),
+                new Vector3(0, 0, 20),
                 new Vector2(screenWidth, screenHeight)
         ));
 
         backgroundObjects.add(new BackgroundObject(
                 new Texture(Gdx.files.internal("game/ringplanet.png")),
-                new Vector3(0, 0, 60),
+                new Vector3(0, 0, 40),
                 new Vector2(screenWidth, screenHeight)
         ));
 
         backgroundObjects.add(new BackgroundObject(
                 new Texture(Gdx.files.internal("game/bigplanet.png")),
-                new Vector3(0, 0, 120),
+                new Vector3(0, 0, 150),
                 new Vector2(screenWidth, screenHeight)
         ));
     }

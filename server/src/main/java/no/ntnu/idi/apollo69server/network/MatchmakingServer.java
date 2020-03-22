@@ -9,9 +9,9 @@ import java.util.List;
 
 import no.ntnu.idi.apollo69framework.Apollo69Framework;
 
-public class GameServer implements Runnable {
+public class MatchmakingServer implements Runnable {
 
-    public static final int MAX_PLAYERS = 1;
+    public static final int MAX_PLAYERS = 2;
 
     private int tcpPort;
     private int udpPort;
@@ -22,7 +22,7 @@ public class GameServer implements Runnable {
     private Server server;
     private MessageHandlerDelegator messageHandlerDelegator;
 
-    public GameServer(int tcpPort, int udpPort, MessageHandlerDelegator messageHandlerDelegator) {
+    public MatchmakingServer(int tcpPort, int udpPort, MessageHandlerDelegator messageHandlerDelegator) {
         this.tcpPort = tcpPort;
         this.udpPort = udpPort;
         this.messageHandlerDelegator = messageHandlerDelegator;
@@ -44,7 +44,7 @@ public class GameServer implements Runnable {
         try {
             server.bind(tcpPort, udpPort);
         } catch (IOException ex) {
-            System.err.println("Failed to start server. Perhaps another server is already running?");
+            System.err.println("Failed to start matchmaking server. Perhaps another server is already running?");
             System.exit(69);
         }
 

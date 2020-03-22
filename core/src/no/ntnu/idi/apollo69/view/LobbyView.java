@@ -1,37 +1,24 @@
 package no.ntnu.idi.apollo69.view;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
 import no.ntnu.idi.apollo69.Variables;
 import no.ntnu.idi.apollo69.controller.LobbyController;
 import no.ntnu.idi.apollo69.model.LobbyModel;
@@ -39,14 +26,14 @@ import no.ntnu.idi.apollo69.model.LobbyModel;
 public class LobbyView extends ApplicationAdapter implements Screen, Variables {
 
     private SpriteBatch spriteBatch;
-    private  LobbyController lobbyController;
+    private LobbyController lobbyController;
     private LobbyModel lobbyModel;
     private Stage stage;
     private Texture backgroundTexture;
 
     public LobbyView(LobbyController lobbyController, LobbyModel lobbyModel, SpriteBatch spriteBatch) {
-        this.lobbyController=lobbyController;
-        this.lobbyModel=lobbyModel;
+        this.lobbyController = lobbyController;
+        this.lobbyModel = lobbyModel;
         this.spriteBatch = spriteBatch;
 
         stage = new Stage(new ScreenViewport());
@@ -68,13 +55,13 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
 
         Table tableLeft = new Table(skin);
         tableLeft.setFillParent(false);
-        tableLeft.setHeight(sizeHeight*1.5f);
+        tableLeft.setHeight(sizeHeight * 1.5f);
         tableLeft.setWidth(sizeWidth);
 
         Table tableRight = new Table(skin);
         tableRight.setFillParent(false);
         tableRight.align(Align.right);
-        tableRight.setHeight(sizeHeight*1.5f);
+        tableRight.setHeight(sizeHeight * 1.5f);
         tableRight.setWidth(sizeWidth);
 
         List highScoreList = new List(skin);
@@ -83,7 +70,7 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
 
         TextField nickname = new TextField(textNickname, skin);
 
-        TextButton join = new TextButton(textJoin,skin);
+        TextButton join = new TextButton(textJoin, skin);
         join.getLabel().setFontScale(sizeButton);
 
         TextButton exit = new TextButton(textExit, skin);
@@ -97,7 +84,7 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
                 .prefWidth(buttonWidth)
                 .padBottom(spacing)
                 .padLeft(spacing)
-        .fillX().fillY();
+                .fillX().fillY();
         tableLeft.row();
 //        tableLeft.add(highScoreList).align(Align.right);
         tableLeft.row();
@@ -115,9 +102,9 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
 
         tableRight.row();
         tableRight.add(highScoreList)
-                .prefHeight(sizeHeight*0.7f)
-                .prefWidth(sizeWidth*0.6f)
-                .padLeft(spacing*2f)
+                .prefHeight(sizeHeight * 0.7f)
+                .prefWidth(sizeWidth * 0.6f)
+                .padLeft(spacing * 2f)
                 .padTop(spacing);
 
         group.setWidth(sizeWidth);
@@ -125,13 +112,20 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
         group.addActor(tableLeft);
         group.addActor(tableRight);
 
+        join.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                lobbyController.joinButtonPressed();
+            }
+        });
+
         stage.addActor(group);
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor( 0, 0, 0, 0 );
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         backgroundTexture = new Texture(Gdx.files.internal("background.png"));
@@ -167,7 +161,7 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
 
     }
 
-    private Array getFakeHighScoreList(){
+    private Array getFakeHighScoreList() {
         Array<String> highScores = new Array<>();
         highScores.add("Gard", "1 million fucking points");
         highScores.add("Lars", "500000");

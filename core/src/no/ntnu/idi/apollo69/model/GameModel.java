@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
+
+import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.view.Background;
 import no.ntnu.idi.apollo69framework.data.Shot;
 import no.ntnu.idi.apollo69framework.data.Spaceship;
@@ -16,19 +18,21 @@ import no.ntnu.idi.apollo69framework.data.Spaceship;
 public class GameModel {
 
     private Spaceship spaceship;
-    private Background parallaxBackground;
+    private Background background;
     private ArrayList<Shot> shots;
 
     public GameModel() {
-        float spaceshipDim = Gdx.graphics.getHeight() / 15f;
+        float spaceshipDim = Gdx.graphics.getHeight() / 10f;
         float centerX = Gdx.graphics.getWidth() / 2f - spaceshipDim / 2;
         float centerY = Gdx.graphics.getHeight() / 2f - spaceshipDim / 2;
 
-        spaceship = new Spaceship(spaceshipDim, spaceshipDim, 5,
+        spaceship = new Spaceship(
+                Device.DEVICE_ID, spaceshipDim, spaceshipDim, 5,
                 new Vector2(centerX, centerY), new Vector2(0, 0),
-                new Sprite(new Texture(Gdx.files.internal("game/spaceship.png"))));
+                new Sprite(new Texture(Gdx.files.internal("game/spaceship.png")))
+        );
 
-        parallaxBackground = new Background();
+        background = new Background();
 
         shots = new ArrayList<>();
     }
@@ -57,8 +61,8 @@ public class GameModel {
         }
     }
 
-    public void renderParallax(SpriteBatch batch) {
-        parallaxBackground.render(batch, spaceship);
+    public void renderBackground(SpriteBatch batch) {
+        background.render(batch, spaceship);
     }
 
     public void renderSpaceships(SpriteBatch batch) {

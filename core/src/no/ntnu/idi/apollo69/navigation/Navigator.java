@@ -49,7 +49,7 @@ public class Navigator implements Disposable {
                 break;
             case LOBBY:
                 LobbyModel lobbyModel = new LobbyModel();
-                LobbyController lobbyController = new LobbyController();
+                LobbyController lobbyController = new LobbyController(this, lobbyModel);
                 LobbyView lobbyView = new LobbyView(lobbyController,lobbyModel, new SpriteBatch());
                 this.setScreen(lobbyView);
         }

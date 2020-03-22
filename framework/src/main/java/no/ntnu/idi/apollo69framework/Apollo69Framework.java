@@ -7,6 +7,7 @@ import java.util.List;
 
 import no.ntnu.idi.apollo69framework.network_messages.DeviceInfo;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInQueue;
+import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerMatchmade;
 import no.ntnu.idi.apollo69framework.network_messages.ServerMessage;
 
@@ -15,6 +16,7 @@ public class Apollo69Framework {
         private static final List<Class> CLASSES_SINGLETON = Collections.unmodifiableList(Arrays.asList(
                 ArrayList.class,
                 DeviceInfo.class,
+                PlayerInput.class,
                 ServerMessage.class,
                 PlayerInQueue.class,
                 PlayerMatchmade.class

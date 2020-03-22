@@ -49,7 +49,7 @@ public class PlayerConnectionListener extends BasePlayerConnectionListener {
     private void matchmakeQueue() {
         List<PlayerConnection> playersInQueue = connections.stream().filter(c -> !activePlayers.contains(c)).collect(Collectors.toList());
 
-        while (!playersInQueue.isEmpty() && activePlayers.size() != GameServer.MAX_PLAYERS && activePlayers.size() != connections.size()) {
+        while (!playersInQueue.isEmpty() && activePlayers.size() != MatchmakingServer.MAX_PLAYERS && activePlayers.size() != connections.size()) {
             PlayerConnection playerToBeAdded = playersInQueue.remove(0);
             activePlayers.add(playerToBeAdded);
             playerToBeAdded.setPlayerState(PlayerState.IN_SPAWN_SCREEN);

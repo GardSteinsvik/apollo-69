@@ -3,13 +3,17 @@ package no.ntnu.idi.apollo69.controller;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import no.ntnu.idi.apollo69.model.GameModel;
+import no.ntnu.idi.apollo69.network.GameClient;
+import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 
 public class GameController {
 
     private GameModel model;
+    private GameClient gameClient;
 
     public GameController(GameModel model) {
         this.model = model;
+        gameClient = NetworkClientSingleton.getInstance().getGameClient();
     }
 
     public void touchpadMoved(Actor actor) {
