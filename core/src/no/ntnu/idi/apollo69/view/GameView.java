@@ -1,5 +1,11 @@
 package no.ntnu.idi.apollo69.view;
 
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -21,7 +27,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import no.ntnu.idi.apollo69.controller.GameController;
+import no.ntnu.idi.apollo69.controller.Mappers;
 import no.ntnu.idi.apollo69.model.GameModel;
+import no.ntnu.idi.apollo69.model.component.PositionComponent;
+import no.ntnu.idi.apollo69.model.component.VelocityComponent;
 import no.ntnu.idi.apollo69framework.data.Spaceship;
 
 public class GameView extends ApplicationAdapter implements Screen {
@@ -52,6 +61,41 @@ public class GameView extends ApplicationAdapter implements Screen {
 
     @Override
     public void show() {
+        //==========================================================================================
+        //=== ASHLEY ENTITY COMPONENT SYSTEM =======================================================
+
+        Engine engine = new Engine();
+
+        Entity spaceship = new Entity();
+        spaceship.add(new PositionComponent());
+        spaceship.add(new VelocityComponent());
+
+        engine.addEntity(spaceship);
+
+        // Retrieving components
+        // Option 1 - instantiate mapper in class (one for each component)
+        ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
+        PositionComponent spaceshipPos = pm.get(spaceship);
+        Vector2 position = new Vector2(spaceshipPos.x, spaceshipPos.y);
+
+        // Retrieving components
+        // Option 2 - keep mappers in separate class
+        VelocityComponent spaceshipVel = Mappers.velocity.get(spaceship);
+        Vector2 velocity = new Vector2(spaceshipVel.x, spaceshipVel.y);
+
+        // Retrieving ALL components
+        ImmutableArray<Component> components = spaceship.getComponents();
+
+        // Entities with the same set of components can be grouped in Family objects. You can
+        // obtain a Family by specifying the list of component classes the entities belonging to
+        // said family must possess. This should satisfy most of your entity  classification needs.
+        Family family = Family.all(PositionComponent.class, VelocityComponent.class).get();
+
+        ImmutableArray<Entity> entities = engine.getEntitiesFor(family);
+
+        // =========================================================================================
+        // =========================================================================================
+
         // Touchpad parameters
         float touchpadPos = Gdx.graphics.getHeight() / 15f; // Distance from edge
         float touchpadDim = Gdx.graphics.getHeight() / 5f; // Width & height
