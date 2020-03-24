@@ -1,11 +1,8 @@
 package no.ntnu.idi.apollo69.view;
 
-import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -16,7 +13,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -30,13 +26,12 @@ import no.ntnu.idi.apollo69.controller.GameController;
 import no.ntnu.idi.apollo69.controller.Mappers;
 import no.ntnu.idi.apollo69.model.GameModel;
 import no.ntnu.idi.apollo69.model.component.PositionComponent;
-import no.ntnu.idi.apollo69.model.component.VelocityComponent;
-import no.ntnu.idi.apollo69framework.data.Spaceship;
 
 public class GameView extends ApplicationAdapter implements Screen {
 
     private GameModel model;
     private GameController controller;
+    private Engine engine;
     private SpriteBatch spriteBatch;
     private ShapeRenderer shapeRenderer;
     private Stage stage;
@@ -61,40 +56,21 @@ public class GameView extends ApplicationAdapter implements Screen {
 
     @Override
     public void show() {
-        //==========================================================================================
-        //=== ASHLEY ENTITY COMPONENT SYSTEM =======================================================
+        engine = new Engine();
 
-        Engine engine = new Engine();
+        engine.addEntityListener(new EntityListener() {
+            @Override
+            public void entityAdded(Entity entity) {
+                System.out.println("New entity: " + entity);
+            }
 
-        Entity spaceship = new Entity();
-        spaceship.add(new PositionComponent());
-        spaceship.add(new VelocityComponent());
+            @Override
+            public void entityRemoved(Entity entity) {
+                System.out.println("Entity " + entity + " removed");
+            }
+        });
 
-        engine.addEntity(spaceship);
-
-        // Retrieving components
-        // Option 1 - instantiate mapper in class (one for each component)
-        ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-        PositionComponent spaceshipPos = pm.get(spaceship);
-        Vector2 position = new Vector2(spaceshipPos.x, spaceshipPos.y);
-
-        // Retrieving components
-        // Option 2 - keep mappers in separate class
-        VelocityComponent spaceshipVel = Mappers.velocity.get(spaceship);
-        Vector2 velocity = new Vector2(spaceshipVel.x, spaceshipVel.y);
-
-        // Retrieving ALL components
-        ImmutableArray<Component> components = spaceship.getComponents();
-
-        // Entities with the same set of components can be grouped in Family objects. You can
-        // obtain a Family by specifying the list of component classes the entities belonging to
-        // said family must possess. This should satisfy most of your entity  classification needs.
-        Family family = Family.all(PositionComponent.class, VelocityComponent.class).get();
-
-        ImmutableArray<Entity> entities = engine.getEntitiesFor(family);
-
-        // =========================================================================================
-        // =========================================================================================
+        model.initEngine(engine);
 
         // Touchpad parameters
         float touchpadPos = Gdx.graphics.getHeight() / 15f; // Distance from edge
@@ -128,7 +104,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         shootBtn.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                controller.shootButtonPressed();
+                controller.shootButtonPressed(engine);
                 return true;
             }
 
@@ -149,7 +125,8 @@ public class GameView extends ApplicationAdapter implements Screen {
         boostBtn.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return controller.boostButtonPressed();
+                controller.boostButtonPressed();
+                return true;
             }
 
             @Override
@@ -170,9 +147,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         font.getData().setScale(1.2f);
 
         // Initialize camera position
-        model.moveCamera(orthoCamera, new Vector2(
-                model.getSpaceship().getPosition().x + model.getSpaceship().getWidth() / 2,
-                model.getSpaceship().getPosition().y + model.getSpaceship().getHeight() / 2));
+        model.moveCameraToSpaceship(orthoCamera, 0);
     }
 
     @Override
@@ -184,28 +159,30 @@ public class GameView extends ApplicationAdapter implements Screen {
         spriteBatch.setProjectionMatrix(orthoCamera.combined);
 
         spriteBatch.begin();
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        // Draw background and spaceship
         model.renderBackground(spriteBatch);
-        model.renderSpaceships(spriteBatch);
+        model.renderMovingObjects(spriteBatch, shapeRenderer, engine);
 
-        // Debug written to font =======================
-        Spaceship spaceship = model.getSpaceship();
-        font.draw(spriteBatch,"WIDTH: " + Math.round(WIDTH) + "  X: " + Math.round(spaceship.getPosition().x), spaceship.getPosition().x - 50, spaceship.getPosition().y - 130);
-        font.draw(spriteBatch,"HEIGHT: " + Math.round(HEIGHT) + "  Y: " + Math.round(spaceship.getPosition().y),spaceship.getPosition().x - 50, spaceship.getPosition().y - 160);
-        // =============================================
+        // Debug written to font
+        PositionComponent position = Mappers.position.get(model.getSpaceship());
+        font.draw(spriteBatch,"WIDTH: " + Math.round(WIDTH) + "  X: " +
+                Math.round(position.x), position.x - 50, position.y - 130);
+        font.draw(spriteBatch,"HEIGHT: " + Math.round(HEIGHT) + "  Y: " +
+                Math.round(position.y), position.x - 50, position.y - 160);
 
         spriteBatch.end();
+        shapeRenderer.end();
 
-        model.renderShots(shapeRenderer);
-        model.moveSpaceship(orthoCamera);
+        model.moveCameraToSpaceship(orthoCamera, delta);
 
         stage.draw();
+
+        engine.update(delta);
     }
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() { }
 
 }

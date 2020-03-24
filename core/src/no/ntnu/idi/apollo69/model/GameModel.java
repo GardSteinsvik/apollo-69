@@ -1,5 +1,9 @@
 package no.ntnu.idi.apollo69.model;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -8,56 +12,45 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import java.util.ArrayList;
-
-import no.ntnu.idi.apollo69.Device;
+import no.ntnu.idi.apollo69.controller.GameMovementSystem;
+import no.ntnu.idi.apollo69.controller.Mappers;
+import no.ntnu.idi.apollo69.model.component.AttackingComponent;
+import no.ntnu.idi.apollo69.model.component.DamageComponent;
+import no.ntnu.idi.apollo69.model.component.DimensionComponent;
+import no.ntnu.idi.apollo69.model.component.HealthComponent;
+import no.ntnu.idi.apollo69.model.component.PositionComponent;
+import no.ntnu.idi.apollo69.model.component.RotationComponent;
+import no.ntnu.idi.apollo69.model.component.BoosterComponent;
+import no.ntnu.idi.apollo69.model.component.SpriteComponent;
+import no.ntnu.idi.apollo69.model.component.VelocityComponent;
 import no.ntnu.idi.apollo69.view.Background;
-import no.ntnu.idi.apollo69framework.data.Shot;
-import no.ntnu.idi.apollo69framework.data.Spaceship;
 
 public class GameModel {
 
-    private Spaceship spaceship;
     private Background background;
-    private ArrayList<Shot> shots;
+    private Entity spaceship;
 
     public GameModel() {
-        float spaceshipDim = Gdx.graphics.getHeight() / 10f;
-        float centerX = Gdx.graphics.getWidth() / 2f - spaceshipDim / 2;
-        float centerY = Gdx.graphics.getHeight() / 2f - spaceshipDim / 2;
-
-        spaceship = new Spaceship(
-                Device.DEVICE_ID, spaceshipDim, spaceshipDim, 5,
-                new Vector2(centerX, centerY), new Vector2(0, 0),
-                new Sprite(new Texture(Gdx.files.internal("game/spaceship.png")))
-        );
-
         background = new Background();
-
-        shots = new ArrayList<>();
+        spaceship = new Entity();
     }
 
-    public Spaceship getSpaceship() {
+    public Entity getSpaceship() {
         return spaceship;
     }
 
     public void handleSpaceshipMovement(float x, float y) {
-        spaceship.setLastDirection(spaceship.getDirection().cpy());
-        spaceship.setDirection(new Vector2(x, y));
+        VelocityComponent velocity = Mappers.velocity.get(spaceship);
+        RotationComponent rotation = Mappers.rotation.get(spaceship);
 
-        // Only update rotation while spaceship is moving.
-        // When touchpad is released, final registered movement will reset direction
-        // to (0,0), which would reset rotation to 0° - and we do not want that.
-        if (spaceship.getDirection().x != 0 || spaceship.getDirection().y != 0) {
-            float rot = Float.parseFloat(String.valueOf(Math.atan2(y, x) * (180 / Math.PI))) - 90;
-            spaceship.setRotation(rot);
-        }
-    }
+        velocity.x = x * velocity.boost;
+        velocity.y = y * velocity.boost;
 
-    public void moveSpaceship(OrthographicCamera cam) {
-        if (spaceship.getDirection().x != 0 || spaceship.getDirection().y != 0) {
-            spaceship.updatePosition();
-            moveCamera(cam, spaceship.getDirection().cpy().scl(5));
+        // Keep track of rotation after touchpad is released
+        if (velocity.x != 0 || velocity.y != 0) {
+            rotation.degrees = Float.parseFloat(String.valueOf(Math.atan2(y, x) * (180 / Math.PI))) - 90;
+            rotation.x = x * velocity.boost;
+            rotation.y = y * velocity.boost;
         }
     }
 
@@ -65,55 +58,183 @@ public class GameModel {
         background.render(batch, spaceship);
     }
 
-    public void renderSpaceships(SpriteBatch batch) {
-        batch.draw(spaceship.getSprite(), spaceship.getPosition().x, spaceship.getPosition().y,
-                spaceship.getWidth() / 2, spaceship.getHeight() / 2,
-                spaceship.getWidth(), spaceship.getHeight(), 1, 1,
-                spaceship.getRotation());
+    public void renderMovingObjects(SpriteBatch batch, ShapeRenderer shapeRenderer, Engine engine) {
 
-        // Add opposing spaceships here as well
+        // Render spaceship(s)
+
+        Family spaceshipFamily = Family.all(
+                PositionComponent.class,
+                VelocityComponent.class,
+                HealthComponent.class).get();
+
+        ImmutableArray<Entity> spaceshipEntities = engine.getEntitiesFor(spaceshipFamily);
+
+        for (Entity spaceship : spaceshipEntities) {
+            Sprite sprite = Mappers.sprite.get(spaceship).img;
+            float posX = Mappers.position.get(spaceship).x;
+            float posY = Mappers.position.get(spaceship).y;
+            float width = Mappers.dimension.get(spaceship).width;
+            float height = Mappers.dimension.get(spaceship).height;
+            float rotation = Mappers.rotation.get(spaceship).degrees;
+
+            batch.draw(sprite, posX, posY, width / 2, height / 2,
+                    width, height, 1,1, rotation);
+        }
+
+        // Render shots
+
+        Family shotFamily = Family.all(
+                PositionComponent.class,
+                VelocityComponent.class,
+                DamageComponent.class).get();
+
+        ImmutableArray<Entity> shotEntities = engine.getEntitiesFor(shotFamily);
+
+        for (Entity shot : shotEntities) {
+            float posX = Mappers.position.get(shot).x;
+            float posY = Mappers.position.get(shot).y;
+            float radius = Mappers.dimension.get(shot).radius;
+
+            shapeRenderer.circle(posX, posY, radius);
+        }
     }
 
-    public void moveCamera(OrthographicCamera cam, Vector2 pos) {
-        cam.translate(pos);
+    public void moveCameraToSpaceship(OrthographicCamera cam, float deltaTime) {
+        VelocityComponent velocity = Mappers.velocity.get(spaceship);
+        cam.translate(new Vector2(velocity.x * deltaTime, velocity.y * deltaTime));
         cam.update();
     }
 
-    public void shoot() {
-        Vector2 position = new Vector2(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
-        Vector2 direction = spaceship.getDirection().x == 0 || spaceship.getDirection().y == 0 ? spaceship.getLastDirection().cpy() : spaceship.getDirection().cpy();
-        shots.add(new Shot(position, direction, 10, 2, 1));
+    public void shoot(Engine engine) {
+        // Create new entity and add components
+        Entity shot = new Entity();
+        shot.add(new PositionComponent());
+        shot.add(new VelocityComponent());
+        shot.add(new DamageComponent());
+        shot.add(new DimensionComponent());
+
+        // TODO: Fix placement
+        //  Shot ends up spawning in bottom left corner and moves relative to
+        //  camera (i.e. relative speed between spaceship and shot does not
+        //  change when both spaceship and shot is moving)
+        // Set initial shot position
+        PositionComponent shotPosition = Mappers.position.get(shot);
+        PositionComponent spaceshipPosition = Mappers.position.get(spaceship);
+        shotPosition.x = spaceshipPosition.x;
+        shotPosition.y = spaceshipPosition.y;
+        //shotPosition.x = Gdx.graphics.getWidth() / 2f;
+        //shotPosition.y = Gdx.graphics.getHeight() / 2f;
+
+        // Retrieve spaceship attacking attributes component
+        AttackingComponent attack = Mappers.attack.get(spaceship);
+
+        // Set shot velocity based on spaceship attacking attributes
+        VelocityComponent shotVelocity = Mappers.velocity.get(shot);
+        RotationComponent spaceshipRotation = Mappers.rotation.get(spaceship);
+        if (spaceshipRotation.x == 0 && spaceshipRotation.y == 0) {
+            // No movement detected yet
+            shotVelocity.x = 0;
+            shotVelocity.y = 400;
+        } else {
+            shotVelocity.x = spaceshipRotation.x * attack.shotVelocity;
+            shotVelocity.y = spaceshipRotation.y * attack.shotVelocity;
+        }
+
+        // Set shot size according to spaceship attacking attributes
+        DimensionComponent dimension = Mappers.dimension.get(shot);
+        dimension.radius = attack.shotRadius;
+
+        // Set shot damage according to spaceship attacking attributes
+        DamageComponent damage = Mappers.damage.get(shot);
+        damage.force = attack.shotDamage;
+
+        engine.addEntity(shot);
     }
 
-    // TODO: Split into moveShots and renderShots
-    public void renderShots(ShapeRenderer shapeRenderer) {
-        if (shots.size() > 0) {
-            shapeRenderer.setColor(Color.RED);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+    public void initEngine(Engine engine) {
+        // Add components to spaceship entity
+        spaceship.add(new PositionComponent());
+        spaceship.add(new VelocityComponent());
+        spaceship.add(new RotationComponent());
+        spaceship.add(new DimensionComponent());
+        spaceship.add(new HealthComponent());
+        spaceship.add(new BoosterComponent());
+        spaceship.add(new SpriteComponent());
+        spaceship.add(new AttackingComponent());
 
-            float dX, dY;
-            ArrayList<Shot> kill = new ArrayList<>();
+        // Set spaceship dimensions
+        DimensionComponent dimension = Mappers.dimension.get(spaceship);
+        dimension.width = Gdx.graphics.getHeight() / 10f;
+        dimension.height = Gdx.graphics.getHeight() / 10f;
 
-            for (Shot shot : shots) {
-                dX = Math.abs(shot.getPosition().x - spaceship.getPosition().x);
-                dY = Math.abs(shot.getPosition().y - spaceship.getPosition().y);
+        // Set spaceship sprite
+        SpriteComponent sprite = Mappers.sprite.get(spaceship);
+        sprite.img = new Sprite(new Texture(Gdx.files.internal("game/spaceship.png")));
 
-                // TODO: Set these values to game bounds rather than relative distances
-                if (dX > Gdx.graphics.getWidth() * 4 || dY > Gdx.graphics.getHeight() * 4) {
-                    kill.add(shot);
-                }
+        // Set initial spaceship attacking attributes (can be altered by power-ups)
+        AttackingComponent attack = Mappers.attack.get(spaceship);
+        attack.shotDamage = 10;
+        attack.shotRadius = dimension.width / 20;
+        attack.shotVelocity = 2; // Twice as fast as spaceship
 
-                shot.updatePosition();
-                shapeRenderer.circle(shot.getPosition().x, shot.getPosition().y, shot.getSize());
-            }
+        // Set initial spaceship booster speed
+        VelocityComponent velocity = Mappers.velocity.get(spaceship);
+        velocity.boost = 100; // Normal speed
 
-            shapeRenderer.end();
+        engine.addEntity(spaceship);
 
-            // Remove shots after rendering to avoid ConcurrentModificationException
-            for (Shot k : kill) {
-                shots.remove(k);
-            }
+        GameMovementSystem movementSystem = new GameMovementSystem();
+        engine.addSystem(movementSystem);
+    }
+
+
+    public void activateBoost() {
+        BoosterComponent booster = Mappers.booster.get(spaceship);
+        VelocityComponent velocity = Mappers.velocity.get(spaceship);
+        velocity.boost = booster.speed;
+    }
+
+    public void deactivateBoost() {
+        VelocityComponent velocity = Mappers.velocity.get(spaceship);
+        velocity.boost = 100;
+    }
+
+    // Called when picking up boost power-up
+    public void setBoost(float b) {
+        BoosterComponent booster = Mappers.booster.get(spaceship);
+        booster.speed = b;
+    }
+
+    // Called when picking up hp power-up
+    public void addHealth(float hp) {
+        HealthComponent health = Mappers.health.get(spaceship);
+        health.hp += hp;
+
+        if (health.hp > 100) {
+            health.hp = 100;
         }
+    }
+
+    // Called when hit by shot or asteroid
+    public void subtractHealth(float hp) {
+        HealthComponent health = Mappers.health.get(spaceship);
+        health.hp -= hp;
+    }
+
+    // Called when picking up a shot power-up
+    public void setAttackAttributes(float radius, float damage, float velocity) {
+        AttackingComponent attack = Mappers.attack.get(spaceship);
+        attack.shotRadius = radius;
+        attack.shotDamage = damage;
+        attack.shotVelocity = velocity;
+    }
+
+    public void resetAttackAttributes() {
+        AttackingComponent attack = Mappers.attack.get(spaceship);
+        DimensionComponent dimension = Mappers.dimension.get(spaceship);
+        attack.shotDamage = 10;
+        attack.shotRadius = dimension.width / 20;
+        attack.shotVelocity = 2;
     }
 
 }

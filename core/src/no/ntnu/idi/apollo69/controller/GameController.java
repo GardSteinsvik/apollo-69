@@ -1,5 +1,6 @@
 package no.ntnu.idi.apollo69.controller;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import no.ntnu.idi.apollo69.model.GameModel;
@@ -22,21 +23,20 @@ public class GameController {
         model.handleSpaceshipMovement(x, y);
     }
 
-    public void shootButtonPressed() {
-        model.shoot();
+    public void shootButtonPressed(Engine engine) {
+        model.shoot(engine);
     }
 
     public void shootButtonReleased() {
-        // Add functionality once auto-mode works
+        // Add functionality once auto-mode is implemented
     }
 
-    public boolean boostButtonPressed() {
-        System.out.println("Boost");
-        return true;
+    public void boostButtonPressed() {
+        model.activateBoost();
     }
 
     public void boostButtonReleased() {
-        System.out.println("Boost released");
+        model.deactivateBoost();
     }
 
 }
