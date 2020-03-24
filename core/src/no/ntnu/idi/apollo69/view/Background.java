@@ -6,13 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-
 import java.util.ArrayList;
-
 import no.ntnu.idi.apollo69.controller.Mappers;
 import no.ntnu.idi.apollo69.model.component.DimensionComponent;
 import no.ntnu.idi.apollo69.model.component.PositionComponent;
-import no.ntnu.idi.apollo69framework.data.SpaceshipObj;
 
 public class Background {
 
@@ -64,26 +61,6 @@ public class Background {
                 new Vector2(screenWidth, screenHeight)
         ));
     }
-
-    public void render(SpriteBatch spriteBatch, SpaceshipObj spaceshipObj) {
-        Vector2 spaceshipCenter = new Vector2(spaceshipObj.getPosition().x + spaceshipObj.getWidth() / 2f, spaceshipObj.getPosition().y + spaceshipObj.getHeight() / 2f);
-
-        for (BackgroundObject bo : backgroundObjects) {
-            Vector2 objectCenter = new Vector2(bo.bounds.x / 2f, bo.bounds.y / 2f);
-
-            float fieldOfView = 250f;
-            float scale = fieldOfView / (fieldOfView + bo.position.z);
-
-            float x = (spaceshipCenter.x - objectCenter.x + bo.position.x) * scale;
-            float y = (spaceshipCenter.y - objectCenter.y + bo.position.y) * scale;
-
-            float width = bo.bounds.x;
-            float height = bo.bounds.y;
-
-            spriteBatch.draw(bo.texture, x, y, width, height);
-        }
-    }
-
 
     public void render(SpriteBatch spriteBatch, Entity spaceship) {
         PositionComponent position = Mappers.position.get(spaceship);
