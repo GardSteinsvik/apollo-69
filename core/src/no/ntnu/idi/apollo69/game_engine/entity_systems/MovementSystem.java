@@ -6,15 +6,15 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 
-import no.ntnu.idi.apollo69.controller.Mappers;
-import no.ntnu.idi.apollo69.model.component.PositionComponent;
-import no.ntnu.idi.apollo69.model.component.VelocityComponent;
+import no.ntnu.idi.apollo69.game_engine.Mappers;
+import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 
-public class GameMovementSystem extends EntitySystem {
+public class MovementSystem extends EntitySystem {
 
     private ImmutableArray<Entity> entities;
 
-    public GameMovementSystem() {}
+    public MovementSystem() {}
 
     @Override
     public void addedToEngine(Engine engine) {
@@ -24,11 +24,11 @@ public class GameMovementSystem extends EntitySystem {
     @Override
     public void update(float deltaTime) {
         for (Entity entity : entities) {
-            PositionComponent position = Mappers.position.get(entity);
-            VelocityComponent velocity = Mappers.velocity.get(entity);
+            PositionComponent positionComponent = PositionComponent.MAPPER.get(entity);
+            VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(entity);
 
-            position.x += velocity.x * deltaTime;
-            position.y += velocity.y * deltaTime;
+            positionComponent.position.x += velocityComponent.velocity.x * deltaTime;
+            positionComponent.position.y += velocityComponent.velocity.y * deltaTime;
         }
     }
 

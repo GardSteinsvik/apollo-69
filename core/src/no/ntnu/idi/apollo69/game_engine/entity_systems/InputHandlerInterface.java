@@ -1,10 +1,9 @@
-package no.ntnu.idi.apollo69.game_engine;
+package no.ntnu.idi.apollo69.game_engine.entity_systems;
 
 import com.badlogic.gdx.math.Vector2;
 
 public interface InputHandlerInterface {
     void move(Vector2 direction);
-    void stopMoving();
     void shoot();
     void boost();
 }
