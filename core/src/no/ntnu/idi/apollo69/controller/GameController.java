@@ -20,11 +20,12 @@ public class GameController {
     public void touchpadMoved(Actor actor) {
         float x = ((Touchpad)actor).getKnobPercentX();
         float y = ((Touchpad)actor).getKnobPercentY();
+
         model.handleSpaceshipMovement(x, y);
     }
 
-    public void shootButtonPressed(Engine engine) {
-        model.shoot(engine);
+    public void shootButtonPressed() {
+        model.shoot();
     }
 
     public void shootButtonReleased() {

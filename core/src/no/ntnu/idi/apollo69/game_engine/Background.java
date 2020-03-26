@@ -1,4 +1,4 @@
-package no.ntnu.idi.apollo69.view;
+package no.ntnu.idi.apollo69.game_engine;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import java.util.ArrayList;
-import no.ntnu.idi.apollo69.controller.Mappers;
-import no.ntnu.idi.apollo69.model.component.DimensionComponent;
-import no.ntnu.idi.apollo69.model.component.PositionComponent;
+import no.ntnu.idi.apollo69.game_engine.Mappers;
+import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 
 public class Background {
 
@@ -63,10 +63,10 @@ public class Background {
     }
 
     public void render(SpriteBatch spriteBatch, Entity spaceship) {
-        PositionComponent position = Mappers.position.get(spaceship);
-        DimensionComponent dimension = Mappers.dimension.get(spaceship);
+        PositionComponent positionComponent = PositionComponent.MAPPER.get(spaceship);
+        DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(spaceship);
 
-        Vector2 spaceshipCenter = new Vector2(position.x + dimension.width / 2f, position.y + dimension.height / 2f);
+        Vector2 spaceshipCenter = new Vector2(positionComponent.position.x + dimensionComponent.width / 2f, positionComponent.position.y + dimensionComponent.height / 2f);
 
         for (BackgroundObject bo : backgroundObjects) {
             Vector2 objectCenter = new Vector2(bo.bounds.x / 2f, bo.bounds.y / 2f);

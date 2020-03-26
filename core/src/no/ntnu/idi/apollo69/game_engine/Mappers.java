@@ -1,15 +1,15 @@
-package no.ntnu.idi.apollo69.controller;
+package no.ntnu.idi.apollo69.game_engine;
 
 import com.badlogic.ashley.core.ComponentMapper;
-import no.ntnu.idi.apollo69.model.component.AttackingComponent;
-import no.ntnu.idi.apollo69.model.component.DamageComponent;
-import no.ntnu.idi.apollo69.model.component.DimensionComponent;
-import no.ntnu.idi.apollo69.model.component.HealthComponent;
-import no.ntnu.idi.apollo69.model.component.PositionComponent;
-import no.ntnu.idi.apollo69.model.component.RotationComponent;
-import no.ntnu.idi.apollo69.model.component.BoosterComponent;
-import no.ntnu.idi.apollo69.model.component.SpriteComponent;
-import no.ntnu.idi.apollo69.model.component.VelocityComponent;
+import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
+import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
+import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
+import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
+import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
+import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 
 public class Mappers {
     public static final ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);

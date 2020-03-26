@@ -1,10 +1,12 @@
-package no.ntnu.idi.apollo69.controller;
+package no.ntnu.idi.apollo69.game_engine.entity_systems;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+
+import no.ntnu.idi.apollo69.controller.Mappers;
 import no.ntnu.idi.apollo69.model.component.PositionComponent;
 import no.ntnu.idi.apollo69.model.component.VelocityComponent;
 

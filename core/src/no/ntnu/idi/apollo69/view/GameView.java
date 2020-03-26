@@ -1,8 +1,5 @@
 package no.ntnu.idi.apollo69.view;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -22,16 +19,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+
 import no.ntnu.idi.apollo69.controller.GameController;
-import no.ntnu.idi.apollo69.controller.Mappers;
+import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.model.GameModel;
-import no.ntnu.idi.apollo69.model.component.PositionComponent;
 
 public class GameView extends ApplicationAdapter implements Screen {
 
     private GameModel model;
     private GameController controller;
-    private Engine engine;
     private SpriteBatch spriteBatch;
     private ShapeRenderer shapeRenderer;
     private Stage stage;
@@ -56,21 +52,6 @@ public class GameView extends ApplicationAdapter implements Screen {
 
     @Override
     public void show() {
-        engine = new Engine();
-
-        engine.addEntityListener(new EntityListener() {
-            @Override
-            public void entityAdded(Entity entity) {
-                System.out.println("New entity: " + entity);
-            }
-
-            @Override
-            public void entityRemoved(Entity entity) {
-                System.out.println("Entity " + entity + " removed");
-            }
-        });
-
-        model.initEngine(engine);
 
         // Touchpad parameters
         float touchpadPos = Gdx.graphics.getHeight() / 15f; // Distance from edge
@@ -104,7 +85,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         shootBtn.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                controller.shootButtonPressed(engine);
+                controller.shootButtonPressed();
                 return true;
             }
 
@@ -117,10 +98,8 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Boost button
         ImageButton boostBtn = new ImageButton(new Skin(Gdx.files.internal("skin/number-cruncher/number-cruncher-ui.json")));
         boostBtn.setSize(btnDim, btnDim);
-        boostBtn.getStyle().imageUp = new TextureRegionDrawable(
-                new Texture(Gdx.files.internal("game/boost.png")));
-        boostBtn.getStyle().imageDown = new TextureRegionDrawable(
-                new Texture(Gdx.files.internal("game/boost.png")));
+        boostBtn.getStyle().imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("game/boost.png")));
+        boostBtn.getStyle().imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("game/boost.png")));
         boostBtn.setPosition(boostBtnX, boostBtnY);
         boostBtn.addListener(new ClickListener() {
             @Override
@@ -157,20 +136,21 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         // Set and update camera
         spriteBatch.setProjectionMatrix(orthoCamera.combined);
+        shapeRenderer.setProjectionMatrix(orthoCamera.combined);
 
         spriteBatch.begin();
         shapeRenderer.setColor(Color.RED);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         model.renderBackground(spriteBatch);
-        model.renderMovingObjects(spriteBatch, shapeRenderer, engine);
+        model.renderMovingObjects(spriteBatch, shapeRenderer);
 
         // Debug written to font
-        PositionComponent position = Mappers.position.get(model.getSpaceship());
+        PositionComponent positionComponent = PositionComponent.MAPPER.get(model.getGameEngine().getPlayer());
         font.draw(spriteBatch,"WIDTH: " + Math.round(WIDTH) + "  X: " +
-                Math.round(position.x), position.x - 50, position.y - 130);
+                Math.round(positionComponent.position.x), positionComponent.position.x - 50, positionComponent.position.y - 130);
         font.draw(spriteBatch,"HEIGHT: " + Math.round(HEIGHT) + "  Y: " +
-                Math.round(position.y), position.x - 50, position.y - 160);
+                Math.round(positionComponent.position.y), positionComponent.position.x - 50, positionComponent.position.y - 160);
 
         spriteBatch.end();
         shapeRenderer.end();
@@ -179,7 +159,7 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         stage.draw();
 
-        engine.update(delta);
+        model.getGameEngine().getEngine().update(delta);
     }
 
     @Override
