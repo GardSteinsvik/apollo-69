@@ -26,13 +26,15 @@ public class PowerupFactory {
         PositionComponent positionComponent = PositionComponent.MAPPER.get(powerup);
         DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(powerup);
 
-        // Change specs
-        positionComponent.position = new Vector2(random.nextInt(400), random.nextInt(400));
+        // Change specs if using DesktopLauncher consider 400 as bounds instead of 1000
+        positionComponent.position = new Vector2(random.nextInt(1000), random.nextInt(1000));
         //positionComponent.position.add(spaceshipPosition.position);
 
-        // Set dimensions
-        dimensionComponent.height = 29f;
-        dimensionComponent.width = 48f;
+        // Set dimensions for DesktopLauncher
+        //dimensionComponent.height = 29f;
+        //dimensionComponent.width = 48f;
+        dimensionComponent.height = 72f;
+        dimensionComponent.width = 120f;
 
         return powerup;
     }
@@ -43,7 +45,7 @@ public class PowerupFactory {
         PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
 
         // Set the texture and type of the powerup
-        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("powerups/health.png")));
+        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("game/powerups/health.png")));
         powerupComponent.type = PowerupType.HEALTH;
 
         return powerup;
@@ -54,7 +56,7 @@ public class PowerupFactory {
         PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
 
         // Set the texture and type of the powerup
-        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("powerups/ammo.png")));
+        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("game/powerups/ammo.png")));
         powerupComponent.type = PowerupType.AMMO;
 
         return powerup;
@@ -65,7 +67,7 @@ public class PowerupFactory {
         PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
 
         // Set the texture and type of the powerup
-        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("powerups/energy.png")));
+        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("game/powerups/energy.png")));
         powerupComponent.type = PowerupType.ENERGY;
 
         return powerup;
@@ -76,7 +78,7 @@ public class PowerupFactory {
         PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
 
         // Set the texture and type of the powerup
-        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("powerups/invisible.png")));
+        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("game/powerups/invisible.png")));
         powerupComponent.type = PowerupType.INVISIBLE;
 
         return powerup;
@@ -87,7 +89,7 @@ public class PowerupFactory {
         PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
 
         // Set the texture and type of the powerup
-        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("powerups/rocket.png")));
+        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("game/powerups/rocket.png")));
         powerupComponent.type = PowerupType.ROCKET;
 
         return powerup;
@@ -98,7 +100,7 @@ public class PowerupFactory {
         PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
 
         // Set the texture and type of the powerup
-        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("powerups/shield.png")));
+        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("game/powerups/shield.png")));
         powerupComponent.type = PowerupType.SHIELD;
 
         return powerup;
