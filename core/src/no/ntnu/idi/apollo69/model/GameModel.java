@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -43,6 +44,12 @@ public class GameModel {
     public GameModel() {
         background = new Background();
         gameEngine = new GameEngineFactory().create();
+
+        // Test for music
+        Music music = Gdx.audio.newMusic(Gdx.files.internal("game/theme.ogg"));
+        music.setLooping(true);
+        music.setVolume(0.5f);
+        music.play();
     }
 
     public void handleSpaceshipMovement(float x, float y) {
