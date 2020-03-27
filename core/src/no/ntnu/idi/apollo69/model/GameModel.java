@@ -18,6 +18,7 @@ import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
 import no.ntnu.idi.apollo69.game_engine.components.PlayableComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.MovementSystem;
 import no.ntnu.idi.apollo69.game_engine.Mappers;
@@ -54,6 +55,25 @@ public class GameModel {
 
     public void renderMovingObjects(SpriteBatch batch, ShapeRenderer shapeRenderer) {
 
+        // Render Powerup(s), first so that it renders under the spaceship, change this after logic is in place on touch anyway?
+
+        Family powerupFamily = Family.all(PowerupComponent.class).get();
+
+        ImmutableArray<Entity> powerupEntities = gameEngine.getEngine().getEntitiesFor(powerupFamily);
+
+        for (int i = 0; i < powerupEntities.size(); i++) {
+            Entity entity = powerupEntities.get(i);
+            Texture powerup = Mappers.powerup.get(entity).powerup.getTexture();
+            float posX = Mappers.position.get(entity).position.x;
+            float posY = Mappers.position.get(entity).position.y;
+            float width = Mappers.dimension.get(entity).width;
+            float height = Mappers.dimension.get(entity).height;
+
+            //System.out.println("test " + posX + "test2 " + posY + " test3 " + width + " test4 " + height + " type " );
+
+            batch.draw(powerup, posX, posY, width, height);
+        }
+
         // Render spaceship(s)
 
         Family spaceshipFamily = Family.all(PlayerComponent.class).get();
@@ -88,6 +108,7 @@ public class GameModel {
 
             shapeRenderer.circle(posX, posY, radius);
         }
+
     }
 
     public void moveCameraToSpaceship(OrthographicCamera camera, float deltaTime) {

@@ -1,11 +1,14 @@
 package no.ntnu.idi.apollo69.game_engine;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
@@ -21,4 +24,5 @@ public class Mappers {
     public static final ComponentMapper<SpriteComponent> sprite = ComponentMapper.getFor(SpriteComponent.class);
     public static final ComponentMapper<BoosterComponent> booster = ComponentMapper.getFor(BoosterComponent.class);
     public static final ComponentMapper<AttackingComponent> attack = ComponentMapper.getFor(AttackingComponent.class);
+    public static final ComponentMapper<PowerupComponent> powerup = ComponentMapper.getFor(PowerupComponent.class);
 }
