@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 
 import java.awt.Dimension;
 import java.util.Random;
@@ -27,10 +29,18 @@ public class PowerupSystem extends EntitySystem {
     private Random random = new Random();
     private ImmutableArray<Entity> powerups;
     private ImmutableArray<Entity> spaceships;
+    private Sound pickupSound;
+
+    /* Music gameMusic = Gdx.audio.newMusic(Gdx.files.internal("game/game.ogg"));
+        gameMusic.setLooping(true);
+        gameMusic.setVolume(0.5f);
+        gameMusic.play(); */
+
 
     public PowerupSystem(int priority) {//PowerupListener listener, int priority) {
         super(priority);
         //this.listener = listener;
+        pickupSound = Gdx.audio.newSound(Gdx.files.internal("game/powerups/pickup.wav"));
     }
 
     @Override
@@ -73,6 +83,7 @@ public class PowerupSystem extends EntitySystem {
                 if (upperX > spaceshipPosition.position.x && lowerX < spaceshipPosition.position.x &&
                 upperY > spaceshipPosition.position.y && lowerY < spaceshipPosition.position.y) {
                     PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
+                    pickupSound.play();
                     System.out.println("Powerup has been hit!");
                     System.out.println("upperX: " + upperX + ", lowerX: " + lowerX + ",upperY: " + upperY + ", lowerY: " + lowerY);
                     //listener.powerup();

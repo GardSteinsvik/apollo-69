@@ -3,6 +3,7 @@ package no.ntnu.idi.apollo69.view;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -127,6 +128,12 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         // Initialize camera position
         model.moveCameraToSpaceship(orthoCamera, 0);
+
+        // Music
+        Music gameMusic = Gdx.audio.newMusic(Gdx.files.internal("game/game.ogg"));
+        gameMusic.setLooping(true);
+        gameMusic.setVolume(0.5f);
+        gameMusic.play();
     }
 
     @Override

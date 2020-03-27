@@ -1,13 +1,8 @@
 package no.ntnu.idi.apollo69.model;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -17,23 +12,18 @@ import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
-import no.ntnu.idi.apollo69.game_engine.components.PlayableComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
-import no.ntnu.idi.apollo69.game_engine.entity_systems.MovementSystem;
 import no.ntnu.idi.apollo69.game_engine.Mappers;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
-import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69.game_engine.Background;
-import no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem;
 
 public class GameModel {
 
@@ -44,12 +34,6 @@ public class GameModel {
     public GameModel() {
         background = new Background();
         gameEngine = new GameEngineFactory().create();
-
-        // Test for music
-        Music music = Gdx.audio.newMusic(Gdx.files.internal("game/theme.ogg"));
-        music.setLooping(true);
-        music.setVolume(0.5f);
-        music.play();
     }
 
     public void handleSpaceshipMovement(float x, float y) {
