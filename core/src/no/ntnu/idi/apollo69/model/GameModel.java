@@ -3,6 +3,8 @@ package no.ntnu.idi.apollo69.model;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -31,9 +33,13 @@ public class GameModel {
 
     private GameEngine gameEngine;
 
+    private Sound shotSound;
+
     public GameModel() {
         background = new Background();
         gameEngine = new GameEngineFactory().create();
+        shotSound = Gdx.audio.newSound(Gdx.files.internal("game/laser.wav"));
+
     }
 
     public void handleSpaceshipMovement(float x, float y) {
@@ -116,6 +122,7 @@ public class GameModel {
 
         // Create new entity and add components
         Entity shot = new ShotFactory().create(spaceship);
+        shotSound.play();
 
         gameEngine.getEngine().addEntity(shot);
     }
