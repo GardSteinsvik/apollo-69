@@ -9,12 +9,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -69,20 +71,26 @@ public class GameView extends ApplicationAdapter implements Screen {
         });
 
         // Button parameters
-        float btnDim = Gdx.graphics.getWidth() / 12f;
+        float btnDim = Gdx.graphics.getWidth() / 10f;
         float shootBtnX = Gdx.graphics.getWidth() - btnDim * 5 / 4;
         float shootBtnY = btnDim * 1;
-        float boostBtnX = shootBtnX - btnDim * 5/4;
+        float boostBtnX = shootBtnX - btnDim;// * 5/4;
         float boostBtnY = btnDim / 4;
+        BitmapFont font = new BitmapFont();
+        Skin shootSkin = new Skin();
+        Skin boostSkin = new Skin();
+        TextureAtlas buttonAtlas = new TextureAtlas(Gdx.files.internal("game/game.atlas"));
 
         // Shoot button
-        ImageButton shootBtn = new ImageButton(new Skin(Gdx.files.internal("skin/number-cruncher/number-cruncher-ui.json")));
-        shootBtn.setSize(btnDim, btnDim);
-        shootBtn.getStyle().imageUp = new TextureRegionDrawable(
-                new Texture(Gdx.files.internal("game/shoot.png")));
-        shootBtn.getStyle().imageDown = new TextureRegionDrawable(
-                new Texture(Gdx.files.internal("game/shoot.png")));
+        shootSkin.addRegions(buttonAtlas);
+        TextButton.TextButtonStyle shootButtonStyle = new TextButton.TextButtonStyle();
+        shootButtonStyle.font = font;
+        shootButtonStyle.up = shootSkin.getDrawable("button_shoot_up");
+        shootButtonStyle.down = shootSkin.getDrawable("button_shoot_down");
+        TextButton shootBtn = new TextButton("", shootButtonStyle);
         shootBtn.setPosition(shootBtnX, shootBtnY);
+        shootBtn.setSize(btnDim, btnDim);
+
         shootBtn.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -97,11 +105,15 @@ public class GameView extends ApplicationAdapter implements Screen {
         });
 
         // Boost button
-        ImageButton boostBtn = new ImageButton(new Skin(Gdx.files.internal("skin/number-cruncher/number-cruncher-ui.json")));
-        boostBtn.setSize(btnDim, btnDim);
-        boostBtn.getStyle().imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("game/boost.png")));
-        boostBtn.getStyle().imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("game/boost.png")));
+        boostSkin.addRegions(buttonAtlas);
+        TextButton.TextButtonStyle boostButtonStyle = new TextButton.TextButtonStyle();
+        boostButtonStyle.font = font;
+        boostButtonStyle.up = shootSkin.getDrawable("button_boost_up");
+        boostButtonStyle.down = shootSkin.getDrawable("button_boost_down");
+        TextButton boostBtn = new TextButton("", boostButtonStyle);
         boostBtn.setPosition(boostBtnX, boostBtnY);
+        boostBtn.setSize(btnDim, btnDim);
+
         boostBtn.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

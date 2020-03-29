@@ -33,7 +33,7 @@ public class SpaceshipFactory {
         dimensionComponent.width = Gdx.graphics.getHeight() / 10f;
         dimensionComponent.height = Gdx.graphics.getHeight() / 10f;
 
-        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("game/spaceships.atlas"));
+        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("game/game.atlas"));
         SpriteComponent spriteComponent = SpriteComponent.MAPPER.get(spaceship);
         spriteComponent.idle = textureAtlas.createSprite("ship1");
         spriteComponent.boost.add(textureAtlas.createSprite("ship1_boost1"));
