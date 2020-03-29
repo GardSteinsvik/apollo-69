@@ -52,7 +52,6 @@ public class GameView extends ApplicationAdapter implements Screen {
 
     @Override
     public void show() {
-
         // Touchpad parameters
         float touchpadPos = Gdx.graphics.getHeight() / 15f; // Distance from edge
         float touchpadDim = Gdx.graphics.getHeight() / 5f; // Width & height
@@ -143,7 +142,8 @@ public class GameView extends ApplicationAdapter implements Screen {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         model.renderBackground(spriteBatch);
-        model.renderMovingObjects(spriteBatch, shapeRenderer);
+        model.renderSpaceships(spriteBatch);
+        model.renderShots(shapeRenderer);
 
         // Debug written to font
         PositionComponent positionComponent = PositionComponent.MAPPER.get(model.getGameEngine().getPlayer());
