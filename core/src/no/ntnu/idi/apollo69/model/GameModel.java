@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
@@ -28,6 +31,8 @@ public class GameModel {
 
     private GameEngine gameEngine;
 
+    private ShootThread shootThread;
+
     public GameModel() {
         background = new Background();
         gameEngine = new GameEngineFactory().create();
@@ -35,6 +40,29 @@ public class GameModel {
 
     public void handleSpaceshipMovement(float x, float y) {
         gameEngine.getPlayerControlSystem().move(new Vector2(x, y));
+    }
+
+    public void handleShots(boolean shoot) {
+        if (shoot) {
+            shootThread = new ShootThread(250);
+            shootThread.start();
+        } else {
+            if (shootThread != null) {
+                shootThread.stop();
+            }
+        }
+    }
+
+    private void shoot() {
+        Entity spaceship = gameEngine.getPlayer();
+
+        PositionComponent spaceshipPosition = PositionComponent.MAPPER.get(spaceship);
+        System.out.println(spaceshipPosition.position.x + ", " + spaceshipPosition.position.y);
+
+        // Create new entity and add components
+        Entity shot = new ShotFactory().create(spaceship);
+
+        gameEngine.getEngine().addEntity(shot);
     }
 
     public void renderBackground(SpriteBatch batch) {
@@ -86,18 +114,6 @@ public class GameModel {
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(gameEngine.getPlayer());
         camera.translate(new Vector2(velocityComponent.velocity.x * deltaTime, velocityComponent.velocity.y * deltaTime));
         camera.update();
-    }
-
-    public void shoot() {
-        Entity spaceship = gameEngine.getPlayer();
-
-        PositionComponent spaceshipPosition = PositionComponent.MAPPER.get(spaceship);
-        System.out.println(spaceshipPosition.position.x + ", " + spaceshipPosition.position.y);
-
-        // Create new entity and add components
-        Entity shot = new ShotFactory().create(spaceship);
-
-        gameEngine.getEngine().addEntity(shot);
     }
 
     public void activateBoost() {
@@ -158,4 +174,37 @@ public class GameModel {
     public GameEngine getGameEngine() {
         return gameEngine;
     }
+
+    class ShootThread implements Runnable {
+        private final AtomicBoolean running = new AtomicBoolean(false);
+        private int interval;
+
+        ShootThread(int interval) {
+            this.interval = interval;
+        }
+
+        void start() {
+            Thread worker = new Thread(this);
+            worker.start();
+        }
+
+        void stop() {
+            running.set(false);
+        }
+
+        @Override
+        public void run() {
+            running.set(true);
+            while (running.get()) {
+                try {
+                    shoot();
+                    Thread.sleep(interval);
+                } catch (Exception e) {
+                    System.out.println("ShootThread: something went wrong");
+                }
+            }
+        }
+
+    }
+
 }

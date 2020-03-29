@@ -46,7 +46,7 @@ public class SpaceshipFactory {
         // Set initial spaceship attacking attributes (can be altered by power-ups)
         AttackingComponent attackingComponent = AttackingComponent.MAPPER.get(spaceship);
         attackingComponent.shotDamage = 10;
-        attackingComponent.shotRadius = dimensionComponent.width / 10;
+        attackingComponent.shotRadius = dimensionComponent.width / 20;
 
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(spaceship);
         //velocityComponent.boost = 400f * Gdx.graphics.getDensity();

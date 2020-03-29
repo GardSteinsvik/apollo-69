@@ -34,7 +34,8 @@ public class ShotFactory {
 
         // Set shot velocity based on spaceship attacking attributes
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(shot);
-        velocityComponent.velocity = new Vector2(0, 300 * Gdx.graphics.getDensity()).rotate(spaceshipRotation.degrees);
+        float shotVelocity = 1200;
+        velocityComponent.velocity = new Vector2(0, shotVelocity * Gdx.graphics.getDensity()).rotate(spaceshipRotation.degrees);
 
         // Set shot size according to spaceship attacking attributes
         DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(shot);

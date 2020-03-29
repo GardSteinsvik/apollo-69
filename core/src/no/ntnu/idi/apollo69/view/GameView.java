@@ -20,6 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import org.w3c.dom.css.RGBColor;
+
 import no.ntnu.idi.apollo69.controller.GameController;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.model.GameModel;
@@ -138,7 +140,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         shapeRenderer.setProjectionMatrix(orthoCamera.combined);
 
         spriteBatch.begin();
-        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.setColor(Color.YELLOW);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         model.renderBackground(spriteBatch);
