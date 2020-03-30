@@ -57,4 +57,15 @@ public class PlayerInput {
     public void setBoosting(boolean boosting) {
         this.boosting = boosting;
     }
+
+    @Override
+    public String toString() {
+        return "PlayerInput{" +
+                "playerId='" + playerId + '\'' +
+                ", moveSpeed=" + moveSpeed +
+                ", rotation=" + rotation +
+                ", shooting=" + shooting +
+                ", boosting=" + boosting +
+                '}';
+    }
 }

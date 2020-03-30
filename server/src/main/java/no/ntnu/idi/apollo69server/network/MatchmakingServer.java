@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.ntnu.idi.apollo69framework.Apollo69Framework;
+import no.ntnu.idi.apollo69server.game_engine.GameEngine;
+import no.ntnu.idi.apollo69server.game_engine.GameEngineFactory;
 
 public class MatchmakingServer implements Runnable {
 

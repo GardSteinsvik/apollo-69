@@ -10,6 +10,7 @@ import no.ntnu.idi.apollo69framework.network_messages.PlayerInQueue;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerMatchmade;
 import no.ntnu.idi.apollo69framework.network_messages.ServerMessage;
+import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
 
 public class Apollo69Framework {
     private static final class MessageClassListHolder {
@@ -19,7 +20,8 @@ public class Apollo69Framework {
                 PlayerInput.class,
                 ServerMessage.class,
                 PlayerInQueue.class,
-                PlayerMatchmade.class
+                PlayerMatchmade.class,
+                UpdateMessage.class
         ));
     }
 

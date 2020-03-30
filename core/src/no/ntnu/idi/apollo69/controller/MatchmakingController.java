@@ -9,6 +9,7 @@ import no.ntnu.idi.apollo69.navigation.ScreenType;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.DeviceInfo;
+import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
 
 public class MatchmakingController {
 
@@ -45,6 +46,8 @@ public class MatchmakingController {
                 if (gameClient.isConnected()) {
                     DeviceInfo deviceInfo = new DeviceInfo(Device.DEVICE_ID);
                     gameClient.sendMessage(deviceInfo);
+
+                    gameClient.sendMessage(new PlayerInput(Device.DEVICE_ID, 5, 5, false, false));
                 }
             }
         };
