@@ -1,4 +1,4 @@
-package no.ntnu.idi.apollo69server.game_engine.player;
+package no.ntnu.idi.apollo69server.game_engine.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
