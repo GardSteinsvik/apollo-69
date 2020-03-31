@@ -15,9 +15,15 @@ import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
 
 public class PowerupFactory {
 
+    // If using DesktopLauncher consider 400 as bounds instead of 1000
+    public static int pickupBounds = 1000;
+
     public Entity create() {
         Entity powerup = new Entity();
         Random random = new Random();
+
+        int xBounds;
+        int yBounds;
 
         powerup.add(new PositionComponent());
         powerup.add(new DimensionComponent());
@@ -26,8 +32,18 @@ public class PowerupFactory {
         PositionComponent positionComponent = PositionComponent.MAPPER.get(powerup);
         DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(powerup);
 
-        // Change specs if using DesktopLauncher consider 400 as bounds instead of 1000
-        positionComponent.position = new Vector2(random.nextInt(1000), random.nextInt(1000));
+
+        if (random.nextInt(2) == 0) {
+            xBounds = random.nextInt(pickupBounds);
+        } else {
+            xBounds = -random.nextInt(pickupBounds);
+        }
+        if (random.nextInt(2) == 0) {
+            yBounds = random.nextInt(pickupBounds);
+        } else {
+            yBounds = -random.nextInt(pickupBounds);
+        }
+        positionComponent.position = new Vector2(xBounds, yBounds);
         //positionComponent.position.add(spaceshipPosition.position);
 
         // Set dimensions for DesktopLauncher

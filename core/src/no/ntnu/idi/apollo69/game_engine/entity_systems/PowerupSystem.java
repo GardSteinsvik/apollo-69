@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
@@ -49,6 +50,42 @@ public class PowerupSystem extends EntitySystem {
         spaceships = engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
     }
 
+    public void handlePickup(Entity spaceShip, PowerupComponent powerupComponent) {
+        PowerupType powerupType = powerupComponent.type;
+        switch(powerupType) {
+            case AMMO:
+                System.out.println("Ammo powerup");
+                break;
+            case ENERGY:
+                System.out.println("Energy powerup");
+                break;
+            case HEALTH:
+                System.out.println("Health powerup");
+
+                HealthComponent health = HealthComponent.MAPPER.get(spaceShip);
+                health.hp += 50;
+
+                // Somehow get upgraded spacecraft limits here? 100 is default HP.
+                if (health.hp > 100) {
+                    health.hp = 100;
+                }
+                break;
+            case ROCKET:
+                System.out.println("Rocket powerup");
+                break;
+            case SHIELD:
+                System.out.println("Shield powerup");
+                break;
+            case INVISIBLE:
+                System.out.println("Invisible powerup");
+                break;
+            default:
+                // Should not happen, as DEFAULT powerup is not generated.
+                break;
+        }
+    }
+
+
     @Override
     public void update(float deltaTime) {
         // Perhaps spawn powerups after checking for if collision,
@@ -83,13 +120,14 @@ public class PowerupSystem extends EntitySystem {
                 if (upperX > spaceshipPosition.position.x && lowerX < spaceshipPosition.position.x &&
                 upperY > spaceshipPosition.position.y && lowerY < spaceshipPosition.position.y) {
                     PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
+                    handlePickup(spaceship, powerupComponent);
                     pickupSound.play();
                     //System.out.println("Powerup has been hit!");
                     //System.out.println("upperX: " + upperX + ", lowerX: " + lowerX + ",upperY: " + upperY + ", lowerY: " + lowerY);
                     //listener.powerup();
-                    if (powerupComponent.type == PowerupType.HEALTH) {
-                        System.out.println("Health powerup!");
-                    }
+                    //if (powerupComponent.type == PowerupType.HEALTH) {
+                    //    System.out.println("Health powerup!");
+                    //}
                     engine.removeEntity(powerup);
                 }
 
