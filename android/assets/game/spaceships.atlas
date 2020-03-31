@@ -1,0 +1,90 @@
+
+spaceships.png
+size: 512,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+ship1
+  rotate: false
+  xy: 300, 68
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship1_boost1
+  rotate: false
+  xy: 400, 68
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship1_boost2
+  rotate: false
+  xy: 450, 68
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship2
+  rotate: false
+  xy: 134, 52
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ship2_boost1
+  rotate: false
+  xy: 2, 52
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ship2_boost2
+  rotate: false
+  xy: 68, 52
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ship3
+  rotate: false
+  xy: 250, 68
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship3_boost1
+  rotate: false
+  xy: 102, 2
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship3_boost2
+  rotate: false
+  xy: 350, 68
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship4
+  rotate: false
+  xy: 2, 2
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship4_boost1
+  rotate: false
+  xy: 200, 68
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship4_boost2
+  rotate: false
+  xy: 52, 2
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1

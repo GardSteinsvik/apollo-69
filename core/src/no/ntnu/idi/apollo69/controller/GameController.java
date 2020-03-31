@@ -25,11 +25,11 @@ public class GameController {
     }
 
     public void shootButtonPressed() {
-        model.shoot();
+        model.handleShots(true);
     }
 
     public void shootButtonReleased() {
-        // Add functionality once auto-mode is implemented
+        model.handleShots(false);
     }
 
     public void boostButtonPressed() {

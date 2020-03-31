@@ -1,0 +1,118 @@
+
+game.png
+size: 1024,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+button_boost_down
+  rotate: false
+  xy: 262, 118
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+button_boost_up
+  rotate: false
+  xy: 2, 118
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+button_shoot_down
+  rotate: false
+  xy: 392, 118
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+button_shoot_up
+  rotate: false
+  xy: 132, 118
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ship1
+  rotate: false
+  xy: 638, 198
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship1_boost1
+  rotate: false
+  xy: 688, 198
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship1_boost2
+  rotate: false
+  xy: 234, 68
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship2
+  rotate: false
+  xy: 68, 52
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ship2_boost1
+  rotate: false
+  xy: 2, 52
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ship2_boost2
+  rotate: false
+  xy: 522, 182
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ship3
+  rotate: false
+  xy: 134, 68
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship3_boost1
+  rotate: false
+  xy: 52, 2
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship3_boost2
+  rotate: false
+  xy: 184, 68
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship4
+  rotate: false
+  xy: 2, 2
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship4_boost1
+  rotate: false
+  xy: 522, 132
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ship4_boost2
+  rotate: false
+  xy: 588, 198
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1

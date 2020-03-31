@@ -3,8 +3,6 @@ package no.ntnu.idi.apollo69.game_engine.entities;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-
-import no.ntnu.idi.apollo69.game_engine.Mappers;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
@@ -36,7 +34,8 @@ public class ShotFactory {
 
         // Set shot velocity based on spaceship attacking attributes
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(shot);
-        velocityComponent.velocity = new Vector2(0, 300 * Gdx.graphics.getDensity()).rotate(spaceshipRotation.degrees);
+        float shotVelocity = 1200;
+        velocityComponent.velocity = new Vector2(0, shotVelocity * Gdx.graphics.getDensity()).rotate(spaceshipRotation.degrees);
 
         // Set shot size according to spaceship attacking attributes
         DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(shot);

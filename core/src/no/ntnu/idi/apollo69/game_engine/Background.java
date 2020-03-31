@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import java.util.ArrayList;
-import no.ntnu.idi.apollo69.game_engine.Mappers;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 
