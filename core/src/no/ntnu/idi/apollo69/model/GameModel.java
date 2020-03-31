@@ -50,8 +50,7 @@ public class GameModel {
         background.render(batch, gameEngine.getPlayer());
     }
 
-    public void renderMovingObjects(SpriteBatch batch, ShapeRenderer shapeRenderer) {
-
+    public void renderPowerups(SpriteBatch batch) {
         // Render Powerup(s), first so that it renders under the spaceship, change this after logic is in place on touch anyway?
 
         Family powerupFamily = Family.all(PowerupComponent.class).get();
@@ -60,16 +59,20 @@ public class GameModel {
 
         for (int i = 0; i < powerupEntities.size(); i++) {
             Entity entity = powerupEntities.get(i);
-            Texture powerup = Mappers.powerup.get(entity).powerup.getTexture();
-            float posX = Mappers.position.get(entity).position.x;
-            float posY = Mappers.position.get(entity).position.y;
-            float width = Mappers.dimension.get(entity).width;
-            float height = Mappers.dimension.get(entity).height;
+            Texture powerup = PowerupComponent.MAPPER.get(entity).powerup.getTexture();
+            float posX = PositionComponent.MAPPER.get(entity).position.x;
+            float posY = PositionComponent.MAPPER.get(entity).position.y;
+            float width = DimensionComponent.MAPPER.get(entity).width;
+            float height = DimensionComponent.MAPPER.get(entity).height;
 
             //System.out.println("test " + posX + "test2 " + posY + " test3 " + width + " test4 " + height + " type " );
 
             batch.draw(powerup, posX, posY, width, height);
         }
+
+    }
+
+    public void renderMovingObjects(SpriteBatch batch, ShapeRenderer shapeRenderer) {
 
         // Render spaceship(s)
 

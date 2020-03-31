@@ -1,7 +1,6 @@
 package no.ntnu.idi.apollo69.game_engine;
 
 import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;

@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 
-import no.ntnu.idi.apollo69.game_engine.entities.PowerupFactory;
 import no.ntnu.idi.apollo69.game_engine.entities.SpaceshipFactory;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.MovementSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem;

@@ -7,6 +7,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 public class PowerupComponent implements Component {
     public static final ComponentMapper<PowerupComponent> MAPPER = ComponentMapper.getFor(PowerupComponent.class);
 
-    public Sprite powerup = new Sprite(); //The look of the Powerup
+    public Sprite powerup = new Sprite(); //The look of the Powerup, maybe it should just be a Texture and not a Sprite?
     public PowerupType type = PowerupType.DEFAULT;
 }

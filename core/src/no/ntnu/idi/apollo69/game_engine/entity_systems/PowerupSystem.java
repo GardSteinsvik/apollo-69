@@ -8,9 +8,6 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
-import java.awt.Dimension;
-import java.util.Random;
-
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
@@ -20,13 +17,13 @@ import no.ntnu.idi.apollo69.game_engine.entities.PowerupFactory;
 
 public class PowerupSystem extends EntitySystem {
 
-    public static interface PowerupListener {
-        public void powerup();
-    }
+    //public static interface PowerupListener {
+    //    public void powerup();
+    //}
 
     private Engine engine;
-    private PowerupListener listener;
-    private Random random = new Random();
+    //private PowerupListener listener;
+    //private Random random = new Random();
     private ImmutableArray<Entity> powerups;
     private ImmutableArray<Entity> spaceships;
     private Sound pickupSound;
@@ -63,6 +60,7 @@ public class PowerupSystem extends EntitySystem {
             engine.addEntity(powerup);
         }
         for (int i = 0; i < spaceships.size(); i++) {
+            // Should the logic for this only be for the client ship? (server-side handling)
             Entity spaceship = spaceships.get(i);
             PositionComponent spaceshipPosition = PositionComponent.MAPPER.get(spaceship);
 
@@ -80,12 +78,14 @@ public class PowerupSystem extends EntitySystem {
 
 
                 //if (spaceshipPosition.position.x > powerupPosition.position.x) {
+                // Fake collision system, should perhaps be bounding boxes or something
+                // to check if X contains Y like rectangles, to-do.
                 if (upperX > spaceshipPosition.position.x && lowerX < spaceshipPosition.position.x &&
                 upperY > spaceshipPosition.position.y && lowerY < spaceshipPosition.position.y) {
                     PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
                     pickupSound.play();
-                    System.out.println("Powerup has been hit!");
-                    System.out.println("upperX: " + upperX + ", lowerX: " + lowerX + ",upperY: " + upperY + ", lowerY: " + lowerY);
+                    //System.out.println("Powerup has been hit!");
+                    //System.out.println("upperX: " + upperX + ", lowerX: " + lowerX + ",upperY: " + upperY + ", lowerY: " + lowerY);
                     //listener.powerup();
                     if (powerupComponent.type == PowerupType.HEALTH) {
                         System.out.println("Health powerup!");

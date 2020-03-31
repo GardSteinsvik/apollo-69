@@ -150,6 +150,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         model.renderBackground(spriteBatch);
+        model.renderPowerups(spriteBatch);
         model.renderMovingObjects(spriteBatch, shapeRenderer);
 
         // Debug written to font
