@@ -9,6 +9,7 @@ import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.ScoreComponent;
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayableComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
@@ -32,6 +33,7 @@ public class SpaceshipFactory {
         spaceship.add(new AttackingComponent());
         spaceship.add(new PlayerComponent());
         spaceship.add(new RectangleBoundsComponent());
+        spaceship.add(new ScoreComponent());
 
         DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(spaceship);
         dimensionComponent.width = Gdx.graphics.getHeight() / 10f;

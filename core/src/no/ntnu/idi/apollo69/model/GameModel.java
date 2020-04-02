@@ -15,8 +15,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
+import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
+import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
@@ -99,6 +102,20 @@ public class GameModel {
         }
 
     }
+
+    public void renderPickups(SpriteBatch batch) {
+        Family GemFamily = Family.all(GemComponent.class).get();
+        ImmutableArray<Entity> gemEntities = gameEngine.getEngine().getEntitiesFor(GemFamily);
+
+
+        for (Entity gem : gemEntities) {
+            GemComponent gemComponent = GemComponent.MAPPER.get(gem);
+            RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
+            batch.draw(gemComponent.texture, rectangleBoundsComponent.rectangle.getX(), rectangleBoundsComponent.rectangle.getY(),
+                    rectangleBoundsComponent.rectangle.getWidth(), rectangleBoundsComponent.rectangle.getHeight());
+        };
+
+    };
 
     public void renderSpaceships(SpriteBatch batch) {
         Family spaceshipFamily = Family.all(PlayerComponent.class).get();

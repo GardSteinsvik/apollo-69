@@ -18,9 +18,9 @@ import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 public class PowerupFactory {
 
     // If using DesktopLauncher consider 400 as bounds instead of 1000
-    public static int pickupBounds = 1000;
+    private static int pickupBounds = 1000;
 
-    public Entity create() {
+    private Entity create() {
         Entity powerup = new Entity();
         Random random = new Random();
 

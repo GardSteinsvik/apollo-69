@@ -164,6 +164,7 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         model.renderBackground(spriteBatch);
         model.renderPowerups(spriteBatch);
+        model.renderPickups(spriteBatch);
         model.renderSpaceships(spriteBatch);
         model.renderShots(shapeRenderer);
 

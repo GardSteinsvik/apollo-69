@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.EntityListener;
 
 import no.ntnu.idi.apollo69.game_engine.entities.SpaceshipFactory;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.MovementSystem;
+import no.ntnu.idi.apollo69.game_engine.entity_systems.PickupSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.PowerupSystem;
 
@@ -36,6 +37,8 @@ public class GameEngineFactory {
         engine.addSystem(new MovementSystem());
 
         engine.addSystem(new PowerupSystem(2));
+
+        engine.addSystem(new PickupSystem(2));
 
         return new GameEngine(engine);
     }

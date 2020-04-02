@@ -48,11 +48,14 @@ public class PowerupSystem extends EntitySystem {
         energys = engine.getEntitiesFor(Family.all(EnergyComponent.class).get());
     }
 
-    public void handlePickup(Entity spaceShip, PowerupComponent powerupComponent) {
+    private void handlePickup(Entity spaceShip, PowerupComponent powerupComponent) {
+        // According to https://github.com/libgdx/ashley/wiki/How-to-use-Ashley
+        // Entities can only hold one component instance of each class,
+        // so adding two will result in the 2nd replacing the 1st. No need for additional logic!
         PowerupType powerupType = powerupComponent.type;
         switch(powerupType) {
             case ENERGY:
-                EnergyComponent energyComponent = EnergyComponent.MAPPER.get(spaceShip);
+                /*EnergyComponent energyComponent = EnergyComponent.MAPPER.get(spaceShip);
                 try {
                     if (energyComponent.energy < 100) {
                         energyComponent.energy = 100;
@@ -60,11 +63,12 @@ public class PowerupSystem extends EntitySystem {
                 } catch (Exception e) {
                     // Assume Nullpointer, create missing EnergyComponent:
                     spaceShip.add(new EnergyComponent());
-                }
+                } */
+                spaceShip.add(new EnergyComponent());
                 System.out.println("Energy powerup");
                 break;
             case SHIELD:
-                ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(spaceShip);
+                /*ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(spaceShip);
                 try {
                     if (shieldComponent.hp < 100) {
                         shieldComponent.hp = 100;
@@ -72,11 +76,12 @@ public class PowerupSystem extends EntitySystem {
                 } catch (Exception e) {
                     // Assume Nullpointer, create missing ShieldComponent:
                     spaceShip.add(new ShieldComponent());
-                }
+                }*/
+                spaceShip.add(new ShieldComponent());
                 System.out.println("Shield powerup");
                 break;
             case INVISIBLE:
-                InvisibleComponent invisibleComponent = InvisibleComponent.MAPPER.get(spaceShip);
+                /*InvisibleComponent invisibleComponent = InvisibleComponent.MAPPER.get(spaceShip);
                 try {
                     Instant time = Instant.now();
                     if (invisibleComponent.time.isBefore(time)) {
@@ -85,7 +90,8 @@ public class PowerupSystem extends EntitySystem {
                 } catch (Exception e) {
                     // Assume Nullpointer, create missing ShieldComponent:
                     spaceShip.add(new InvisibleComponent());
-                }
+                }*/
+                spaceShip.add(new InvisibleComponent());
                 System.out.println("Invisible powerup");
                 break;
             default:
