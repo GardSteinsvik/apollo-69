@@ -3,7 +3,10 @@ package no.ntnu.idi.apollo69.model;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -13,9 +16,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
+import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
-import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
@@ -31,11 +35,15 @@ public class GameModel {
 
     private GameEngine gameEngine;
 
+    private Sound shotSound;
+
     private ShootThread shootThread;
 
     public GameModel() {
         background = new Background();
         gameEngine = new GameEngineFactory().create();
+        shotSound = Gdx.audio.newSound(Gdx.files.internal("game/laser.wav"));
+
     }
 
     public void handleSpaceshipMovement(float x, float y) {
@@ -67,6 +75,28 @@ public class GameModel {
 
     public void renderBackground(SpriteBatch batch) {
         background.render(batch, gameEngine.getPlayer());
+    }
+
+    public void renderPowerups(SpriteBatch batch) {
+        // Render Powerup(s), first so that it renders under the spaceship, change this after logic is in place on touch anyway?
+
+        Family powerupFamily = Family.all(PowerupComponent.class).get();
+
+        ImmutableArray<Entity> powerupEntities = gameEngine.getEngine().getEntitiesFor(powerupFamily);
+
+        for (int i = 0; i < powerupEntities.size(); i++) {
+            Entity entity = powerupEntities.get(i);
+            Texture powerup = PowerupComponent.MAPPER.get(entity).powerup.getTexture();
+            float posX = PositionComponent.MAPPER.get(entity).position.x;
+            float posY = PositionComponent.MAPPER.get(entity).position.y;
+            float width = DimensionComponent.MAPPER.get(entity).width;
+            float height = DimensionComponent.MAPPER.get(entity).height;
+
+            //System.out.println("test " + posX + "test2 " + posY + " test3 " + width + " test4 " + height + " type " );
+
+            batch.draw(powerup, posX, posY, width, height);
+        }
+
     }
 
     public void renderSpaceships(SpriteBatch batch) {
@@ -108,6 +138,7 @@ public class GameModel {
 
             shapeRenderer.circle(posX, posY, radius);
         }
+
     }
 
     public void moveCameraToSpaceship(OrthographicCamera camera, float deltaTime) {
@@ -198,6 +229,7 @@ public class GameModel {
             while (running.get()) {
                 try {
                     shoot();
+                    //shotSound.play();
                     Thread.sleep(interval);
                 } catch (Exception e) {
                     System.out.println("ShootThread: something went wrong");
