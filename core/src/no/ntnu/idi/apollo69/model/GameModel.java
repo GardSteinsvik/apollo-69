@@ -229,7 +229,7 @@ public class GameModel {
             while (running.get()) {
                 try {
                     shoot();
-                    shotSound.play();
+                    //shotSound.play();
                     Thread.sleep(interval);
                 } catch (Exception e) {
                     System.out.println("ShootThread: something went wrong");

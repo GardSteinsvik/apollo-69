@@ -127,7 +127,7 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
         Music themeMusic = Gdx.audio.newMusic(Gdx.files.internal("game/theme.ogg"));
         themeMusic.setLooping(true);
         themeMusic.setVolume(0.5f);
-        themeMusic.play();
+        //themeMusic.play();
     }
 
     @Override

@@ -146,7 +146,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         Music gameMusic = Gdx.audio.newMusic(Gdx.files.internal("game/game.ogg"));
         gameMusic.setLooping(true);
         gameMusic.setVolume(0.5f);
-        gameMusic.play();
+        //gameMusic.play();
     }
 
     @Override

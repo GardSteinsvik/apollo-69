@@ -121,7 +121,7 @@ public class PowerupSystem extends EntitySystem {
                 upperY > spaceshipPosition.position.y && lowerY < spaceshipPosition.position.y) {
                     PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
                     handlePickup(spaceship, powerupComponent);
-                    pickupSound.play();
+                    //pickupSound.play();
                     //System.out.println("Powerup has been hit!");
                     //System.out.println("upperX: " + upperX + ", lowerX: " + lowerX + ",upperY: " + upperY + ", lowerY: " + lowerY);
                     //listener.powerup();
