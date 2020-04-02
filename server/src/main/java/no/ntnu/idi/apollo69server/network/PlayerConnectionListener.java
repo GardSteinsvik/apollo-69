@@ -1,28 +1,34 @@
 package no.ntnu.idi.apollo69server.network;
 
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInQueue;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerMatchmade;
+import no.ntnu.idi.apollo69server.game_engine.GameEngine;
 
 public class PlayerConnectionListener extends BasePlayerConnectionListener {
 
     final private List<PlayerConnection> connections;
-    final private List<PlayerConnection> activePlayers;
+    final private List<PlayerConnection> waitingConnections = new ArrayList<>();
     private MessageHandlerDelegator handlerDelegator;
+    private GameEngineProvider gameEngineProvider;
 
-    public PlayerConnectionListener(List<PlayerConnection> connections, List<PlayerConnection> activePlayers, MessageHandlerDelegator handlerDelegator) {
+
+    public PlayerConnectionListener(List<PlayerConnection> connections, MessageHandlerDelegator handlerDelegator, GameEngineProvider gameEngineProvider) {
         this.connections = connections;
-        this.activePlayers = activePlayers;
         this.handlerDelegator = handlerDelegator;
+        this.gameEngineProvider = gameEngineProvider;
     }
 
     @Override
     public void connected(PlayerConnection connection) {
         synchronized (connections) {
             connections.add(connection);
+            waitingConnections.add(connection);
             matchmakeQueue();
         }
     }
@@ -41,25 +47,31 @@ public class PlayerConnectionListener extends BasePlayerConnectionListener {
     public void disconnected(PlayerConnection connection) {
         synchronized (connections) {
             connections.remove(connection);
-            activePlayers.remove(connection);
+            waitingConnections.remove(connection);
             matchmakeQueue();
         }
     }
 
     private void matchmakeQueue() {
-        List<PlayerConnection> playersInQueue = connections.stream().filter(c -> !activePlayers.contains(c)).collect(Collectors.toList());
+        GameEngine gameEngine = gameEngineProvider.getNotFullGameEngine();
 
-        while (!playersInQueue.isEmpty() && activePlayers.size() != MatchmakingServer.MAX_PLAYERS && activePlayers.size() != connections.size()) {
-            PlayerConnection playerToBeAdded = playersInQueue.remove(0);
-            activePlayers.add(playerToBeAdded);
-            playerToBeAdded.setPlayerState(PlayerState.IN_SPAWN_SCREEN);
+        while (gameEngine != null && !waitingConnections.isEmpty()) {
+            PlayerConnection playerToBeAdded = waitingConnections.remove(0);
+            gameEngine.addPlayerToGame(playerToBeAdded);
             playerToBeAdded.sendTCP(new PlayerMatchmade());
+            gameEngine = gameEngineProvider.getNotFullGameEngine();
         }
 
         AtomicInteger positionInQueue = new AtomicInteger(1);
-        playersInQueue.forEach(playerConnection -> {
-            playerConnection.sendTCP(new PlayerInQueue(positionInQueue.get(), playersInQueue.size()));
+        for (PlayerConnection playerConnection : waitingConnections) {
+            playerConnection.sendTCP(new PlayerInQueue(positionInQueue.get(), waitingConnections.size()));
             positionInQueue.getAndIncrement();
-        });
+        }
+    }
+
+    @FunctionalInterface
+    interface GameEngineProvider {
+        @Nullable
+        GameEngine getNotFullGameEngine();
     }
 }

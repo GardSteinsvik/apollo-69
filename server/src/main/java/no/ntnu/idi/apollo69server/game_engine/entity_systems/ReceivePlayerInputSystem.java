@@ -55,8 +55,6 @@ public class ReceivePlayerInputSystem extends EntitySystem {
             return;
         }
 
-        if (playerInput.isShooting()) {
-            System.out.println("Player " + playerInput.getPlayerId() + " is shooting");
-        }
+        System.out.println("Player " + playerInput.getPlayerId() + ": Rotation " + playerInput.getRotationDto().degrees + " deg");
     }
 }

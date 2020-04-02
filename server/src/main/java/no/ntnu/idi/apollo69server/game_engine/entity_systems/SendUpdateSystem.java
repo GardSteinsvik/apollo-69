@@ -6,11 +6,19 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.RotationComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69server.network.PlayerConnection;
 
 public class SendUpdateSystem extends EntitySystem {
@@ -40,14 +48,13 @@ public class SendUpdateSystem extends EntitySystem {
 
     private void sendUpdate() {
 
-        UpdateMessage updateMessage = new UpdateMessage();
+        UpdateMessage updateMessage = createUpdateMessage();
 
         for (Entity player: players) {
             NetworkPlayerComponent networkPlayerComponent = NetworkPlayerComponent.MAPPER.get(player);
             PlayerConnection playerConnection = networkPlayerComponent.getPlayerConnection();
 
             if (playerConnection.isConnected()) {
-                System.out.println("Sending message to player " + playerConnection.getDeviceId());
                 playerConnection.sendTCP(updateMessage);
             } else {
                 // Player is not connected, remove from game
@@ -55,5 +62,31 @@ public class SendUpdateSystem extends EntitySystem {
                 playerComponent.setAlive(false);
             }
         }
+    }
+
+    private UpdateMessage createUpdateMessage() {
+        UpdateMessage updateMessage = new UpdateMessage();
+
+        // PLAYERS
+        List<PlayerDto> playerDtoList = new ArrayList<>();
+        for (Entity playerEntity: players) {
+            PlayerComponent playerComponent = PlayerComponent.MAPPER.get(playerEntity);
+            PositionComponent positionComponent = PositionComponent.MAPPER.get(playerEntity);
+            RotationComponent rotationComponent = RotationComponent.MAPPER.get(playerEntity);
+            VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(playerEntity);
+            playerDtoList.add(new PlayerDto(
+                    playerComponent.getId(),
+                    playerComponent.getName(),
+                    playerComponent.isAlive(),
+                    new PositionDto(positionComponent.position.x, positionComponent.position.y),
+                    new RotationDto(rotationComponent.degrees, rotationComponent.x, rotationComponent.y),
+                    new VelocityDto(velocityComponent.velocity.x, velocityComponent.velocity.y, velocityComponent.boost)
+            ));
+        }
+        updateMessage.setPlayerDtoList(playerDtoList);
+
+        // TODO: Add more data like shots here
+
+        return updateMessage;
     }
 }

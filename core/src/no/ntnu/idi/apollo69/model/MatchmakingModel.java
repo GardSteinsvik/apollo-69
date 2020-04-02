@@ -38,8 +38,6 @@ public class MatchmakingModel implements Disposable {
                 } else if (message instanceof PlayerMatchmade) {
                     System.out.println("You have joined the game!");
                     setMatchmakingDone(true);
-                } else if (message instanceof UpdateMessage) {
-                    System.out.println("Update from server.");
                 }
             }
         };

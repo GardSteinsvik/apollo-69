@@ -2,18 +2,40 @@ package no.ntnu.idi.apollo69server.game_engine;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.utils.Disposable;
+import com.esotericsoftware.kryonet.Listener;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import no.ntnu.idi.apollo69server.network.BasePlayerConnectionListener;
+import no.ntnu.idi.apollo69server.network.MatchmakingServer;
 import no.ntnu.idi.apollo69server.network.MessageHandlerDelegator;
+import no.ntnu.idi.apollo69server.network.PlayerConnection;
 
 public class GameEngine implements Runnable, Disposable {
 
+    private final int id;
     private Engine engine;
-    private MessageHandlerDelegator messageHandlerDelegator;
     private boolean serverAlive = true;
 
-    public GameEngine(Engine engine, MessageHandlerDelegator messageHandlerDelegator) {
+    private final Listener listener;
+    private final List<PlayerConnection> playerConnectionList = new ArrayList<>();
+
+    public GameEngine(int id, Engine engine, MessageHandlerDelegator messageHandlerDelegator) {
+        this.id = id;
         this.engine = engine;
-        this.messageHandlerDelegator = messageHandlerDelegator;
+
+        listener = new BasePlayerConnectionListener() {
+            @Override
+            public void received(PlayerConnection connection, Object object) {
+                messageHandlerDelegator.handleMessage(connection, object);
+            }
+
+            @Override
+            public void disconnected(PlayerConnection connection) {
+                removePlayerFromGame(connection);
+            }
+        };
     }
 
     @Override
@@ -37,6 +59,32 @@ public class GameEngine implements Runnable, Disposable {
     @Override
     public void dispose() {
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public boolean isFull() {
+        synchronized (playerConnectionList) {
+            return playerConnectionList.size() >= MatchmakingServer.MAX_PLAYERS;
+        }
+    }
+
+    public void addPlayerToGame(PlayerConnection playerConnection) {
+        synchronized (playerConnectionList) {
+            playerConnectionList.add(playerConnection);
+        }
+
+        playerConnection.addListener(listener);
+    }
+
+    public void removePlayerFromGame(PlayerConnection playerConnection) {
+        synchronized (playerConnectionList) {
+            playerConnectionList.remove(playerConnection);
+        }
+
+        playerConnection.removeListener(listener);
     }
 
     public void setServerAlive(boolean serverAlive) {
