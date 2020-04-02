@@ -91,9 +91,10 @@ public class GameModel {
             float posY = PositionComponent.MAPPER.get(entity).position.y;
             float width = DimensionComponent.MAPPER.get(entity).width;
             float height = DimensionComponent.MAPPER.get(entity).height;
+            float density = Gdx.graphics.getDensity();
 
-            //System.out.println("test " + posX + "test2 " + posY + " test3 " + width + " test4 " + height + " type " );
-
+            // Density adjustements would ruin bounds, not appropriate application (!)
+            //batch.draw(powerup, posX, posY, width * density, height * density);
             batch.draw(powerup, posX, posY, width, height);
         }
 

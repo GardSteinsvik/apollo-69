@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 
 public class MovementSystem extends EntitySystem {
@@ -24,9 +25,12 @@ public class MovementSystem extends EntitySystem {
         for (Entity entity : entities) {
             PositionComponent positionComponent = PositionComponent.MAPPER.get(entity);
             VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(entity);
+            RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(entity);
 
             positionComponent.position.x += velocityComponent.velocity.x * deltaTime;
             positionComponent.position.y += velocityComponent.velocity.y * deltaTime;
+            rectangleBoundsComponent.rectangle.setX(positionComponent.position.x);
+            rectangleBoundsComponent.rectangle.setY(positionComponent.position.y);
         }
     }
 

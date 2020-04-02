@@ -3,6 +3,8 @@ package no.ntnu.idi.apollo69.game_engine.entities;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Rectangle;
+
 import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
@@ -11,6 +13,7 @@ import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayableComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
@@ -28,10 +31,14 @@ public class SpaceshipFactory {
         spaceship.add(new SpriteComponent());
         spaceship.add(new AttackingComponent());
         spaceship.add(new PlayerComponent());
+        spaceship.add(new RectangleBoundsComponent());
 
         DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(spaceship);
         dimensionComponent.width = Gdx.graphics.getHeight() / 10f;
         dimensionComponent.height = Gdx.graphics.getHeight() / 10f;
+
+        RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(spaceship);
+        rectangleBoundsComponent.rectangle = new Rectangle(0, 0, dimensionComponent.width, dimensionComponent.height);
 
         TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("game/game.atlas"));
         SpriteComponent spriteComponent = SpriteComponent.MAPPER.get(spaceship);

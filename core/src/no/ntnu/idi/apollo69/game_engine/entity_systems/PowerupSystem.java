@@ -6,39 +6,34 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Intersector;
 
-import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
+import java.time.Instant;
+
+import no.ntnu.idi.apollo69.game_engine.components.EnergyComponent;
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
+import no.ntnu.idi.apollo69.game_engine.components.InvisibleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
+import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
+import no.ntnu.idi.apollo69.game_engine.components.ShieldComponent;
+import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.entities.PowerupFactory;
 
 public class PowerupSystem extends EntitySystem {
 
-    //public static interface PowerupListener {
-    //    public void powerup();
-    //}
-
     private Engine engine;
-    //private PowerupListener listener;
-    //private Random random = new Random();
     private ImmutableArray<Entity> powerups;
     private ImmutableArray<Entity> spaceships;
-    private Sound pickupSound;
-
-    /* Music gameMusic = Gdx.audio.newMusic(Gdx.files.internal("game/game.ogg"));
-        gameMusic.setLooping(true);
-        gameMusic.setVolume(0.5f);
-        gameMusic.play(); */
+    private ImmutableArray<Entity> shields;
+    private ImmutableArray<Entity> invisibles;
+    private ImmutableArray<Entity> energys;
 
 
-    public PowerupSystem(int priority) {//PowerupListener listener, int priority) {
+    public PowerupSystem(int priority) {
         super(priority);
-        //this.listener = listener;
-        pickupSound = Gdx.audio.newSound(Gdx.files.internal("game/powerups/pickup.wav"));
     }
 
     @Override
@@ -48,35 +43,49 @@ public class PowerupSystem extends EntitySystem {
 
         powerups = engine.getEntitiesFor(Family.all(PowerupComponent.class).get());
         spaceships = engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
+        shields = engine.getEntitiesFor(Family.all(ShieldComponent.class).get());
+        invisibles = engine.getEntitiesFor(Family.all(InvisibleComponent.class).get());
+        energys = engine.getEntitiesFor(Family.all(EnergyComponent.class).get());
     }
 
     public void handlePickup(Entity spaceShip, PowerupComponent powerupComponent) {
         PowerupType powerupType = powerupComponent.type;
         switch(powerupType) {
-            case AMMO:
-                System.out.println("Ammo powerup");
-                break;
             case ENERGY:
+                EnergyComponent energyComponent = EnergyComponent.MAPPER.get(spaceShip);
+                try {
+                    if (energyComponent.energy < 100) {
+                        energyComponent.energy = 100;
+                    }
+                } catch (Exception e) {
+                    // Assume Nullpointer, create missing EnergyComponent:
+                    spaceShip.add(new EnergyComponent());
+                }
                 System.out.println("Energy powerup");
                 break;
-            case HEALTH:
-                System.out.println("Health powerup");
-
-                HealthComponent health = HealthComponent.MAPPER.get(spaceShip);
-                health.hp += 50;
-
-                // Somehow get upgraded spacecraft limits here? 100 is default HP.
-                if (health.hp > 100) {
-                    health.hp = 100;
-                }
-                break;
-            case ROCKET:
-                System.out.println("Rocket powerup");
-                break;
             case SHIELD:
+                ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(spaceShip);
+                try {
+                    if (shieldComponent.hp < 100) {
+                        shieldComponent.hp = 100;
+                    }
+                } catch (Exception e) {
+                    // Assume Nullpointer, create missing ShieldComponent:
+                    spaceShip.add(new ShieldComponent());
+                }
                 System.out.println("Shield powerup");
                 break;
             case INVISIBLE:
+                InvisibleComponent invisibleComponent = InvisibleComponent.MAPPER.get(spaceShip);
+                try {
+                    Instant time = Instant.now();
+                    if (invisibleComponent.time.isBefore(time)) {
+                        invisibleComponent.time = time;
+                    }
+                } catch (Exception e) {
+                    // Assume Nullpointer, create missing ShieldComponent:
+                    spaceShip.add(new InvisibleComponent());
+                }
                 System.out.println("Invisible powerup");
                 break;
             default:
@@ -88,50 +97,58 @@ public class PowerupSystem extends EntitySystem {
 
     @Override
     public void update(float deltaTime) {
-        // Perhaps spawn powerups after checking for if collision,
-        // as it can happen that the ship will not even see the powerup.
+        // Spawn new powerups in the map
+        // TO-DO: Need to check that the powerup does not spawn close to ship or other powerups.
         for (int p = powerups.size(); p < 4; p++) {
-            // make new powerup(s)
-            // Add powerup test
             Entity powerup = new PowerupFactory().createRandomPowerup();
             engine.addEntity(powerup);
         }
+        // Check if a spaceship has hit a powerup
         for (int i = 0; i < spaceships.size(); i++) {
-            // Should the logic for this only be for the client ship? (server-side handling)
+            // Should the logic for this only be for the client ship? (server-side frame optimization rendering)
             Entity spaceship = spaceships.get(i);
-            PositionComponent spaceshipPosition = PositionComponent.MAPPER.get(spaceship);
+            RectangleBoundsComponent spaceshipRectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(spaceship);
 
-            // Perform a check if hit is registered? E.g. StateComponent
-            // state = hit something, CollisionSystem?
-            // to optimize this code :
             for (int j = 0; j < powerups.size(); j++) {
                 Entity powerup = powerups.get(j);
-                PositionComponent powerupPosition = PositionComponent.MAPPER.get(powerup);
-                DimensionComponent powerupDimension = DimensionComponent.MAPPER.get(powerup);
-                float upperX = powerupPosition.position.x + (powerupDimension.width / 2);
-                float lowerX = powerupPosition.position.x - (powerupDimension.width / 2);
-                float upperY = powerupPosition.position.y + (powerupDimension.height / 2);
-                float lowerY = powerupPosition.position.y - (powerupDimension.height / 2);
-
-
-                //if (spaceshipPosition.position.x > powerupPosition.position.x) {
-                // Fake collision system, should perhaps be bounding boxes or something
-                // to check if X contains Y like rectangles, to-do.
-                if (upperX > spaceshipPosition.position.x && lowerX < spaceshipPosition.position.x &&
-                upperY > spaceshipPosition.position.y && lowerY < spaceshipPosition.position.y) {
+                RectangleBoundsComponent powerupRectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(powerup);
+                if (Intersector.overlaps(powerupRectangleBoundsComponent.rectangle, spaceshipRectangleBoundsComponent.rectangle)) {
                     PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
                     handlePickup(spaceship, powerupComponent);
                     //pickupSound.play();
-                    //System.out.println("Powerup has been hit!");
-                    //System.out.println("upperX: " + upperX + ", lowerX: " + lowerX + ",upperY: " + upperY + ", lowerY: " + lowerY);
-                    //listener.powerup();
-                    //if (powerupComponent.type == PowerupType.HEALTH) {
-                    //    System.out.println("Health powerup!");
-                    //}
                     engine.removeEntity(powerup);
                 }
 
             }
         }
+        // Unused Components collector (do we need this here??)
+        // Handle shield powerups
+        for (Entity entity : shields) {
+            ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(entity);
+            if (shieldComponent.hp == 0) {
+                System.out.println("Removed shield");
+                entity.remove(ShieldComponent.class);
+            }
+        }
+
+        // Handle invisible powerups
+        for (Entity entity : invisibles) {
+            InvisibleComponent invisibleComponent = InvisibleComponent.MAPPER.get(entity);
+            Instant compareTime = Instant.now().minusSeconds(15);
+            if (invisibleComponent.time.isBefore(compareTime)) {
+                System.out.println("Removed invisibility");
+                entity.remove(InvisibleComponent.class);
+            }
+        }
+
+        // Handle energy powerups
+        for (Entity entity : energys) {
+            EnergyComponent energyComponent = EnergyComponent.MAPPER.get(entity);
+            if (energyComponent.energy == 0) {
+                System.out.println("Removed energy");
+                entity.remove(EnergyComponent.class);
+            }
+        }
+
     }
 }
