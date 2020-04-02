@@ -6,7 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -14,15 +13,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-
-import org.w3c.dom.css.RGBColor;
 
 import no.ntnu.idi.apollo69.controller.GameController;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
@@ -140,40 +135,51 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         // Initialize camera position
         model.moveCameraToSpaceship(orthoCamera, 0);
+
+        //shotRenderer.setColor(Color.YELLOW);
+        //boundaryRenderer.setColor(Color.RED);
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glLineWidth(10);
 
-        // Set and update camera
+        // Set camera
         spriteBatch.setProjectionMatrix(orthoCamera.combined);
         shapeRenderer.setProjectionMatrix(orthoCamera.combined);
 
+        // Render sprites
         spriteBatch.begin();
-        shapeRenderer.setColor(Color.YELLOW);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
         model.renderBackground(spriteBatch);
         model.renderSpaceships(spriteBatch);
-        model.renderShots(shapeRenderer);
+        this.debug();
+        spriteBatch.end();
 
+        // Render shapes
+        model.renderShots(shapeRenderer);
+        model.renderBoundary(shapeRenderer, GameModel.GAME_RADIUS);
+
+        // Render UI
+        stage.draw();
+
+        // Update camera position
+        model.moveCameraToSpaceship(orthoCamera, delta);
+
+        // Update game engine
+        model.getGameEngine().getEngine().update(delta);
+
+        model.inBoundsCheck();
+    }
+
+    private void debug() {
         // Debug written to font
         PositionComponent positionComponent = PositionComponent.MAPPER.get(model.getGameEngine().getPlayer());
         font.draw(spriteBatch,"WIDTH: " + Math.round(WIDTH) + "  X: " +
                 Math.round(positionComponent.position.x), positionComponent.position.x - 50, positionComponent.position.y - 130);
         font.draw(spriteBatch,"HEIGHT: " + Math.round(HEIGHT) + "  Y: " +
                 Math.round(positionComponent.position.y), positionComponent.position.x - 50, positionComponent.position.y - 160);
-
-        spriteBatch.end();
-        shapeRenderer.end();
-
-        model.moveCameraToSpaceship(orthoCamera, delta);
-
-        stage.draw();
-
-        model.getGameEngine().getEngine().update(delta);
     }
 
     @Override

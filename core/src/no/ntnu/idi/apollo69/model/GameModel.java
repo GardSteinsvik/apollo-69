@@ -3,11 +3,13 @@ package no.ntnu.idi.apollo69.model;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
@@ -32,6 +34,9 @@ public class GameModel {
     private GameEngine gameEngine;
 
     private ShootThread shootThread;
+
+    public static final int GAME_RADIUS = 1000; // Temporary
+    public static final int VELOCITY = 400;
 
     public GameModel() {
         background = new Background();
@@ -101,12 +106,39 @@ public class GameModel {
         Family shotFamily = Family.all(PositionComponent.class, VelocityComponent.class, DamageComponent.class).get();
         ImmutableArray<Entity> shots = gameEngine.getEngine().getEntitiesFor(shotFamily);
 
+        shapeRenderer.setColor(Color.YELLOW);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
         for (Entity shot : shots) {
             float posX = PositionComponent.MAPPER.get(shot).position.x;
             float posY = PositionComponent.MAPPER.get(shot).position.y;
             float radius = DimensionComponent.MAPPER.get(shot).radius;
 
             shapeRenderer.circle(posX, posY, radius);
+        }
+
+        shapeRenderer.end();
+    }
+
+    public void renderBoundary(ShapeRenderer shapeRenderer, float radius) {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.circle(0, 0, radius);
+        shapeRenderer.end();
+
+        // Rectangle r = sprite.getBoundingRectangle();
+
+    }
+
+    public void inBoundsCheck() {
+        float x = PositionComponent.MAPPER.get(gameEngine.getPlayer()).position.x;
+        float y = PositionComponent.MAPPER.get(gameEngine.getPlayer()).position.y;
+        float offset = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).height;
+        double distanceFromCenter = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) + offset;
+
+        if (distanceFromCenter > GameModel.GAME_RADIUS - offset) {
+            VelocityComponent.MAPPER.get(gameEngine.getPlayer()).velocity.x = 0;
+            VelocityComponent.MAPPER.get(gameEngine.getPlayer()).velocity.y = 0;
         }
     }
 
@@ -117,9 +149,12 @@ public class GameModel {
     }
 
     public void activateBoost() {
-        BoosterComponent booster = BoosterComponent.MAPPER.get(gameEngine.getPlayer());
-        VelocityComponent velocity = VelocityComponent.MAPPER.get(gameEngine.getPlayer());
-        velocity.boost = booster.speed;
+        VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(gameEngine.getPlayer());
+        BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(gameEngine.getPlayer());
+
+        velocityComponent.scalar = boosterComponent.boost;
+        velocityComponent.velocity.x *= boosterComponent.boost;
+        velocityComponent.velocity.y *= boosterComponent.boost;
 
         SpriteComponent sprite = SpriteComponent.MAPPER.get(gameEngine.getPlayer());
         if (sprite.boost.size() > 0) {
@@ -129,16 +164,25 @@ public class GameModel {
 
     public void deactivateBoost() {
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(gameEngine.getPlayer());
-        velocityComponent.boost = 1;
+        BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(gameEngine.getPlayer());
+
+        velocityComponent.scalar = velocityComponent.idle;
+        velocityComponent.velocity.x /= boosterComponent.boost;
+        velocityComponent.velocity.y /= boosterComponent.boost;
 
         SpriteComponent sprite = SpriteComponent.MAPPER.get(gameEngine.getPlayer());
         sprite.current = sprite.idle;
     }
 
     // Called when picking up boost power-up
-    public void setBoost(float b) {
-        BoosterComponent booster = BoosterComponent.MAPPER.get(gameEngine.getPlayer());
-        booster.speed = b;
+    public void setBoost(float boost) {
+        BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(gameEngine.getPlayer());
+        boosterComponent.boost = boost;
+    }
+
+    public void resetBoost() {
+        BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(gameEngine.getPlayer());
+        boosterComponent.boost = boosterComponent.defaultValue;
     }
 
     // Called when picking up hp power-up

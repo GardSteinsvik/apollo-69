@@ -3,6 +3,8 @@ package no.ntnu.idi.apollo69.game_engine.entities;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
+
 import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
@@ -49,11 +51,11 @@ public class SpaceshipFactory {
         attackingComponent.shotRadius = dimensionComponent.width / 20;
 
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(spaceship);
-        //velocityComponent.boost = 400f * Gdx.graphics.getDensity();
-        velocityComponent.boost = 1 * Gdx.graphics.getDensity();
+        velocityComponent.scalar = velocityComponent.idle;
+        velocityComponent.velocity = new Vector2(0,1).scl(velocityComponent.scalar);
 
         BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(spaceship);
-        boosterComponent.speed = 1000;
+        boosterComponent.boost = boosterComponent.defaultValue;
 
         return spaceship;
     }
