@@ -7,8 +7,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
-import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
-import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 
 public class SpawnSystem extends EntitySystem {
 
@@ -27,8 +25,6 @@ public class SpawnSystem extends EntitySystem {
     public void update(float deltaTime) {
         for (Entity entity : entities) {
             NetworkPlayerComponent networkPlayerComponent = NetworkPlayerComponent.MAPPER.get(entity);
-
-
 
         }
     }

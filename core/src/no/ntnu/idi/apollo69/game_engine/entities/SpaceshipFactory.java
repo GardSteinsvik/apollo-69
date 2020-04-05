@@ -40,9 +40,6 @@ public class SpaceshipFactory {
         spriteComponent.boost.add(textureAtlas.createSprite("ship1_boost2"));
         spriteComponent.current = spriteComponent.idle;
 
-        PlayerComponent playerComponent = PlayerComponent.MAPPER.get(spaceship);
-        playerComponent.name = "Player 1";
-
         // Set initial spaceship attacking attributes (can be altered by power-ups)
         AttackingComponent attackingComponent = AttackingComponent.MAPPER.get(spaceship);
         attackingComponent.shotDamage = 10;
@@ -64,6 +61,7 @@ public class SpaceshipFactory {
 
         PlayerComponent playerComponent = PlayerComponent.MAPPER.get(spaceship);
         playerComponent.playerId = Device.DEVICE_ID;
+        playerComponent.name = "Player 1";
 
         return spaceship;
     }

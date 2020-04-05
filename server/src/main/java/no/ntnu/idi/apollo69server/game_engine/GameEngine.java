@@ -18,14 +18,14 @@ public class GameEngine implements Runnable, Disposable {
     private Engine engine;
     private boolean serverAlive = true;
 
-    private final Listener listener;
+    private final Listener playerConnectionListener;
     private final List<PlayerConnection> playerConnectionList = new ArrayList<>();
 
     public GameEngine(int id, Engine engine, MessageHandlerDelegator messageHandlerDelegator) {
         this.id = id;
         this.engine = engine;
 
-        listener = new BasePlayerConnectionListener() {
+        playerConnectionListener = new BasePlayerConnectionListener() {
             @Override
             public void received(PlayerConnection connection, Object object) {
                 messageHandlerDelegator.handleMessage(connection, object);
@@ -76,7 +76,7 @@ public class GameEngine implements Runnable, Disposable {
             playerConnectionList.add(playerConnection);
         }
 
-        playerConnection.addListener(listener);
+        playerConnection.addListener(playerConnectionListener);
     }
 
     public void removePlayerFromGame(PlayerConnection playerConnection) {
@@ -84,7 +84,7 @@ public class GameEngine implements Runnable, Disposable {
             playerConnectionList.remove(playerConnection);
         }
 
-        playerConnection.removeListener(listener);
+        playerConnection.removeListener(playerConnectionListener);
     }
 
     public void setServerAlive(boolean serverAlive) {

@@ -9,7 +9,6 @@ import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInQueue;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerMatchmade;
 import no.ntnu.idi.apollo69framework.network_messages.ServerMessage;
-import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
 
 public class MatchmakingModel implements Disposable {
 

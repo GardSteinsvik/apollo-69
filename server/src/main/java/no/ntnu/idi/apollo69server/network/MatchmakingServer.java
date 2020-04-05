@@ -15,8 +15,8 @@ import no.ntnu.idi.apollo69server.game_engine.GameEngineFactory;
 
 public class MatchmakingServer implements Runnable {
 
-    public static final int MAX_GAME_SERVERS = 2;
-    public static final int MAX_PLAYERS = 1;
+    public static final int MAX_GAME_SERVERS = 1;
+    public static final int MAX_PLAYERS = 2;
 
     private int tcpPort;
     private int udpPort;

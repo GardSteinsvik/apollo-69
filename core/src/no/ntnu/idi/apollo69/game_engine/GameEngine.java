@@ -3,6 +3,7 @@ package no.ntnu.idi.apollo69.game_engine;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
@@ -25,14 +26,8 @@ public class GameEngine implements Runnable, Disposable {
 
     @Override
     public void run() {
-        long lastUpdate = System.nanoTime();
-
         while (!gameOver) {
-            long now = System.nanoTime();
-            double deltaTimeSeconds = (now - lastUpdate) / 1_000_000_000d;
-
-            engine.update((float) deltaTimeSeconds);
-
+            engine.update(Gdx.graphics.getDeltaTime());
             gameOver = isGameOver();
         }
 

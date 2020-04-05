@@ -10,40 +10,43 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.esotericsoftware.kryonet.Listener;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import no.ntnu.idi.apollo69.game_engine.Background;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
-import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
-import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
-import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
-import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
+import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
+import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
+import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
-import no.ntnu.idi.apollo69.game_engine.Background;
+import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
+import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 
 public class GameModel {
 
     private Background background;
-
     private GameEngine gameEngine;
-
     private Sound shotSound;
-
     private ShootThread shootThread;
+
+    private Listener gameUpdateListener;
 
     public GameModel() {
         background = new Background();
         gameEngine = new GameEngineFactory().create();
         shotSound = Gdx.audio.newSound(Gdx.files.internal("game/laser.wav"));
 
+        gameUpdateListener = new ServerUpdateListener(gameEngine);
+        NetworkClientSingleton.getInstance().getClient().addListener(gameUpdateListener);
     }
 
     public void handleSpaceshipMovement(float x, float y) {

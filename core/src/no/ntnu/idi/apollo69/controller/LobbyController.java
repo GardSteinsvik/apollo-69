@@ -10,8 +10,8 @@ import no.ntnu.idi.apollo69framework.network_messages.PlayerSpawn;
 
 public class LobbyController {
 
-    Navigator navigator;
-    LobbyModel lobbyModel;
+    private Navigator navigator;
+    private LobbyModel lobbyModel;
     private GameClient gameClient;
 
     public LobbyController(Navigator navigator, LobbyModel lobbyModel) {
@@ -21,7 +21,7 @@ public class LobbyController {
     }
 
     public void joinButtonPressed() {
-        gameClient.sendMessage(new PlayerSpawn(Device.DEVICE_ID, "Testnavn"));
+        gameClient.sendMessage(new PlayerSpawn(Device.DEVICE_ID, "Player_" + Device.DEVICE_ID)); // TODO: Bytt navn til tekst fra input-feltet
         navigator.changeScreen(ScreenType.GAME);
     }
 

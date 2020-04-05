@@ -47,7 +47,6 @@ public class SendUpdateSystem extends EntitySystem {
     }
 
     private void sendUpdate() {
-
         UpdateMessage updateMessage = createUpdateMessage();
 
         for (Entity player: players) {
