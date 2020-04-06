@@ -145,7 +145,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Music
         Music gameMusic = Gdx.audio.newMusic(Gdx.files.internal("game/game.ogg"));
         gameMusic.setLooping(true);
-        gameMusic.setVolume(0.5f);
+        gameMusic.setVolume(0.2f);
         gameMusic.play();
     }
 
@@ -166,6 +166,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.renderPowerups(spriteBatch);
         model.renderSpaceships(spriteBatch);
         model.renderShots(shapeRenderer);
+        model.renderAsteroids(spriteBatch);
 
         // Debug written to font
         PositionComponent positionComponent = PositionComponent.MAPPER.get(model.getGameEngine().getPlayer());

@@ -44,6 +44,7 @@ public class PowerupSystem extends EntitySystem {
     @Override
     public void addedToEngine(Engine engine) {
         // Is this a good idea? Or use getEngine() instead?
+        // This is done in AsteroidSystem too. If changed here, change there too
         this.engine = engine;
 
         powerups = engine.getEntitiesFor(Family.all(PowerupComponent.class).get());

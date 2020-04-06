@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
+import no.ntnu.idi.apollo69.game_engine.components.AsteroidComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
@@ -97,6 +98,21 @@ public class GameModel {
             batch.draw(powerup, posX, posY, width, height);
         }
 
+    }
+
+    public void renderAsteroids(SpriteBatch batch){
+        Family AsteroidFamily = Family.all(AsteroidComponent.class).get();
+        ImmutableArray<Entity> asteroids = gameEngine.getEngine().getEntitiesFor(AsteroidFamily);
+
+        for(Entity asteroid : asteroids) {
+            Texture asteroidTexture = SpriteComponent.MAPPER.get(asteroid).idle.getTexture();
+            float posX = PositionComponent.MAPPER.get(asteroid).position.x;
+            float posY = PositionComponent.MAPPER.get(asteroid).position.y;
+            float width = DimensionComponent.MAPPER.get(asteroid).width;
+            float height = DimensionComponent.MAPPER.get(asteroid).height;
+
+            batch.draw(asteroidTexture,posX, posY, width, height);
+        }
     }
 
     public void renderSpaceships(SpriteBatch batch) {
@@ -229,7 +245,7 @@ public class GameModel {
             while (running.get()) {
                 try {
                     shoot();
-                    shotSound.play();
+/*                    shotSound.play();*/
                     Thread.sleep(interval);
                 } catch (Exception e) {
                     System.out.println("ShootThread: something went wrong");
