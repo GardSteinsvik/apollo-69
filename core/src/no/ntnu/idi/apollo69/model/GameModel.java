@@ -101,7 +101,6 @@ public class GameModel {
             //batch.draw(powerup, posX, posY, width * density, height * density);
             batch.draw(powerup, posX, posY, width, height);
         }
-
     }
 
     public void renderPickups(SpriteBatch batch) {
@@ -125,8 +124,8 @@ public class GameModel {
             Texture asteroidTexture = SpriteComponent.MAPPER.get(asteroid).idle.getTexture();
             float posX = PositionComponent.MAPPER.get(asteroid).position.x;
             float posY = PositionComponent.MAPPER.get(asteroid).position.y;
-            float width = DimensionComponent.MAPPER.get(asteroid).width;
-            float height = DimensionComponent.MAPPER.get(asteroid).height;
+            float width = DimensionComponent.MAPPER.get(asteroid).width * Gdx.graphics.getDensity();
+            float height = DimensionComponent.MAPPER.get(asteroid).height * Gdx.graphics.getDensity();
 
             batch.draw(asteroidTexture,posX, posY, width, height);
         }
