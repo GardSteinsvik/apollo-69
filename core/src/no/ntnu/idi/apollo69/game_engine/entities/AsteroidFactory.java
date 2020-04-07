@@ -16,12 +16,14 @@ import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 
-import static no.ntnu.idi.apollo69.game_engine.entities.PowerupFactory.pickupBounds;
-
 public class AsteroidFactory {
 
     public final int HP_OF_ASTEROID = 50;
     public final float DAMAGE_OF_ASTEROID = 50f;
+    public final int MAXIMUM_SPEED_OF_ASTEROID = 600;
+    public final int MINIMUM_SPEED_OF_ASTEROID = 0;
+
+    private int maxSpawnDistance = 1000;
 
     public Entity create (){
         Entity asteroid = new Entity();
@@ -40,6 +42,8 @@ public class AsteroidFactory {
         int yBounds;
 
         SpriteComponent spriteComponent = SpriteComponent.MAPPER.get(asteroid);
+
+        // Change when we have asset manager.
         spriteComponent.idle = new Sprite(new Texture(Gdx.files.internal("game/asteroids/meteor-1.png")));
 
         PositionComponent positionComponent = PositionComponent.MAPPER.get(asteroid);
@@ -54,37 +58,36 @@ public class AsteroidFactory {
         // Random spawn same as powerups
         // TODO: Make code, to spawn outside map and run through the map.
         if (random.nextInt(2) == 0) {
-            xBounds = random.nextInt(pickupBounds);
+            xBounds = random.nextInt(maxSpawnDistance);
         } else {
-            xBounds = -random.nextInt(pickupBounds);
+            xBounds = -random.nextInt(maxSpawnDistance);
         }
         if (random.nextInt(2) == 0) {
-            yBounds = random.nextInt(pickupBounds);
+            yBounds = random.nextInt(maxSpawnDistance);
         } else {
-            yBounds = -random.nextInt(pickupBounds);
+            yBounds = -random.nextInt(maxSpawnDistance);
         }
+        positionComponent.position = new Vector2(xBounds,yBounds);
+
 
         // Random which direction the asteroid goes.
         // TODO: Can be improved
         Vector2 velocity = new Vector2();
-        int maxVel = 600;
-        int minVel = 0;
         if(random.nextInt(2) == 0) {
-            velocity.x = ((random.nextInt(maxVel-minVel))+minVel);
+            velocity.x = ((random.nextInt(MAXIMUM_SPEED_OF_ASTEROID -MINIMUM_SPEED_OF_ASTEROID))+MINIMUM_SPEED_OF_ASTEROID);
         }else{
-            velocity.x = -((random.nextInt(maxVel-minVel))+minVel);
+            velocity.x = -((random.nextInt(MAXIMUM_SPEED_OF_ASTEROID-MINIMUM_SPEED_OF_ASTEROID))+MINIMUM_SPEED_OF_ASTEROID);
         }
         if(random.nextInt(2) == 0){
-            velocity.y = ((random.nextInt(maxVel-minVel))+minVel);
+            velocity.y = ((random.nextInt(MAXIMUM_SPEED_OF_ASTEROID-MINIMUM_SPEED_OF_ASTEROID))+MINIMUM_SPEED_OF_ASTEROID);
         }else{
-            velocity.y = -((random.nextInt(maxVel-minVel))+minVel);
+            velocity.y = -((random.nextInt(MAXIMUM_SPEED_OF_ASTEROID-MINIMUM_SPEED_OF_ASTEROID))+MINIMUM_SPEED_OF_ASTEROID);
         }
 
         velocityComponent.velocity = velocity;
-        positionComponent.position = new Vector2(xBounds,yBounds);
 
-        dimensionComponent.height = Gdx.graphics.getDensity() * 72f;
-        dimensionComponent.width = Gdx.graphics.getDensity() * 120f;
+        dimensionComponent.height = 72f;
+        dimensionComponent.width = 120f;
 
         return asteroid;
     }
