@@ -1,13 +1,12 @@
 package no.ntnu.idi.apollo69.game_engine.entities;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
+import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayableComponent;
@@ -30,25 +29,13 @@ public class SpaceshipFactory {
         spaceship.add(new SpriteComponent());
         spaceship.add(new AttackingComponent());
         spaceship.add(new PlayerComponent());
-
-        DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(spaceship);
-        dimensionComponent.width = Gdx.graphics.getHeight() / 10f;
-        dimensionComponent.height = Gdx.graphics.getHeight() / 10f;
-
-        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("game/game.atlas"));
-        SpriteComponent spriteComponent = SpriteComponent.MAPPER.get(spaceship);
-        spriteComponent.idle = textureAtlas.createSprite("ship1");
-        spriteComponent.boost.add(textureAtlas.createSprite("ship1_boost1"));
-        spriteComponent.boost.add(textureAtlas.createSprite("ship1_boost2"));
-        spriteComponent.current = spriteComponent.idle;
+        spaceship.add(new BoundingCircleComponent());
 
         PlayerComponent playerComponent = PlayerComponent.MAPPER.get(spaceship);
         playerComponent.name = "Player 1";
 
-        // Set initial spaceship attacking attributes (can be altered by power-ups)
         AttackingComponent attackingComponent = AttackingComponent.MAPPER.get(spaceship);
         attackingComponent.shotDamage = 10;
-        attackingComponent.shotRadius = dimensionComponent.width / 20;
 
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(spaceship);
         velocityComponent.scalar = velocityComponent.idle;

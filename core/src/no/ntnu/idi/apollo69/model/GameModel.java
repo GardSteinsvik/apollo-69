@@ -3,21 +3,24 @@ package no.ntnu.idi.apollo69.model;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
+import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
-import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
@@ -35,8 +38,7 @@ public class GameModel {
 
     private ShootThread shootThread;
 
-    public static final int GAME_RADIUS = 1000; // Temporary
-    public static final int VELOCITY = 400;
+    public static final int GAME_RADIUS = 2000; // Temporary
 
     public GameModel() {
         background = new Background();
@@ -56,18 +58,6 @@ public class GameModel {
                 shootThread.stop();
             }
         }
-    }
-
-    private void shoot() {
-        Entity spaceship = gameEngine.getPlayer();
-
-        PositionComponent spaceshipPosition = PositionComponent.MAPPER.get(spaceship);
-        System.out.println(spaceshipPosition.position.x + ", " + spaceshipPosition.position.y);
-
-        // Create new entity and add components
-        Entity shot = new ShotFactory().create(spaceship);
-
-        gameEngine.getEngine().addEntity(shot);
     }
 
     public void renderBackground(SpriteBatch batch) {
@@ -126,20 +116,55 @@ public class GameModel {
         shapeRenderer.circle(0, 0, radius);
         shapeRenderer.end();
 
-        // Rectangle r = sprite.getBoundingRectangle();
+        //renderSpaceshipBoundingCircle(shapeRenderer);
+    }
 
+    private void renderSpaceshipBoundingCircle(ShapeRenderer shapeRenderer) {
+        Circle c = BoundingCircleComponent.MAPPER.get(gameEngine.getPlayer()).circle;
+        float dim = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).height;
+        float w = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).width;
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(new Color(0, 1, 0, 0.25f));
+        shapeRenderer.circle(c.x, c.y, dim/2);
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     public void inBoundsCheck() {
-        float x = PositionComponent.MAPPER.get(gameEngine.getPlayer()).position.x;
-        float y = PositionComponent.MAPPER.get(gameEngine.getPlayer()).position.y;
-        float offset = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).height;
-        double distanceFromCenter = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) + offset;
+        float offset = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).height / 2;
+        Circle gameSpace = new Circle(new Vector2(0, 0), GAME_RADIUS - offset);
+        Circle spaceship = BoundingCircleComponent.MAPPER.get(gameEngine.getPlayer()).circle;
 
-        if (distanceFromCenter > GameModel.GAME_RADIUS - offset) {
-            VelocityComponent.MAPPER.get(gameEngine.getPlayer()).velocity.x = 0;
-            VelocityComponent.MAPPER.get(gameEngine.getPlayer()).velocity.y = 0;
+        if (!gameSpace.contains(spaceship)) {
+            // Very brute force direction change - could be improved
+            VelocityComponent.MAPPER.get(gameEngine.getPlayer()).velocity.x *= -1;
+            VelocityComponent.MAPPER.get(gameEngine.getPlayer()).velocity.y *= -1;
+            RotationComponent.MAPPER.get(gameEngine.getPlayer()).degrees += 180;
         }
+    }
+
+    // Initialize device-specific spaceship components
+    public void initSpaceship() {
+        DimensionComponent dimComp = DimensionComponent.MAPPER.get(getGameEngine().getPlayer());
+        dimComp.width = Gdx.graphics.getHeight() / 10f;
+        dimComp.height = Gdx.graphics.getHeight() / 10f;
+
+        AttackingComponent attackComp = AttackingComponent.MAPPER.get(getGameEngine().getPlayer());
+        attackComp.shotRadius = dimComp.width / 20;
+
+        SpriteComponent spriteComp = SpriteComponent.MAPPER.get(getGameEngine().getPlayer());
+        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("game/game.atlas"));
+        spriteComp.idle = textureAtlas.createSprite("ship1");
+        spriteComp.boost.add(textureAtlas.createSprite("ship1_boost1"));
+        spriteComp.boost.add(textureAtlas.createSprite("ship1_boost2"));
+        spriteComp.current = spriteComp.idle;
+
+        BoundingCircleComponent boundComp = BoundingCircleComponent.MAPPER.get(getGameEngine().getPlayer());
+        float offset = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).height / 2;
+        Vector2 position = PositionComponent.MAPPER.get(gameEngine.getPlayer()).position;
+        boundComp.circle = new Circle(new Vector2(position.x + offset, position.y + offset), offset);
     }
 
     public void moveCameraToSpaceship(OrthographicCamera camera, float deltaTime) {
@@ -148,30 +173,8 @@ public class GameModel {
         camera.update();
     }
 
-    public void activateBoost() {
-        VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(gameEngine.getPlayer());
-        BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(gameEngine.getPlayer());
-
-        velocityComponent.scalar = boosterComponent.boost;
-        velocityComponent.velocity.x *= boosterComponent.boost;
-        velocityComponent.velocity.y *= boosterComponent.boost;
-
-        SpriteComponent sprite = SpriteComponent.MAPPER.get(gameEngine.getPlayer());
-        if (sprite.boost.size() > 0) {
-            sprite.current = sprite.boost.get(0);
-        }
-    }
-
-    public void deactivateBoost() {
-        VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(gameEngine.getPlayer());
-        BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(gameEngine.getPlayer());
-
-        velocityComponent.scalar = velocityComponent.idle;
-        velocityComponent.velocity.x /= boosterComponent.boost;
-        velocityComponent.velocity.y /= boosterComponent.boost;
-
-        SpriteComponent sprite = SpriteComponent.MAPPER.get(gameEngine.getPlayer());
-        sprite.current = sprite.idle;
+    public void boost(boolean on) {
+        gameEngine.getPlayerControlSystem().boost(on);
     }
 
     // Called when picking up boost power-up
@@ -241,7 +244,7 @@ public class GameModel {
             running.set(true);
             while (running.get()) {
                 try {
-                    shoot();
+                    gameEngine.getPlayerControlSystem().shoot(gameEngine);
                     Thread.sleep(interval);
                 } catch (Exception e) {
                     System.out.println("ShootThread: something went wrong");

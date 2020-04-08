@@ -20,7 +20,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import no.ntnu.idi.apollo69.controller.GameController;
+import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
+import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.model.GameModel;
 
 public class GameView extends ApplicationAdapter implements Screen {
@@ -136,8 +139,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Initialize camera position
         model.moveCameraToSpaceship(orthoCamera, 0);
 
-        //shotRenderer.setColor(Color.YELLOW);
-        //boundaryRenderer.setColor(Color.RED);
+        model.initSpaceship();
     }
 
     @Override
@@ -145,6 +147,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glLineWidth(10);
+        Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
 
         // Set camera
         spriteBatch.setProjectionMatrix(orthoCamera.combined);
