@@ -54,8 +54,6 @@ public class AsteroidFactory {
         HealthComponent healthComponent = HealthComponent.MAPPER.get(asteroid);
         DamageComponent damageComponent = DamageComponent.MAPPER.get(asteroid);
 
-        RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(asteroid);
-
         damageComponent.force = DAMAGE_OF_ASTEROID;
         healthComponent.hp = HP_OF_ASTEROID;
         dimensionComponent.height = 120f;
