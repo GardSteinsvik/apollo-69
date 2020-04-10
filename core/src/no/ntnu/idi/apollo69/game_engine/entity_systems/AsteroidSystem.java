@@ -13,6 +13,7 @@ import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.entities.AsteroidFactory;
+import no.ntnu.idi.apollo69.model.GameModel;
 
 public class AsteroidSystem extends EntitySystem {
 
@@ -32,25 +33,24 @@ public class AsteroidSystem extends EntitySystem {
 
     @Override
     public void update(float deltaTime) {
-        super.update(deltaTime);
-
         // Always keeping it to 3 asteroids in the field.
         for(int i = asteroids.size(); i < 3; i++) {
             Entity asteroid = new AsteroidFactory().create();
-            PositionComponent asteroidPosition = PositionComponent.MAPPER.get(asteroid);
-            DimensionComponent asteroidDimension = DimensionComponent.MAPPER.get(asteroid);
-
             engine.addEntity(asteroid);
         }
         // Maybe out of map component?
         // TODO: make real despawn code for the asteroids.
         for(Entity asteroid: asteroids){
-            if((asteroid.getComponent(PositionComponent.class).position.x > Gdx.graphics.getWidth())
-                    || (asteroid.getComponent(PositionComponent.class).position.y > Gdx.graphics.getHeight())){
+            if(asteroid.getComponent(PositionComponent.class).position.x > GameModel.GAME_RADIUS + 200){
                 engine.removeEntity(asteroid);
             }
-            if((asteroid.getComponent(PositionComponent.class).position.x < -Gdx.graphics.getWidth())
-                    || (asteroid.getComponent(PositionComponent.class).position.y < -Gdx.graphics.getHeight())){
+            if(asteroid.getComponent(PositionComponent.class).position.x < -GameModel.GAME_RADIUS + 200){
+                engine.removeEntity(asteroid);
+            }
+            if(asteroid.getComponent(PositionComponent.class).position.y > GameModel.GAME_RADIUS + 200){
+                engine.removeEntity(asteroid);
+            }
+            if(asteroid.getComponent(PositionComponent.class).position.y < -GameModel.GAME_RADIUS + 200){
                 engine.removeEntity(asteroid);
             }
         }

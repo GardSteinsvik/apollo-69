@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -112,6 +113,10 @@ public class GameModel {
         };
     };
 
+    public void initDeviceSpecificAsteroidValues(){
+
+    }
+
     public void renderAsteroids(SpriteBatch batch){
         Family AsteroidFamily = Family.all(AsteroidComponent.class).get();
         ImmutableArray<Entity> asteroids = gameEngine.getEngine().getEntitiesFor(AsteroidFamily);
@@ -120,9 +125,8 @@ public class GameModel {
             Texture asteroidTexture = SpriteComponent.MAPPER.get(asteroid).idle.getTexture();
             float posX = PositionComponent.MAPPER.get(asteroid).position.x;
             float posY = PositionComponent.MAPPER.get(asteroid).position.y;
-            float width = DimensionComponent.MAPPER.get(asteroid).width * Gdx.graphics.getDensity();
-            float height = DimensionComponent.MAPPER.get(asteroid).height * Gdx.graphics.getDensity();
-
+            float width = DimensionComponent.MAPPER.get(asteroid).width;
+            float height = DimensionComponent.MAPPER.get(asteroid).height;
             batch.draw(asteroidTexture,posX, posY, width, height);
         }
     }

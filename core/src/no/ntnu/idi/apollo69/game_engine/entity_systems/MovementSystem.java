@@ -36,8 +36,11 @@ public class MovementSystem extends EntitySystem {
 
             positionComponent.position.x += velocityComponent.velocity.x * deltaTime;
             positionComponent.position.y += velocityComponent.velocity.y * deltaTime;
-            rectangleBoundsComponent.rectangle.setX(positionComponent.position.x);
-            rectangleBoundsComponent.rectangle.setY(positionComponent.position.y);
+
+            if(rectangleBoundsComponent != null) {
+                rectangleBoundsComponent.rectangle.setX(positionComponent.position.x);
+                rectangleBoundsComponent.rectangle.setY(positionComponent.position.y);
+            }
 
             if (boundingComponent != null) {
                 float boundX = positionComponent.position.x + dimensionComponent.height / 2;

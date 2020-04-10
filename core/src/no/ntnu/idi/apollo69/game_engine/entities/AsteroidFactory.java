@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
@@ -13,8 +14,10 @@ import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
+import no.ntnu.idi.apollo69.model.GameModel;
 
 public class AsteroidFactory {
 
@@ -23,7 +26,7 @@ public class AsteroidFactory {
     public final int MAXIMUM_SPEED_OF_ASTEROID = 600;
     public final int MINIMUM_SPEED_OF_ASTEROID = 0;
 
-    private int maxSpawnDistance = 1000;
+    private int maxSpawnDistanceRadius = GameModel.GAME_RADIUS;
 
     public Entity create (){
         Entity asteroid = new Entity();
@@ -35,7 +38,6 @@ public class AsteroidFactory {
         asteroid.add(new VelocityComponent());
         asteroid.add(new SpriteComponent());
         asteroid.add(new HealthComponent());
-
         Random random = new Random();
 
         int xBounds;
@@ -52,20 +54,24 @@ public class AsteroidFactory {
         HealthComponent healthComponent = HealthComponent.MAPPER.get(asteroid);
         DamageComponent damageComponent = DamageComponent.MAPPER.get(asteroid);
 
+        RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(asteroid);
+
         damageComponent.force = DAMAGE_OF_ASTEROID;
         healthComponent.hp = HP_OF_ASTEROID;
+        dimensionComponent.height = 120f;
+        dimensionComponent.width = 120f;
 
         // Random spawn same as powerups
         // TODO: Make code, to spawn outside map and run through the map.
         if (random.nextInt(2) == 0) {
-            xBounds = random.nextInt(maxSpawnDistance);
+            xBounds = random.nextInt(maxSpawnDistanceRadius);
         } else {
-            xBounds = -random.nextInt(maxSpawnDistance);
+            xBounds = -random.nextInt(maxSpawnDistanceRadius);
         }
         if (random.nextInt(2) == 0) {
-            yBounds = random.nextInt(maxSpawnDistance);
+            yBounds = random.nextInt(maxSpawnDistanceRadius);
         } else {
-            yBounds = -random.nextInt(maxSpawnDistance);
+            yBounds = -random.nextInt(maxSpawnDistanceRadius);
         }
         positionComponent.position = new Vector2(xBounds,yBounds);
 
@@ -85,9 +91,6 @@ public class AsteroidFactory {
         }
 
         velocityComponent.velocity = velocity;
-
-        dimensionComponent.height = 72f;
-        dimensionComponent.width = 120f;
 
         return asteroid;
     }
