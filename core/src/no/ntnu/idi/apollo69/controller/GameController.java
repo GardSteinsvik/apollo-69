@@ -1,6 +1,5 @@
 package no.ntnu.idi.apollo69.controller;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import no.ntnu.idi.apollo69.model.GameModel;
@@ -33,11 +32,11 @@ public class GameController {
     }
 
     public void boostButtonPressed() {
-        model.activateBoost();
+        model.boost(true);
     }
 
     public void boostButtonReleased() {
-        model.deactivateBoost();
+        model.boost(false);
     }
 
 }

@@ -5,9 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 
+import com.badlogic.gdx.math.Vector2;
+
 import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
+import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.ScoreComponent;
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
@@ -32,6 +35,7 @@ public class SpaceshipFactory {
         spaceship.add(new SpriteComponent());
         spaceship.add(new AttackingComponent());
         spaceship.add(new PlayerComponent());
+        spaceship.add(new BoundingCircleComponent());
         spaceship.add(new RectangleBoundsComponent());
         spaceship.add(new ScoreComponent());
 
@@ -52,17 +56,15 @@ public class SpaceshipFactory {
         PlayerComponent playerComponent = PlayerComponent.MAPPER.get(spaceship);
         playerComponent.name = "Player 1";
 
-        // Set initial spaceship attacking attributes (can be altered by power-ups)
         AttackingComponent attackingComponent = AttackingComponent.MAPPER.get(spaceship);
         attackingComponent.shotDamage = 10;
-        attackingComponent.shotRadius = dimensionComponent.width / 20;
 
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(spaceship);
-        //velocityComponent.boost = 400f * Gdx.graphics.getDensity();
-        velocityComponent.boost = 1 * Gdx.graphics.getDensity();
+        velocityComponent.scalar = velocityComponent.idle;
+        velocityComponent.velocity = new Vector2(0,1).scl(velocityComponent.scalar);
 
         BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(spaceship);
-        boosterComponent.speed = 1000;
+        boosterComponent.boost = boosterComponent.defaultValue;
 
         return spaceship;
     }
