@@ -57,7 +57,7 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
         SpriteComponent sprite = SpriteComponent.MAPPER.get(player);
 
         if (on) {
-            velocityComponent.scalar = boosterComponent.boost;
+            velocityComponent.scalar *= boosterComponent.boost;
             velocityComponent.velocity.x *= boosterComponent.boost;
             velocityComponent.velocity.y *= boosterComponent.boost;
 
@@ -65,7 +65,7 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
                 sprite.current = sprite.boost.get(0);
             }
         } else {
-            velocityComponent.scalar = velocityComponent.idle;
+            velocityComponent.scalar /= velocityComponent.idle;
             velocityComponent.velocity.x /= boosterComponent.boost;
             velocityComponent.velocity.y /= boosterComponent.boost;
             sprite.current = sprite.idle;
