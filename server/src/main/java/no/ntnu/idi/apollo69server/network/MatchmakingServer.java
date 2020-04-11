@@ -23,6 +23,7 @@ public class MatchmakingServer implements Runnable {
 
     private List<PlayerConnection> connections = new ArrayList<>();
 
+    private ThreadGroup gameEngineThreadGroup = new ThreadGroup("GameEngine");
     private List<GameEngine> gameEngineList = new ArrayList<>();
 
     private Server server;
@@ -39,9 +40,9 @@ public class MatchmakingServer implements Runnable {
             }
         };
 
-        /* MATCHMAKING HANDLER */
+        /* NEW CONNECTION HANDLER */
         messageHandlerDelegator.registerHandler((connection, deviceInfo) -> {
-            System.out.println("Player " + deviceInfo.getDeviceId() + " wants to join the game!");
+            System.out.println("Player " + deviceInfo.getDeviceId() + " wants to join a game!");
             connection.setDeviceId(deviceInfo.getDeviceId());
             ServerMessage serverMessage = new ServerMessage("Welcome, " + deviceInfo.getDeviceId());
             connection.sendTCP(serverMessage);
@@ -49,16 +50,8 @@ public class MatchmakingServer implements Runnable {
 
         Apollo69Framework.getMessageClasses().forEach(server.getKryo()::register);
 
-        ThreadGroup gameEngineThreadGroup = new ThreadGroup("GameEngine");
-
         for (int i = 0; i < MAX_GAME_SERVERS; i++) {
-            System.out.println("Starting GameEngine" + i);
-            GameEngine gameEngine = new GameEngineFactory().create(i);
-            gameEngineList.add(gameEngine);
-            Thread gameEngineThread = new Thread(gameEngineThreadGroup, gameEngine, "GameEngine" + i);
-
-            gameEngineThread.setDaemon(true);
-            gameEngineThread.start();
+            addGameServer();
         }
     }
 
@@ -78,6 +71,21 @@ public class MatchmakingServer implements Runnable {
         }
 
         server.run();
+    }
+
+    private void addGameServer() {
+        int i = gameEngineList.size();
+        System.out.println("Starting GameEngine" + i);
+        GameEngine gameEngine = new GameEngineFactory().create(i);
+        gameEngineList.add(gameEngine);
+
+        Thread gameEngineThread = new Thread(gameEngineThreadGroup, gameEngine, "GameEngine" + i);
+        gameEngineThread.setDaemon(true);
+        gameEngineThread.start();
+    }
+
+    private void removeGameServer() {
+
     }
 
     public void stop() {
