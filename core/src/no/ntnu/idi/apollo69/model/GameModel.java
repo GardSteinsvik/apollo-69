@@ -20,15 +20,18 @@ import com.esotericsoftware.kryonet.Listener;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import no.ntnu.idi.apollo69.game_engine.Assets;
 import no.ntnu.idi.apollo69.game_engine.Background;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
+import no.ntnu.idi.apollo69.game_engine.components.GemType;
 import no.ntnu.idi.apollo69.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69.game_engine.components.AsteroidComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
 import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
@@ -60,6 +63,7 @@ public class GameModel {
 
     public GameModel() {
         background = new Background();
+        Assets.load();
         gameEngine = new GameEngineFactory().create();
         shotSound = Gdx.audio.newSound(Gdx.files.internal("game/laser.wav"));
 
@@ -95,16 +99,19 @@ public class GameModel {
 
         for (int i = 0; i < powerupEntities.size(); i++) {
             Entity entity = powerupEntities.get(i);
-            Texture powerup = PowerupComponent.MAPPER.get(entity).powerup.getTexture();
+            //Texture powerup = PowerupComponent.MAPPER.get(entity).powerup.getTexture();
+            PowerupType powerupType = PowerupComponent.MAPPER.get(entity).type;
             float posX = PositionComponent.MAPPER.get(entity).position.x;
             float posY = PositionComponent.MAPPER.get(entity).position.y;
             float width = DimensionComponent.MAPPER.get(entity).width;
             float height = DimensionComponent.MAPPER.get(entity).height;
-            float density = Gdx.graphics.getDensity();
 
             // Density adjustements would ruin bounds, not appropriate application (!)
+            // float density = Gdx.graphics.getDensity();
+
             //batch.draw(powerup, posX, posY, width * density, height * density);
-            batch.draw(powerup, posX, posY, width, height);
+            //batch.draw(powerup, posX, posY, width, height);
+            batch.draw(Assets.getPowerupRegion(powerupType), posX, posY, width, height);
         }
     }
 
@@ -114,9 +121,10 @@ public class GameModel {
 
 
         for (Entity gem : gemEntities) {
+            GemType gemType = GemComponent.MAPPER.get(gem).type;
             GemComponent gemComponent = GemComponent.MAPPER.get(gem);
             RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
-            batch.draw(gemComponent.texture, rectangleBoundsComponent.rectangle.getX(), rectangleBoundsComponent.rectangle.getY(),
+            batch.draw(Assets.getPickupRegion(gemType), rectangleBoundsComponent.rectangle.getX(), rectangleBoundsComponent.rectangle.getY(),
                     rectangleBoundsComponent.rectangle.getWidth(), rectangleBoundsComponent.rectangle.getHeight());
         };
     };

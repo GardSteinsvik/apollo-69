@@ -1,8 +1,6 @@
 package no.ntnu.idi.apollo69.game_engine.entities;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Random;
@@ -53,8 +51,7 @@ public class GemFactory {
 
         GemComponent gemComponent = GemComponent.MAPPER.get(gem);
 
-        // Set the texture and type of the gem
-        gemComponent.texture = new Texture(Gdx.files.internal("game/gems/meteorite.png"));
+        // Set the type of the gem
         gemComponent.type = GemType.METEORITE;
 
         return gem;
@@ -65,8 +62,7 @@ public class GemFactory {
 
         GemComponent gemComponent = GemComponent.MAPPER.get(gem);
 
-        // Set the texture and type of the gem
-        gemComponent.texture = new Texture(Gdx.files.internal("game/gems/star.png"));
+        // Set the type of the gem
         gemComponent.type = GemType.STAR;
 
         return gem;
@@ -77,8 +73,7 @@ public class GemFactory {
 
         GemComponent gemComponent = GemComponent.MAPPER.get(gem);
 
-        // Set the texture and type of the gem
-        gemComponent.texture = new Texture(Gdx.files.internal("game/gems/coin.png"));
+        // Set the type of the gem
         gemComponent.type = GemType.COIN;
 
         return gem;
@@ -90,7 +85,6 @@ public class GemFactory {
         GemComponent gemComponent = GemComponent.MAPPER.get(gem);
 
         // Set the texture and type of the gem
-        gemComponent.texture = new Texture(Gdx.files.internal("game/gems/ruby.png"));
         gemComponent.type = GemType.RUBY;
 
         return gem;

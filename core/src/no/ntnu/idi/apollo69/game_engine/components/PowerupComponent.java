@@ -8,6 +8,6 @@ public class PowerupComponent implements Component {
     public static final ComponentMapper<PowerupComponent> MAPPER = ComponentMapper.getFor(PowerupComponent.class);
 
     // TODO: Maybe use spritecomponent instead of new sprite under this component?
-    public Sprite powerup = new Sprite(); //The look of the Powerup, maybe it should just be a Texture and not a Sprite?
+    // THis component is for indicating that it is a Powerup, and it uses PowerupType, thus I do not think it should be a part of spritecomponent (!)
     public PowerupType type = PowerupType.DEFAULT;
 }

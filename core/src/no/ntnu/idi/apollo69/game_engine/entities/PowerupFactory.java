@@ -1,9 +1,6 @@
 package no.ntnu.idi.apollo69.game_engine.entities;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -61,8 +58,7 @@ public class PowerupFactory {
 
         PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
 
-        // Set the texture and type of the powerup
-        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("game/powerups/energy.png")));
+        // Set the type of the powerup
         powerupComponent.type = PowerupType.ENERGY;
 
         return powerup;
@@ -72,8 +68,7 @@ public class PowerupFactory {
 
         PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
 
-        // Set the texture and type of the powerup
-        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("game/powerups/invisible.png")));
+        // Set the type of the powerup
         powerupComponent.type = PowerupType.INVISIBLE;
 
         return powerup;
@@ -83,8 +78,7 @@ public class PowerupFactory {
 
         PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
 
-        // Set the texture and type of the powerup
-        powerupComponent.powerup = new Sprite(new Texture(Gdx.files.internal("game/powerups/shield.png")));
+        // Set the type of the powerup
         powerupComponent.type = PowerupType.SHIELD;
 
         return powerup;

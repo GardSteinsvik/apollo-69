@@ -1,0 +1,47 @@
+powerups.png
+size: 49, 177
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ammo
+  rotate: false
+  xy: 0, 0
+  size: 48, 29
+  orig: 48, 29
+  offset: 0, 0
+  index: -1
+energy
+  rotate: false
+  xy: 0, 29
+  size: 48, 29
+  orig: 48, 29
+  offset: 0, 0
+  index: -1
+health
+  rotate: false
+  xy: 0, 58
+  size: 48, 29
+  orig: 48, 29
+  offset: 0, 0
+  index: -1
+invisible
+  rotate: false
+  xy: 0, 87
+  size: 49, 32
+  orig: 49, 32
+  offset: 0, 0
+  index: -1
+rocket
+  rotate: false
+  xy: 0, 119
+  size: 47, 29
+  orig: 47, 29
+  offset: 0, 0
+  index: -1
+shield
+  rotate: false
+  xy: 0, 148
+  size: 48, 29
+  orig: 48, 29
+  offset: 0, 0
+  index: -1
