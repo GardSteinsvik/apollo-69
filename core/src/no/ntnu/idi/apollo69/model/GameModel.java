@@ -4,45 +4,71 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.esotericsoftware.kryonet.Listener;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import no.ntnu.idi.apollo69.game_engine.Assets;
+import no.ntnu.idi.apollo69.game_engine.Background;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
+import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
+import no.ntnu.idi.apollo69.game_engine.components.GemType;
+import no.ntnu.idi.apollo69.game_engine.components.PickupComponent;
+import no.ntnu.idi.apollo69.game_engine.components.AsteroidComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
+import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
+import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
+import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
+import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
+import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
-import no.ntnu.idi.apollo69.game_engine.Background;
+import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
+import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 
 public class GameModel {
 
     private Background background;
-
     private GameEngine gameEngine;
-
+    private Sound shotSound;
     private ShootThread shootThread;
+
+    private Listener gameUpdateListener;
 
     public static final int GAME_RADIUS = 2000; // Temporary
 
     public GameModel() {
         background = new Background();
+        Assets.load();
         gameEngine = new GameEngineFactory().create();
+        shotSound = Gdx.audio.newSound(Gdx.files.internal("game/laser.wav"));
+
+        gameUpdateListener = new ServerUpdateListener(gameEngine);
+        NetworkClientSingleton.getInstance().getClient().addListener(gameUpdateListener);
     }
 
     public void handleSpaceshipMovement(float x, float y) {
@@ -62,6 +88,63 @@ public class GameModel {
 
     public void renderBackground(SpriteBatch batch) {
         background.render(batch, gameEngine.getPlayer());
+    }
+
+    public void renderPowerups(SpriteBatch batch) {
+        // Render Powerup(s), first so that it renders under the spaceship, change this after logic is in place on touch anyway?
+
+        Family powerupFamily = Family.all(PowerupComponent.class).get();
+
+        ImmutableArray<Entity> powerupEntities = gameEngine.getEngine().getEntitiesFor(powerupFamily);
+
+        for (int i = 0; i < powerupEntities.size(); i++) {
+            Entity entity = powerupEntities.get(i);
+            //Texture powerup = PowerupComponent.MAPPER.get(entity).powerup.getTexture();
+            PowerupType powerupType = PowerupComponent.MAPPER.get(entity).type;
+            float posX = PositionComponent.MAPPER.get(entity).position.x;
+            float posY = PositionComponent.MAPPER.get(entity).position.y;
+            float width = DimensionComponent.MAPPER.get(entity).width;
+            float height = DimensionComponent.MAPPER.get(entity).height;
+
+            // Density adjustements would ruin bounds, not appropriate application (!)
+            // float density = Gdx.graphics.getDensity();
+
+            //batch.draw(powerup, posX, posY, width * density, height * density);
+            //batch.draw(powerup, posX, posY, width, height);
+            batch.draw(Assets.getPowerupRegion(powerupType), posX, posY, width, height);
+        }
+    }
+
+    public void renderPickups(SpriteBatch batch) {
+        Family GemFamily = Family.all(GemComponent.class).get();
+        ImmutableArray<Entity> gemEntities = gameEngine.getEngine().getEntitiesFor(GemFamily);
+
+
+        for (Entity gem : gemEntities) {
+            GemType gemType = GemComponent.MAPPER.get(gem).type;
+            GemComponent gemComponent = GemComponent.MAPPER.get(gem);
+            RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
+            batch.draw(Assets.getPickupRegion(gemType), rectangleBoundsComponent.rectangle.getX(), rectangleBoundsComponent.rectangle.getY(),
+                    rectangleBoundsComponent.rectangle.getWidth(), rectangleBoundsComponent.rectangle.getHeight());
+        };
+    };
+
+    public void initDeviceSpecificAsteroidValues(){
+
+    }
+
+    public void renderAsteroids(SpriteBatch batch){
+        Family AsteroidFamily = Family.all(AsteroidComponent.class).get();
+        ImmutableArray<Entity> asteroids = gameEngine.getEngine().getEntitiesFor(AsteroidFamily);
+
+        for(Entity asteroid : asteroids) {
+            Texture asteroidTexture = SpriteComponent.MAPPER.get(asteroid).idle.getTexture();
+            float posX = PositionComponent.MAPPER.get(asteroid).position.x;
+            float posY = PositionComponent.MAPPER.get(asteroid).position.y;
+            float width = DimensionComponent.MAPPER.get(asteroid).width;
+            float height = DimensionComponent.MAPPER.get(asteroid).height;
+            batch.draw(asteroidTexture,posX, posY, width, height);
+        }
     }
 
     public void renderSpaceships(SpriteBatch batch) {
@@ -106,7 +189,6 @@ public class GameModel {
 
             shapeRenderer.circle(posX, posY, radius);
         }
-
         shapeRenderer.end();
     }
 

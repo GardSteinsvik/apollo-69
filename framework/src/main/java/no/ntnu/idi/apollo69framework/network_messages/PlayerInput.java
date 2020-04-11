@@ -1,19 +1,21 @@
 package no.ntnu.idi.apollo69framework.network_messages;
 
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
+
 public class PlayerInput {
     private String playerId;
-    private float moveSpeed;
-    private float rotation;
+    private VelocityDto velocityDto;
+    private RotationDto rotationDto;
     private boolean shooting;
     private boolean boosting;
 
     public PlayerInput() {
     }
 
-    public PlayerInput(String playerId, float moveSpeed, float rotation, boolean shooting, boolean boosting) {
-        this.playerId = playerId;
-        this.moveSpeed = moveSpeed;
-        this.rotation = rotation;
+    public PlayerInput(VelocityDto velocityDto, RotationDto rotationDto, boolean shooting, boolean boosting) {
+        this.velocityDto = velocityDto;
+        this.rotationDto = rotationDto;
         this.shooting = shooting;
         this.boosting = boosting;
     }
@@ -26,20 +28,20 @@ public class PlayerInput {
         this.playerId = playerId;
     }
 
-    public float getMoveSpeed() {
-        return moveSpeed;
+    public VelocityDto getVelocityDto() {
+        return velocityDto;
     }
 
-    public void setMoveSpeed(float moveSpeed) {
-        this.moveSpeed = moveSpeed;
+    public void setVelocityDto(VelocityDto velocityDto) {
+        this.velocityDto = velocityDto;
     }
 
-    public float getRotation() {
-        return rotation;
+    public RotationDto getRotationDto() {
+        return rotationDto;
     }
 
-    public void setRotation(float rotation) {
-        this.rotation = rotation;
+    public void setRotationDto(RotationDto rotationDto) {
+        this.rotationDto = rotationDto;
     }
 
     public boolean isShooting() {
@@ -56,5 +58,16 @@ public class PlayerInput {
 
     public void setBoosting(boolean boosting) {
         this.boosting = boosting;
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerInput{" +
+                "playerId='" + playerId + '\'' +
+                ", velocityDto=" + velocityDto +
+                ", rotationDto=" + rotationDto +
+                ", shooting=" + shooting +
+                ", boosting=" + boosting +
+                '}';
     }
 }

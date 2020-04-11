@@ -3,6 +3,7 @@ package no.ntnu.idi.apollo69.view;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -30,6 +31,7 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
     private LobbyModel lobbyModel;
     private Stage stage;
     private Texture backgroundTexture;
+    private Music themeMusic;
 
     public LobbyView(LobbyController lobbyController, LobbyModel lobbyModel, SpriteBatch spriteBatch) {
         this.lobbyController = lobbyController;
@@ -121,6 +123,11 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
 
         stage.addActor(group);
         Gdx.input.setInputProcessor(stage);
+
+        Music themeMusic = Gdx.audio.newMusic(Gdx.files.internal("game/theme.ogg"));
+        themeMusic.setLooping(true);
+        themeMusic.setVolume(0.5f);
+        //themeMusic.play();
     }
 
     @Override
