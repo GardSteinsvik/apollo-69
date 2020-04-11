@@ -122,10 +122,12 @@ public class GameModel {
 
         for (Entity gem : gemEntities) {
             GemType gemType = GemComponent.MAPPER.get(gem).type;
-            GemComponent gemComponent = GemComponent.MAPPER.get(gem);
-            RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
-            batch.draw(Assets.getPickupRegion(gemType), rectangleBoundsComponent.rectangle.getX(), rectangleBoundsComponent.rectangle.getY(),
-                    rectangleBoundsComponent.rectangle.getWidth(), rectangleBoundsComponent.rectangle.getHeight());
+            float posX = PositionComponent.MAPPER.get(gem).position.x;
+            float posY = PositionComponent.MAPPER.get(gem).position.y;
+            float width = DimensionComponent.MAPPER.get(gem).width;
+            float height = DimensionComponent.MAPPER.get(gem).height;
+            //RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
+            batch.draw(Assets.getPickupRegion(gemType), posX, posY, width, height);
         };
     };
 

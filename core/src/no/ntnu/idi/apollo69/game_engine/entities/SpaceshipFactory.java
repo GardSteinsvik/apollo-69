@@ -36,15 +36,11 @@ public class SpaceshipFactory {
         spaceship.add(new AttackingComponent());
         spaceship.add(new PlayerComponent());
         spaceship.add(new BoundingCircleComponent());
-        spaceship.add(new RectangleBoundsComponent());
         spaceship.add(new ScoreComponent());
 
         DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(spaceship);
         dimensionComponent.width = Gdx.graphics.getHeight() / 10f;
         dimensionComponent.height = Gdx.graphics.getHeight() / 10f;
-
-        RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(spaceship);
-        rectangleBoundsComponent.rectangle = new Rectangle(0, 0, dimensionComponent.width, dimensionComponent.height);
 
         TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("game/game.atlas"));
         SpriteComponent spriteComponent = SpriteComponent.MAPPER.get(spaceship);

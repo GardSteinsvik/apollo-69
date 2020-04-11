@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Intersector;
 
+import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
 import no.ntnu.idi.apollo69.game_engine.components.GemType;
 import no.ntnu.idi.apollo69.game_engine.components.PickupComponent;
@@ -66,10 +67,12 @@ public class PickupSystem extends EntitySystem {
             engine.addEntity(gem);
         }
         for (Entity spaceship : spaceships) {
-            RectangleBoundsComponent spaceshipBounds = RectangleBoundsComponent.MAPPER.get(spaceship);
+            //RectangleBoundsComponent spaceshipBounds = RectangleBoundsComponent.MAPPER.get(spaceship);
+            BoundingCircleComponent spaceshipboundingCircleComponent = BoundingCircleComponent.MAPPER.get(spaceship);
             for (Entity pickup : pickups) {
                 RectangleBoundsComponent pickupBounds = RectangleBoundsComponent.MAPPER.get(pickup);
-                if (Intersector.overlaps(spaceshipBounds.rectangle, pickupBounds.rectangle)) {
+                //if (Intersector.overlaps(spaceshipBounds.rectangle, pickupBounds.rectangle)) {
+                if (Intersector.overlaps(spaceshipboundingCircleComponent.circle, pickupBounds.rectangle)) {
                     GemComponent gemComponent = GemComponent.MAPPER.get(pickup);
                     handleGemPickup(spaceship, gemComponent);
                     engine.removeEntity(pickup);

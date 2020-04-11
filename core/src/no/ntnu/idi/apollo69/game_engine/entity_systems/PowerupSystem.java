@@ -5,21 +5,18 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Intersector;
 
 import java.time.Instant;
 
+import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.EnergyComponent;
-import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.InvisibleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
 import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.components.ShieldComponent;
-import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.entities.PowerupFactory;
 
 public class PowerupSystem extends EntitySystem {
@@ -114,12 +111,13 @@ public class PowerupSystem extends EntitySystem {
         for (int i = 0; i < spaceships.size(); i++) {
             // Should the logic for this only be for the client ship? (server-side frame optimization rendering)
             Entity spaceship = spaceships.get(i);
-            RectangleBoundsComponent spaceshipRectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(spaceship);
-
+            //RectangleBoundsComponent spaceshipRectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(spaceship);
+            BoundingCircleComponent spaceshipboundingCircleComponent = BoundingCircleComponent.MAPPER.get(spaceship);
             for (int j = 0; j < powerups.size(); j++) {
                 Entity powerup = powerups.get(j);
                 RectangleBoundsComponent powerupRectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(powerup);
-                if (Intersector.overlaps(powerupRectangleBoundsComponent.rectangle, spaceshipRectangleBoundsComponent.rectangle)) {
+                //if (Intersector.overlaps(powerupRectangleBoundsComponent.rectangle, spaceshipRectangleBoundsComponent.rectangle)) {
+                if (Intersector.overlaps(spaceshipboundingCircleComponent.circle, powerupRectangleBoundsComponent.rectangle)) {
                     PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
                     handlePickup(spaceship, powerupComponent);
                     //pickupSound.play();
