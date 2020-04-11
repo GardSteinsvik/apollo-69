@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Listener;
 
@@ -84,29 +85,32 @@ public class GameModel {
 
         for (Entity gem : gemEntities) {
             GemComponent gemComponent = GemComponent.MAPPER.get(gem);
-            RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
-            batch.draw(gemComponent.texture, rectangleBoundsComponent.rectangle.getX(), rectangleBoundsComponent.rectangle.getY(),
-                    rectangleBoundsComponent.rectangle.getWidth(), rectangleBoundsComponent.rectangle.getHeight());
+            Rectangle bounds = RectangleBoundsComponent.MAPPER.get(gem).rectangle;
+            batch.draw(
+                    gemComponent.texture,
+                    bounds.getX(),
+                    bounds.getY(),
+                    bounds.getWidth(),
+                    bounds.getHeight()
+            );
         }
     }
 
     public void renderAsteroids(SpriteBatch batch){
-        Family AsteroidFamily = Family.all(AsteroidComponent.class).get();
-        ImmutableArray<Entity> asteroids = gameEngine.getEngine().getEntitiesFor(AsteroidFamily);
+        ImmutableArray<Entity> asteroids = gameEngine.getEngine().getEntitiesFor(Family.all(AsteroidComponent.class).get());
 
-        for(Entity asteroid : asteroids) {
+        for (Entity asteroid: asteroids) {
             Texture asteroidTexture = SpriteComponent.MAPPER.get(asteroid).idle.getTexture();
             float posX = PositionComponent.MAPPER.get(asteroid).position.x;
             float posY = PositionComponent.MAPPER.get(asteroid).position.y;
             float width = DimensionComponent.MAPPER.get(asteroid).width;
             float height = DimensionComponent.MAPPER.get(asteroid).height;
-            batch.draw(asteroidTexture,posX, posY, width, height);
+            batch.draw(asteroidTexture, posX, posY, width, height);
         }
     }
 
     public void renderSpaceships(SpriteBatch batch) {
-        Family spaceshipFamily = Family.all(PlayerComponent.class).get();
-        ImmutableArray<Entity> spaceships = gameEngine.getEngine().getEntitiesFor(spaceshipFamily);
+        ImmutableArray<Entity> spaceships = gameEngine.getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get());
 
         for (Entity spaceship : spaceships) {
             SpriteComponent spriteComponent = SpriteComponent.MAPPER.get(spaceship);
@@ -127,8 +131,7 @@ public class GameModel {
                 spriteComponent.lastUpdated = System.currentTimeMillis();
             }
 
-            batch.draw(spriteComponent.current, posX, posY, width/2, height/2,
-                    width, height, 1,1, rotation);
+            batch.draw(spriteComponent.current, posX, posY, width/2, height/2, width, height, 1, 1, rotation);
         }
     }
 
