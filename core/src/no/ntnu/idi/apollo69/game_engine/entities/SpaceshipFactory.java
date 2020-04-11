@@ -3,14 +3,21 @@ package no.ntnu.idi.apollo69.game_engine.entities;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Rectangle;
+
+import com.badlogic.gdx.math.Vector2;
+
 import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
+import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.ScoreComponent;
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayableComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
@@ -28,10 +35,16 @@ public class SpaceshipFactory {
         spaceship.add(new SpriteComponent());
         spaceship.add(new AttackingComponent());
         spaceship.add(new PlayerComponent());
+        spaceship.add(new BoundingCircleComponent());
+        spaceship.add(new RectangleBoundsComponent());
+        spaceship.add(new ScoreComponent());
 
         DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(spaceship);
         dimensionComponent.width = Gdx.graphics.getHeight() / 10f;
         dimensionComponent.height = Gdx.graphics.getHeight() / 10f;
+
+        RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(spaceship);
+        rectangleBoundsComponent.rectangle = new Rectangle(0, 0, dimensionComponent.width, dimensionComponent.height);
 
         TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("game/game.atlas"));
         SpriteComponent spriteComponent = SpriteComponent.MAPPER.get(spaceship);
@@ -43,14 +56,13 @@ public class SpaceshipFactory {
         // Set initial spaceship attacking attributes (can be altered by power-ups)
         AttackingComponent attackingComponent = AttackingComponent.MAPPER.get(spaceship);
         attackingComponent.shotDamage = 10;
-        attackingComponent.shotRadius = dimensionComponent.width / 20;
 
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(spaceship);
-        //velocityComponent.boost = 400f * Gdx.graphics.getDensity();
-        velocityComponent.boost = 1 * Gdx.graphics.getDensity();
+        velocityComponent.scalar = velocityComponent.idle;
+        velocityComponent.velocity = new Vector2(0,1).scl(velocityComponent.scalar);
 
         BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(spaceship);
-        boosterComponent.speed = 1000;
+        boosterComponent.boost = boosterComponent.defaultValue;
 
         return spaceship;
     }

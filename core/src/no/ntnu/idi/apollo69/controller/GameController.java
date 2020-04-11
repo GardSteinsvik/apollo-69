@@ -29,11 +29,11 @@ public class GameController {
     }
 
     public void boostButtonPressed() {
-        model.activateBoost();
+        model.boost(true);
     }
 
     public void boostButtonReleased() {
-        model.deactivateBoost();
+        model.boost(false);
     }
 
 }

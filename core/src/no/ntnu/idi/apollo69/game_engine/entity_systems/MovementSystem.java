@@ -5,7 +5,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Vector2;
+
+import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
+import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 
 public class MovementSystem extends EntitySystem {
@@ -24,9 +30,23 @@ public class MovementSystem extends EntitySystem {
         for (Entity entity : entities) {
             PositionComponent positionComponent = PositionComponent.MAPPER.get(entity);
             VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(entity);
+            RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(entity);
+            BoundingCircleComponent boundingComponent = BoundingCircleComponent.MAPPER.get(entity);
+            DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(entity);
 
             positionComponent.position.x += velocityComponent.velocity.x * deltaTime;
             positionComponent.position.y += velocityComponent.velocity.y * deltaTime;
+
+            if(rectangleBoundsComponent != null) {
+                rectangleBoundsComponent.rectangle.setX(positionComponent.position.x);
+                rectangleBoundsComponent.rectangle.setY(positionComponent.position.y);
+            }
+
+            if (boundingComponent != null) {
+                float boundX = positionComponent.position.x + dimensionComponent.height / 2;
+                float boundY = positionComponent.position.y + dimensionComponent.height / 2;
+                boundingComponent.circle.setPosition(boundX, boundY);
+            }
         }
     }
 

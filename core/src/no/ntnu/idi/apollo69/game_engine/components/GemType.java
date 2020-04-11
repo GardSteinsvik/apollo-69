@@ -1,8 +1,9 @@
 package no.ntnu.idi.apollo69.game_engine.components;
 
-public enum PowerupType {
+public enum GemType {
     DEFAULT,
-    ENERGY,
-    SHIELD,
-    INVISIBLE
+    RUBY,
+    STAR,
+    COIN,
+    METEORITE
 }

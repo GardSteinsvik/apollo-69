@@ -6,5 +6,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 public class BoosterComponent implements Component {
     public static final ComponentMapper<BoosterComponent> MAPPER = ComponentMapper.getFor(BoosterComponent.class);
 
-    public float speed = 0.0f;
+    public float boost = 0.0f;
+    public float defaultValue = 2f;
 }
