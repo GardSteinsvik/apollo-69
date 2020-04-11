@@ -40,19 +40,19 @@ public class PickupSystem extends EntitySystem {
         switch(type) {
             case RUBY:
                 scoreComponent.score = scoreComponent.score + 5;
-                System.out.println("Ruby powerup, current score: " + scoreComponent.score);
+                System.out.println("Ruby pickup, current score: " + scoreComponent.score);
                 break;
             case COIN:
                 scoreComponent.score = scoreComponent.score + 1;
-                System.out.println("Coin powerup, current score: " + scoreComponent.score);
+                System.out.println("Coin pickup, current score: " + scoreComponent.score);
                 break;
             case METEORITE:
                 scoreComponent.score = scoreComponent.score + 3;
-                System.out.println("Meteorite powerup, current score: " + scoreComponent.score);
+                System.out.println("Meteorite pickup, current score: " + scoreComponent.score);
                 break;
             case STAR:
                 scoreComponent.score = scoreComponent.score + 10;
-                System.out.println("Star powerup, current score: " + scoreComponent.score);
+                System.out.println("Star pickup, current score: " + scoreComponent.score);
                 break;
             case DEFAULT:
                 // SHould not happen as defaul gem is not spawned
