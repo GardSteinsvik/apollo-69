@@ -5,6 +5,7 @@ import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.Velo
 
 public class PlayerInput {
     private String playerId;
+    private PlayerInputType type;
     private VelocityDto velocityDto;
     private RotationDto rotationDto;
     private boolean shooting;
@@ -13,11 +14,8 @@ public class PlayerInput {
     public PlayerInput() {
     }
 
-    public PlayerInput(VelocityDto velocityDto, RotationDto rotationDto, boolean shooting, boolean boosting) {
-        this.velocityDto = velocityDto;
-        this.rotationDto = rotationDto;
-        this.shooting = shooting;
-        this.boosting = boosting;
+    public PlayerInput(PlayerInputType type) {
+        this.type = type;
     }
 
     public String getPlayerId() {
@@ -26,6 +24,14 @@ public class PlayerInput {
 
     public void setPlayerId(String playerId) {
         this.playerId = playerId;
+    }
+
+    public PlayerInputType getType() {
+        return type;
+    }
+
+    public void setType(PlayerInputType type) {
+        this.type = type;
     }
 
     public VelocityDto getVelocityDto() {

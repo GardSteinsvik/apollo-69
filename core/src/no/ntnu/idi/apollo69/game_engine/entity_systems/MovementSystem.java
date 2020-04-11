@@ -28,24 +28,27 @@ public class MovementSystem extends EntitySystem {
     @Override
     public void update(float deltaTime) {
         for (Entity entity : entities) {
+            // MOVE ENTITIES
             PositionComponent positionComponent = PositionComponent.MAPPER.get(entity);
             VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(entity);
-            RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(entity);
-            BoundingCircleComponent boundingComponent = BoundingCircleComponent.MAPPER.get(entity);
-            DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(entity);
 
             positionComponent.position.x += velocityComponent.velocity.x * deltaTime;
             positionComponent.position.y += velocityComponent.velocity.y * deltaTime;
 
-            if(rectangleBoundsComponent != null) {
+            // UPDATE BOUNDS IF ANY
+            RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(entity);
+            BoundingCircleComponent boundingCircleComponent = BoundingCircleComponent.MAPPER.get(entity);
+            DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(entity);
+
+            if (rectangleBoundsComponent != null) {
                 rectangleBoundsComponent.rectangle.setX(positionComponent.position.x);
                 rectangleBoundsComponent.rectangle.setY(positionComponent.position.y);
             }
 
-            if (boundingComponent != null) {
+            if (boundingCircleComponent != null) {
                 float boundX = positionComponent.position.x + dimensionComponent.height / 2;
                 float boundY = positionComponent.position.y + dimensionComponent.height / 2;
-                boundingComponent.circle.setPosition(boundX, boundY);
+                boundingCircleComponent.circle.setPosition(boundX, boundY);
             }
         }
     }

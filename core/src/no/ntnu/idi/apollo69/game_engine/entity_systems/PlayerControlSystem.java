@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
+import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
@@ -17,13 +18,13 @@ import no.ntnu.idi.apollo69.model.GameModel;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
+import no.ntnu.idi.apollo69framework.network_messages.PlayerInputType;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
 
 public class PlayerControlSystem extends EntitySystem implements InputHandlerInterface {
 
     private Entity player;
-    private PlayerInput playerInput = new PlayerInput();
     private GameClient gameClient;
 
     public PlayerControlSystem(Entity player) {
@@ -49,7 +50,9 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
             rotationComponent.y = direction.y * velocityComponent.scalar;
         }
 
+        // Send input to the server
         if (gameClient.isConnected()) {
+            PlayerInput playerInput = new PlayerInput(PlayerInputType.MOVE);
             playerInput.setVelocityDto(new VelocityDto(velocityComponent.velocity.x, velocityComponent.velocity.y, velocityComponent.scalar));
             playerInput.setRotationDto(new RotationDto(rotationComponent.degrees, rotationComponent.x, rotationComponent.y));
             gameClient.sendMessage(playerInput);
@@ -57,9 +60,14 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
     }
 
     @Override
-    public void shoot(GameEngine engine) {
-        Entity shot = new ShotFactory().create(player);
-        engine.getEngine().addEntity(shot);
+    public void shoot(boolean on) {
+        player.getComponent(AttackingComponent.class).shooting = on;
+
+        if (gameClient.isConnected()) {
+            PlayerInput playerInput = new PlayerInput(PlayerInputType.SHOOT);
+            playerInput.setShooting(on);
+            gameClient.sendMessage(playerInput);
+        }
     }
 
     @Override
@@ -81,6 +89,12 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
             velocityComponent.velocity.x /= boosterComponent.boost;
             velocityComponent.velocity.y /= boosterComponent.boost;
             sprite.current = sprite.idle;
+        }
+
+        if (gameClient.isConnected()) {
+            PlayerInput playerInput = new PlayerInput(PlayerInputType.BOOST);
+            playerInput.setBoosting(on);
+            gameClient.sendMessage(playerInput);
         }
     }
 

@@ -8,6 +8,7 @@ import java.util.List;
 import no.ntnu.idi.apollo69framework.network_messages.DeviceInfo;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInQueue;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
+import no.ntnu.idi.apollo69framework.network_messages.PlayerInputType;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerMatchmade;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerSpawn;
 import no.ntnu.idi.apollo69framework.network_messages.ServerMessage;
@@ -27,6 +28,7 @@ public class Apollo69Framework {
                 VelocityDto.class,
                 DeviceInfo.class,
                 PlayerInput.class,
+                PlayerInputType.class,
                 PlayerSpawn.class,
                 ServerMessage.class,
                 PlayerInQueue.class,

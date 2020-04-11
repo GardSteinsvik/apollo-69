@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,37 +13,27 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Listener;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import no.ntnu.idi.apollo69.game_engine.Background;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
-import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
-import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69.game_engine.components.AsteroidComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
-import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
-import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
-import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
-import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
+import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
+import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
-import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 
 public class GameModel {
@@ -52,7 +41,6 @@ public class GameModel {
     private Background background;
     private GameEngine gameEngine;
     private Sound shotSound;
-    private ShootThread shootThread;
 
     private Listener gameUpdateListener;
 
@@ -65,21 +53,6 @@ public class GameModel {
 
         gameUpdateListener = new ServerUpdateListener(gameEngine);
         NetworkClientSingleton.getInstance().getClient().addListener(gameUpdateListener);
-    }
-
-    public void handleSpaceshipMovement(float x, float y) {
-        gameEngine.getPlayerControlSystem().move(new Vector2(x, y));
-    }
-
-    public void handleShots(boolean shoot) {
-        if (shoot) {
-            shootThread = new ShootThread(250);
-            shootThread.start();
-        } else {
-            if (shootThread != null) {
-                shootThread.stop();
-            }
-        }
     }
 
     public void renderBackground(SpriteBatch batch) {
@@ -100,10 +73,6 @@ public class GameModel {
             float posY = PositionComponent.MAPPER.get(entity).position.y;
             float width = DimensionComponent.MAPPER.get(entity).width;
             float height = DimensionComponent.MAPPER.get(entity).height;
-            float density = Gdx.graphics.getDensity();
-
-            // Density adjustements would ruin bounds, not appropriate application (!)
-            //batch.draw(powerup, posX, posY, width * density, height * density);
             batch.draw(powerup, posX, posY, width, height);
         }
     }
@@ -118,11 +87,7 @@ public class GameModel {
             RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
             batch.draw(gemComponent.texture, rectangleBoundsComponent.rectangle.getX(), rectangleBoundsComponent.rectangle.getY(),
                     rectangleBoundsComponent.rectangle.getWidth(), rectangleBoundsComponent.rectangle.getHeight());
-        };
-    };
-
-    public void initDeviceSpecificAsteroidValues(){
-
+        }
     }
 
     public void renderAsteroids(SpriteBatch batch){
@@ -247,10 +212,6 @@ public class GameModel {
         camera.update();
     }
 
-    public void boost(boolean on) {
-        gameEngine.getPlayerControlSystem().boost(on);
-    }
-
     // Called when picking up boost power-up
     public void setBoost(float boost) {
         BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(gameEngine.getPlayer());
@@ -295,37 +256,4 @@ public class GameModel {
     public GameEngine getGameEngine() {
         return gameEngine;
     }
-
-    class ShootThread implements Runnable {
-        private final AtomicBoolean running = new AtomicBoolean(false);
-        private int interval;
-
-        ShootThread(int interval) {
-            this.interval = interval;
-        }
-
-        void start() {
-            Thread worker = new Thread(this);
-            worker.start();
-        }
-
-        void stop() {
-            running.set(false);
-        }
-
-        @Override
-        public void run() {
-            running.set(true);
-            while (running.get()) {
-                try {
-                    gameEngine.getPlayerControlSystem().shoot(gameEngine);
-                    Thread.sleep(interval);
-                } catch (Exception e) {
-                    System.out.println("ShootThread: something went wrong");
-                }
-            }
-        }
-
-    }
-
 }

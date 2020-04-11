@@ -10,6 +10,7 @@ import no.ntnu.idi.apollo69.game_engine.entity_systems.MovementSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.PickupSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.PowerupSystem;
+import no.ntnu.idi.apollo69.game_engine.entity_systems.ShootingSystem;
 
 public class GameEngineFactory {
     private final float GAME_UPDATE_SECONDS = 1 / 120f;
@@ -36,6 +37,8 @@ public class GameEngineFactory {
         engine.addSystem(new PlayerControlSystem(spaceship));
 
         engine.addSystem(new MovementSystem());
+
+        engine.addSystem(new ShootingSystem());
 
         engine.addSystem(new AsteroidSystem());
 
