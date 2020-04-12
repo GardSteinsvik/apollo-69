@@ -5,23 +5,22 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.apollo69.game_engine.components.PlayableComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
-import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
+import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
+import no.ntnu.idi.apollo69framework.network_messages.PlayerInputType;
 
-public class UpdateGameStateSystem extends EntitySystem {
-    private ImmutableArray<Entity> players;
+public class SendPositionSystem extends EntitySystem {
+
+    private Entity player;
     private GameClient gameClient;
-    private float interval;
     private float timeAccumulator = 0f;
+    private float interval;
 
-    public UpdateGameStateSystem(int priority, float interval) {
+    public SendPositionSystem(int priority, float interval) {
         super(priority);
         this.interval = interval;
         this.gameClient = NetworkClientSingleton.getInstance().getGameClient();
@@ -29,21 +28,22 @@ public class UpdateGameStateSystem extends EntitySystem {
 
     @Override
     public void addedToEngine(Engine engine) {
-        players = engine.getEntitiesFor(Family.all(PlayableComponent.class).get());
+        player = getEngine().getEntitiesFor(Family.all(PlayableComponent.class).get()).first();
+
     }
 
     @Override
     public void update(float deltaTime) {
         timeAccumulator += deltaTime;
         if (timeAccumulator >= interval) {
-            parseGameState(gameClient.getGameState());
+            PositionComponent positionComponent = PositionComponent.MAPPER.get(player);
+
+            PlayerInput playerInput = new PlayerInput(PlayerInputType.MOVE);
+            playerInput.setPosX(positionComponent.position.x);
+            playerInput.setPosY(positionComponent.position.y);
+
+            gameClient.sendMessage(playerInput);
             timeAccumulator = 0f;
         }
-    }
-
-    private void parseGameState(UpdateMessage updateMessage) {
-        if (updateMessage == null) return;
-
-        // DERSOM NOE MÅ OPPDATERES I DET LOKALE ENGINET VED NETTVERKSOPPDATERINGER MÅ DET GJØRES HER
     }
 }

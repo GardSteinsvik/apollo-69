@@ -25,14 +25,14 @@ public class ServerUpdateListener extends Listener {
             UpdateMessage updateMessage = (UpdateMessage) object;
             NetworkClientSingleton.getInstance().getGameClient().setGameState(updateMessage);
         } else if (object instanceof PlayerSpawn) {
-            PlayerSpawn playerSpawn = (PlayerSpawn) object;
-            System.out.println("A player has joined! Name: " + playerSpawn.getName());
-
-            Entity spaceship = new SpaceshipFactory().create(1);
-            PlayerComponent playerComponent = spaceship.getComponent(PlayerComponent.class);
-            playerComponent.playerId = playerSpawn.getPlayerId();
-            playerComponent.name = playerSpawn.getName();
-            gameEngine.getEngine().addEntity(spaceship);
+//            PlayerSpawn playerSpawn = (PlayerSpawn) object;
+//            System.out.println("A player has joined! Name: " + playerSpawn.getName());
+//
+//            Entity spaceship = new SpaceshipFactory().create(1);
+//            PlayerComponent playerComponent = spaceship.getComponent(PlayerComponent.class);
+//            playerComponent.playerId = playerSpawn.getPlayerId();
+//            playerComponent.name = playerSpawn.getName();
+//            gameEngine.getEngine().addEntity(spaceship);
         }
     }
 }

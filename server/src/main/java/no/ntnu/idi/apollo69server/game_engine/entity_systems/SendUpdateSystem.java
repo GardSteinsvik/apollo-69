@@ -84,7 +84,7 @@ public class SendUpdateSystem extends EntitySystem {
         }
         updateMessage.setPlayerDtoList(playerDtoList);
 
-        // TODO: Add more data like shots here
+        // TODO: Add more data like shots and asteroids here
 
         return updateMessage;
     }

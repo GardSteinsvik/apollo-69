@@ -3,8 +3,9 @@ package no.ntnu.idi.apollo69framework.network_messages;
 public class PlayerInput {
     private String playerId;
     private PlayerInputType type;
-    private float directionX;
-    private float directionY;
+    private float posX;
+    private float posY;
+    private float rotationDegrees;
     private boolean shooting;
     private boolean boosting;
 
@@ -31,20 +32,28 @@ public class PlayerInput {
         this.type = type;
     }
 
-    public float getDirectionX() {
-        return directionX;
+    public float getPosX() {
+        return posX;
     }
 
-    public void setDirectionX(float directionX) {
-        this.directionX = directionX;
+    public void setPosX(float posX) {
+        this.posX = posX;
     }
 
-    public float getDirectionY() {
-        return directionY;
+    public float getPosY() {
+        return posY;
     }
 
-    public void setDirectionY(float directionY) {
-        this.directionY = directionY;
+    public void setPosY(float posY) {
+        this.posY = posY;
+    }
+
+    public float getRotationDegrees() {
+        return rotationDegrees;
+    }
+
+    public void setRotationDegrees(float rotationDegrees) {
+        this.rotationDegrees = rotationDegrees;
     }
 
     public boolean isShooting() {

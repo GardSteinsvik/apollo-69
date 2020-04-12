@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.Assets;
-import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
@@ -45,14 +44,13 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
             rotationComponent.degrees = (float) (Math.atan2(direction.y, direction.x) * (180 / Math.PI) - 90);
             rotationComponent.x = direction.x * velocityComponent.scalar;
             rotationComponent.y = direction.y * velocityComponent.scalar;
-        }
 
-        // Send input to the server
-        if (gameClient.isConnected()) {
-            PlayerInput playerInput = new PlayerInput(PlayerInputType.MOVE);
-            playerInput.setDirectionX(direction.x);
-            playerInput.setDirectionY(direction.y);
-            gameClient.sendMessage(playerInput);
+            // Send input to the server
+            if (gameClient.isConnected()) {
+                PlayerInput playerInput = new PlayerInput(PlayerInputType.ROTATE);
+                playerInput.setRotationDegrees((float) (Math.atan2(direction.y, direction.x) * (180 / Math.PI) - 90));
+                gameClient.sendMessage(playerInput);
+            }
         }
     }
 

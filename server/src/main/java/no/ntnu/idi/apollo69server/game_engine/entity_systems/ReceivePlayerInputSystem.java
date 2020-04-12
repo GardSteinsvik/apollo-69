@@ -11,9 +11,8 @@ import java.util.HashMap;
 import java.util.Queue;
 
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 
@@ -62,14 +61,13 @@ public class ReceivePlayerInputSystem extends EntitySystem {
 
         switch (playerInput.getType()) {
             case MOVE:
-                Vector2 direction = new Vector2(playerInput.getDirectionX(), playerInput.getDirectionY());
-                RotationComponent rotationComponent = RotationComponent.MAPPER.get(player);
-                VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(player);
+                PositionComponent positionComponent = PositionComponent.MAPPER.get(player);
+                positionComponent.position.set(playerInput.getPosX(), playerInput.getPosY());
+                break;
 
-                velocityComponent.velocity = direction.scl(velocityComponent.scalar);
-                rotationComponent.degrees = (float) (Math.atan2(direction.y, direction.x) * (180 / Math.PI) - 90);
-                rotationComponent.x = direction.x * velocityComponent.scalar;
-                rotationComponent.y = direction.y * velocityComponent.scalar;
+            case ROTATE:
+                RotationComponent rotationComponent = RotationComponent.MAPPER.get(player);
+                rotationComponent.degrees = playerInput.getRotationDegrees();
                 break;
             case BOOST:
 

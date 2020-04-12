@@ -6,7 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -23,7 +22,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import no.ntnu.idi.apollo69.controller.GameController;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.model.GameModel;
-import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 
 public class GameView extends ApplicationAdapter implements Screen {
 
@@ -32,8 +30,6 @@ public class GameView extends ApplicationAdapter implements Screen {
     private SpriteBatch spriteBatch;
     private ShapeRenderer shapeRenderer;
     private Stage stage;
-
-    private float timeAccumulator = 0f;
 
     // Debug written to font
     private static BitmapFont font = new BitmapFont();
@@ -163,6 +159,10 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.renderAsteroids(spriteBatch);
         model.renderPowerups(spriteBatch);
         model.renderSpaceships(spriteBatch);
+
+        // Render data from server
+        model.renderNetworkData(spriteBatch);
+
         this.debug();
         spriteBatch.end();
 
@@ -180,15 +180,6 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.getGameEngine().getEngine().update(delta);
 
         model.inBoundsCheck();
-
-        timeAccumulator += delta;
-        if (timeAccumulator >= 1/30f) { // 30 times every second
-            model.renderNetworkData();
-            timeAccumulator = 0f;
-        }
-
-        // TODO: Hent data fra server og rendre ut 30 ganger i sekundet
-        // NetworkClientSingleton.getInstance().getGameClient().getGameState().getPlayerDtoList()
     }
 
     private void debug() {

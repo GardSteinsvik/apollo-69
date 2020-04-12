@@ -10,6 +10,7 @@ import no.ntnu.idi.apollo69.game_engine.entity_systems.MovementSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.PickupSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.PowerupSystem;
+import no.ntnu.idi.apollo69.game_engine.entity_systems.SendPositionSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.ShootingSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.UpdateGameStateSystem;
 
@@ -49,6 +50,8 @@ public class GameEngineFactory {
         engine.addSystem(new PowerupSystem(2));
 
         engine.addSystem(new PickupSystem(2));
+
+        engine.addSystem(new SendPositionSystem(3, NETWORK_UPDATE_SECONDS));
 
 
         return new GameEngine(engine);

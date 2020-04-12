@@ -57,6 +57,7 @@ import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
 
 public class GameModel {
 
@@ -92,16 +93,17 @@ public class GameModel {
         background.render(batch, camera);
     }
 
-    public void renderNetworkData() {
+    public void renderNetworkData(SpriteBatch spriteBatch) {
         UpdateMessage updateMessage = gameClient.getGameState();
 
-        renderSpaceships(updateMessage.getPlayerDtoList());
+        renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
     }
 
-    private void renderSpaceships(List<PlayerDto> playerDtoList) {
+    private void renderSpaceships(SpriteBatch spriteBatch, List<PlayerDto> playerDtoList) {
         for (PlayerDto playerDto: playerDtoList) {
             if (playerDto.playerId.equals(Device.DEVICE_ID)) continue; // The current player is rendered from the ECS engine
-
+            PositionDto positionDto = playerDto.positionDto;
+            spriteBatch.draw(Assets.getSpaceshipRegion(1), positionDto.x, positionDto.y, 30, 30, 60, 60, 1, 1, playerDto.rotationDto.degrees);
         }
     }
 
