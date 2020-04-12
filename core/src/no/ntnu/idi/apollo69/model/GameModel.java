@@ -104,7 +104,6 @@ public class GameModel {
         Family GemFamily = Family.all(GemComponent.class).get();
         ImmutableArray<Entity> gemEntities = gameEngine.getEngine().getEntitiesFor(GemFamily);
 
-
         for (Entity gem : gemEntities) {
             GemComponent gemComponent = GemComponent.MAPPER.get(gem);
             RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
@@ -172,6 +171,23 @@ public class GameModel {
             float radius = DimensionComponent.MAPPER.get(shot).radius;
 
             shapeRenderer.circle(posX, posY, radius);
+        }
+        shapeRenderer.end();
+    }
+
+    public void renderHealthBar(ShapeRenderer shapeRenderer){
+        Family healthFamily = Family.all(HealthComponent.class).get();
+        ImmutableArray<Entity> healthBars = gameEngine.getEngine().getEntitiesFor(healthFamily);
+
+        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        for (Entity healthBar : healthBars){
+            float posX = PositionComponent.MAPPER.get(healthBar).position.x;
+            float posY = PositionComponent.MAPPER.get(healthBar).position.y;
+            float hpTimesTwo = HealthComponent.MAPPER.get(healthBar).hp * 2;
+
+            shapeRenderer.rectLine(posX, posY-20, posX + hpTimesTwo, posY-20, 5);
         }
         shapeRenderer.end();
     }

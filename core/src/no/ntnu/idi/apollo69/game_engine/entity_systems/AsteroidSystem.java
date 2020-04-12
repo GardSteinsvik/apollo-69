@@ -16,7 +16,7 @@ public class AsteroidSystem extends EntitySystem {
 
     private Engine engine;
     ImmutableArray<Entity> asteroids;
-    public final int AMOUNT_OF_ASTEROIDS_TO_KEEP_ON_THE_MAP = 3;
+    public final int AMOUNT_OF_ASTEROIDS_TO_KEEP_ON_THE_MAP = 30;
 
     public AsteroidSystem(){
     }
@@ -41,6 +41,7 @@ public class AsteroidSystem extends EntitySystem {
         for(Entity asteroid: asteroids){
             float xBound = asteroid.getComponent(PositionComponent.class).position.x;
             float yBound = asteroid.getComponent(PositionComponent.class).position.y;
+            // TODO: GAME Radius needs to be changed. To a variable that can be reached on the server.
             Circle circle = new Circle(0, 0, GameModel.GAME_RADIUS+500);
             if(!circle.contains(xBound, yBound)){
                 engine.removeEntity(asteroid);

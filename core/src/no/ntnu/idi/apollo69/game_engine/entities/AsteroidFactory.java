@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
@@ -48,6 +47,7 @@ public class AsteroidFactory {
         SpriteComponent spriteComponent = SpriteComponent.MAPPER.get(asteroid);
 
         // Change when we have asset manager.
+        // TODO: Change to use asset manager.
         spriteComponent.idle = new Sprite(new Texture(Gdx.files.internal("game/asteroids/meteor-1.png")));
 
         PositionComponent positionComponent = PositionComponent.MAPPER.get(asteroid);
@@ -81,7 +81,6 @@ public class AsteroidFactory {
             positionOfAsteroid.add(xBounds, yBounds);
         }
         positionComponent.position = positionOfAsteroid;
-
 
         // Random which direction the asteroid goes.
         // TODO: Can be improved
