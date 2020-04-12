@@ -33,6 +33,8 @@ public class GameView extends ApplicationAdapter implements Screen {
     private ShapeRenderer shapeRenderer;
     private Stage stage;
 
+    private float timeAccumulator = 0f;
+
     // Debug written to font
     private static BitmapFont font = new BitmapFont();
 
@@ -178,6 +180,12 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.getGameEngine().getEngine().update(delta);
 
         model.inBoundsCheck();
+
+        timeAccumulator += delta;
+        if (timeAccumulator >= 1/30f) { // 30 times every second
+            model.renderNetworkData();
+            timeAccumulator = 0f;
+        }
 
         // TODO: Hent data fra server og rendre ut 30 ganger i sekundet
         // NetworkClientSingleton.getInstance().getGameClient().getGameState().getPlayerDtoList()

@@ -20,6 +20,9 @@ import com.esotericsoftware.kryonet.Listener;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import no.ntnu.idi.apollo69.game_engine.Assets;
+import java.util.List;
+
+import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.game_engine.Background;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
@@ -50,7 +53,10 @@ import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
+import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
+import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
 
 public class GameModel {
 
@@ -58,6 +64,7 @@ public class GameModel {
     private GameEngine gameEngine;
     private Sound shotSound;
 
+    private GameClient gameClient;
     private Listener gameUpdateListener;
 
     public static final int GAME_RADIUS = 2000; // Temporary
@@ -76,12 +83,26 @@ public class GameModel {
         gameEngine = new GameEngineFactory().create();
         shotSound = Gdx.audio.newSound(Gdx.files.internal("game/laser.wav"));
 
+        this.gameClient = NetworkClientSingleton.getInstance().getGameClient();
         gameUpdateListener = new ServerUpdateListener(gameEngine);
         NetworkClientSingleton.getInstance().getClient().addListener(gameUpdateListener);
     }
 
     public void renderBackground(SpriteBatch batch) {
         background.render(batch, camera);
+    }
+
+    public void renderNetworkData() {
+        UpdateMessage updateMessage = gameClient.getGameState();
+
+        renderSpaceships(updateMessage.getPlayerDtoList());
+    }
+
+    private void renderSpaceships(List<PlayerDto> playerDtoList) {
+        for (PlayerDto playerDto: playerDtoList) {
+            if (playerDto.playerId.equals(Device.DEVICE_ID)) continue; // The current player is rendered from the ECS engine
+
+        }
     }
 
     public void renderPowerups(SpriteBatch batch) {
