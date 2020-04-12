@@ -23,6 +23,7 @@ import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 
 public class SpaceshipFactory {
+
     public Entity create() {
         Entity spaceship = new Entity();
 

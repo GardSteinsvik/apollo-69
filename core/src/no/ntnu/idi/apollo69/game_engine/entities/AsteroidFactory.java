@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
@@ -26,9 +26,9 @@ public class AsteroidFactory {
     public final int MAXIMUM_SPEED_OF_ASTEROID = 600;
     public final int MINIMUM_SPEED_OF_ASTEROID = 0;
 
-    private int maxSpawnDistanceRadius = GameModel.GAME_RADIUS;
+    private int maxSpawnDistanceRadius = GameModel.GAME_RADIUS + 100;
 
-    public Entity create (){
+    public Entity create () {
         Entity asteroid = new Entity();
 
         asteroid.add(new AsteroidComponent());
@@ -38,6 +38,7 @@ public class AsteroidFactory {
         asteroid.add(new VelocityComponent());
         asteroid.add(new SpriteComponent());
         asteroid.add(new HealthComponent());
+        asteroid.add(new RectangleBoundsComponent());
         Random random = new Random();
 
         int xBounds;
@@ -46,6 +47,7 @@ public class AsteroidFactory {
         SpriteComponent spriteComponent = SpriteComponent.MAPPER.get(asteroid);
 
         // Change when we have asset manager.
+        // TODO: Change to use asset manager.
         spriteComponent.idle = new Sprite(new Texture(Gdx.files.internal("game/asteroids/meteor-1.png")));
 
         PositionComponent positionComponent = PositionComponent.MAPPER.get(asteroid);
@@ -56,23 +58,29 @@ public class AsteroidFactory {
 
         damageComponent.force = DAMAGE_OF_ASTEROID;
         healthComponent.hp = HP_OF_ASTEROID;
-        dimensionComponent.height = 120f;
-        dimensionComponent.width = 120f;
+
+        // TODO: Find better way of dimension the asteroid.
+        dimensionComponent.height = 240f;
+        dimensionComponent.width = 240f;
 
         // Random spawn same as powerups
-        // TODO: Make code, to spawn outside map and run through the map.
-        if (random.nextInt(2) == 0) {
-            xBounds = random.nextInt(maxSpawnDistanceRadius);
-        } else {
-            xBounds = -random.nextInt(maxSpawnDistanceRadius);
+        // TODO: Optimize spawn method. This takes to much power.
+        Circle circle = new Circle(0, 0, GameModel.GAME_RADIUS);
+        Vector2 positionOfAsteroid = new Vector2(0, 0);
+        while (circle.contains(positionOfAsteroid)){
+            if (random.nextInt(2) == 0) {
+                xBounds = random.nextInt(maxSpawnDistanceRadius);
+            } else {
+                xBounds = -random.nextInt(maxSpawnDistanceRadius);
+            }
+            if (random.nextInt(2) == 0) {
+                yBounds = random.nextInt(maxSpawnDistanceRadius);
+            } else {
+                yBounds = -random.nextInt(maxSpawnDistanceRadius);
+            }
+            positionOfAsteroid.add(xBounds, yBounds);
         }
-        if (random.nextInt(2) == 0) {
-            yBounds = random.nextInt(maxSpawnDistanceRadius);
-        } else {
-            yBounds = -random.nextInt(maxSpawnDistanceRadius);
-        }
-        positionComponent.position = new Vector2(xBounds,yBounds);
-
+        positionComponent.position = positionOfAsteroid;
 
         // Random which direction the asteroid goes.
         // TODO: Can be improved

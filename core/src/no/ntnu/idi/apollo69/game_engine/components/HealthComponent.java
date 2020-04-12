@@ -7,4 +7,5 @@ public class HealthComponent implements Component {
     public static final ComponentMapper<HealthComponent> MAPPER = ComponentMapper.getFor(HealthComponent.class);
 
     public int hp = 0;
+
 }
