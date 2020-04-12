@@ -5,12 +5,14 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
+import no.ntnu.idi.apollo69.game_engine.Assets;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
+import no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
-import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
+import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.model.GameModel;
@@ -31,9 +33,7 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
         gameClient = NetworkClientSingleton.getInstance().getGameClient();
     }
 
-    //
-    //  IMPORTANT - THIS IS ONLY CALLED WHEN CHANGES TO TOUCHPAD IS REGISTERED
-    //
+    // IMPORTANT - THIS IS ONLY CALLED WHEN CHANGES TO TOUCHPAD IS REGISTERED
     @Override
     public void move(Vector2 direction) {
         float offset = DimensionComponent.MAPPER.get(player).height / 2;
@@ -66,21 +66,19 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
     public void boost(boolean on) {
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(player);
         BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(player);
-        SpriteComponent sprite = SpriteComponent.MAPPER.get(player);
+        SpaceshipComponent spaceshipComponent = SpaceshipComponent.MAPPER.get(player);
+        AtlasRegionComponent atlasRegionComponent = AtlasRegionComponent.MAPPER.get(player);
 
         if (on) {
             velocityComponent.scalar *= boosterComponent.boost;
             velocityComponent.velocity.x *= boosterComponent.boost;
             velocityComponent.velocity.y *= boosterComponent.boost;
-
-            if (sprite.boost.size() > 0) {
-                sprite.current = sprite.boost.get(0);
-            }
+            atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(spaceshipComponent.type, 1);
         } else {
-            velocityComponent.scalar /= velocityComponent.idle;
+            velocityComponent.scalar /= boosterComponent.boost;
             velocityComponent.velocity.x /= boosterComponent.boost;
             velocityComponent.velocity.y /= boosterComponent.boost;
-            sprite.current = sprite.idle;
+            atlasRegionComponent.region = Assets.getSpaceshipRegion(spaceshipComponent.type);
         }
     }
 

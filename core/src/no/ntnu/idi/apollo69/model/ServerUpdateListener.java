@@ -27,7 +27,7 @@ public class ServerUpdateListener extends Listener {
             PlayerSpawn playerSpawn = (PlayerSpawn) object;
             System.out.println("A player has joined! Name: " + playerSpawn.getName());
 
-            Entity spaceship = new SpaceshipFactory().create();
+            Entity spaceship = new SpaceshipFactory().create(1);
             PlayerComponent playerComponent = spaceship.getComponent(PlayerComponent.class);
             playerComponent.playerId = playerSpawn.getPlayerId();
             playerComponent.name = playerSpawn.getName();
