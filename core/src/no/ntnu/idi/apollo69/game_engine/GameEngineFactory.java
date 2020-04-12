@@ -32,8 +32,7 @@ public class GameEngineFactory {
             }
         });
 
-        Entity spaceship = new SpaceshipFactory().createPlayableSpaceship();
-
+        Entity spaceship = new SpaceshipFactory().createPlayableSpaceship(1);
         engine.addEntity(spaceship);
 
         engine.addSystem(new UpdateGameStateSystem(1, NETWORK_UPDATE_SECONDS));
