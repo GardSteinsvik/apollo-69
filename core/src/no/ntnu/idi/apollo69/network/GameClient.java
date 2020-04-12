@@ -4,6 +4,8 @@ import com.esotericsoftware.kryonet.Client;
 
 import java.io.IOException;
 
+import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
+
 public class GameClient {
 
     private Client client;
@@ -12,6 +14,8 @@ public class GameClient {
     private int udpPort;
 
     private static volatile boolean clientConnecting = false;
+
+    private volatile UpdateMessage gameState = null;
 
     public GameClient(Client client, String serverIp, int tcpPort, int udpPort) {
         this.client = client;
@@ -63,5 +67,13 @@ public class GameClient {
 
     public void disconnectClient() {
         client.stop();
+    }
+
+    public UpdateMessage getGameState() {
+        return gameState;
+    }
+
+    public void setGameState(UpdateMessage updateMessage) {
+        gameState = updateMessage;
     }
 }

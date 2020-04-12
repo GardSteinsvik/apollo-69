@@ -47,6 +47,14 @@ public class GameModel {
 
     public static final int GAME_RADIUS = 2000; // Temporary
 
+    // Constants for the screen orthographic camera
+    private final float SCREEN_WIDTH = Gdx.graphics.getWidth();
+    private final float SCREEN_HEIGHT = Gdx.graphics.getHeight();
+    private final float ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
+    private final float HEIGHT = SCREEN_HEIGHT;
+    private final float WIDTH = SCREEN_WIDTH;
+    private final OrthographicCamera camera = new OrthographicCamera(WIDTH/Gdx.graphics.getDensity(), HEIGHT/Gdx.graphics.getDensity());
+
     public GameModel() {
         background = new Background();
         gameEngine = new GameEngineFactory().create();
@@ -57,7 +65,7 @@ public class GameModel {
     }
 
     public void renderBackground(SpriteBatch batch) {
-        background.render(batch, gameEngine.getPlayer());
+        background.render(batch, camera);
     }
 
     public void renderPowerups(SpriteBatch batch) {
@@ -115,8 +123,7 @@ public class GameModel {
         for (Entity spaceship : spaceships) {
             SpriteComponent spriteComponent = SpriteComponent.MAPPER.get(spaceship);
             float dT = System.currentTimeMillis() - spriteComponent.lastUpdated;
-            float posX = PositionComponent.MAPPER.get(spaceship).position.x;
-            float posY = PositionComponent.MAPPER.get(spaceship).position.y;
+            Vector2 position = PositionComponent.MAPPER.get(spaceship).position;
             float width = DimensionComponent.MAPPER.get(spaceship).width;
             float height = DimensionComponent.MAPPER.get(spaceship).height;
             float rotation = RotationComponent.MAPPER.get(spaceship).degrees;
@@ -131,7 +138,7 @@ public class GameModel {
                 spriteComponent.lastUpdated = System.currentTimeMillis();
             }
 
-            batch.draw(spriteComponent.current, posX, posY, width/2, height/2, width, height, 1, 1, rotation);
+            batch.draw(spriteComponent.current, position.x, position.y, width/2, height/2, width, height, 1, 1, rotation);
         }
     }
 
@@ -174,6 +181,7 @@ public class GameModel {
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
+    // FIXME: Må flyttes til et EntitySystem
     public void inBoundsCheck() {
         float offset = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).height / 2;
         Circle gameSpace = new Circle(new Vector2(0, 0), GAME_RADIUS - offset);
@@ -183,7 +191,8 @@ public class GameModel {
             // Very brute force direction change - could be improved
             VelocityComponent.MAPPER.get(gameEngine.getPlayer()).velocity.x *= -1;
             VelocityComponent.MAPPER.get(gameEngine.getPlayer()).velocity.y *= -1;
-            RotationComponent.MAPPER.get(gameEngine.getPlayer()).degrees += 180;
+            RotationComponent rotationComponent = RotationComponent.MAPPER.get(gameEngine.getPlayer());
+            rotationComponent.degrees = (rotationComponent.degrees + 180) % 360;
         }
     }
 
@@ -209,51 +218,13 @@ public class GameModel {
         boundComp.circle = new Circle(new Vector2(position.x + offset, position.y + offset), offset);
     }
 
-    public void moveCameraToSpaceship(OrthographicCamera camera, float deltaTime) {
-        VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(gameEngine.getPlayer());
-        camera.translate(new Vector2(velocityComponent.velocity.x * deltaTime, velocityComponent.velocity.y * deltaTime));
+    public void moveCameraToSpaceship() {
+        camera.position.set(PositionComponent.MAPPER.get(gameEngine.getPlayer()).position, 0);
         camera.update();
     }
 
-    // Called when picking up boost power-up
-    public void setBoost(float boost) {
-        BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(gameEngine.getPlayer());
-        boosterComponent.boost = boost;
-    }
-
-    public void resetBoost() {
-        BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(gameEngine.getPlayer());
-        boosterComponent.boost = boosterComponent.defaultValue;
-    }
-
-    // Called when picking up hp power-up
-    public void addHealth(float hp) {
-        HealthComponent health = HealthComponent.MAPPER.get(gameEngine.getPlayer());
-        health.hp += hp;
-
-        if (health.hp > 100) {
-            health.hp = 100;
-        }
-    }
-
-    // Called when hit by shot or asteroid
-    public void subtractHealth(float hp) {
-        HealthComponent health = HealthComponent.MAPPER.get(gameEngine.getPlayer());
-        health.hp -= hp;
-    }
-
-    // Called when picking up a shot power-up
-    public void setAttackAttributes(float radius, float damage) {
-        AttackingComponent attack = AttackingComponent.MAPPER.get(gameEngine.getPlayer());
-        attack.shotRadius = radius;
-        attack.shotDamage = damage;
-    }
-
-    public void resetAttackAttributes() {
-        AttackingComponent attack = AttackingComponent.MAPPER.get(gameEngine.getPlayer());
-        DimensionComponent dimension = DimensionComponent.MAPPER.get(gameEngine.getPlayer());
-        attack.shotDamage = 10;
-        attack.shotRadius = dimension.width / 20;
+    public OrthographicCamera getCamera() {
+        return camera;
     }
 
     public GameEngine getGameEngine() {

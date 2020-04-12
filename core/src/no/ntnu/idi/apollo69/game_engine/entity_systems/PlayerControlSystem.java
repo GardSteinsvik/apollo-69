@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
-import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
@@ -13,14 +12,11 @@ import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
-import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.model.GameModel;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInputType;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
 
 public class PlayerControlSystem extends EntitySystem implements InputHandlerInterface {
 
@@ -53,8 +49,8 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
         // Send input to the server
         if (gameClient.isConnected()) {
             PlayerInput playerInput = new PlayerInput(PlayerInputType.MOVE);
-            playerInput.setVelocityDto(new VelocityDto(velocityComponent.velocity.x, velocityComponent.velocity.y, velocityComponent.scalar));
-            playerInput.setRotationDto(new RotationDto(rotationComponent.degrees, rotationComponent.x, rotationComponent.y));
+            playerInput.setDirectionX(direction.x);
+            playerInput.setDirectionY(direction.y);
             gameClient.sendMessage(playerInput);
         }
     }

@@ -41,16 +41,18 @@ public class AsteroidSystem extends EntitySystem {
         // Maybe out of map component?
         // TODO: make real despawn code for the asteroids.
         for(Entity asteroid: asteroids){
-            if(asteroid.getComponent(PositionComponent.class).position.x > GameModel.GAME_RADIUS + 200){
+            PositionComponent positionComponent = PositionComponent.MAPPER.get(asteroid);
+            Vector2 position = positionComponent.position;
+            if(position.x > GameModel.GAME_RADIUS + 200){
                 engine.removeEntity(asteroid);
             }
-            if(asteroid.getComponent(PositionComponent.class).position.x < -GameModel.GAME_RADIUS + 200){
+            if(position.x < -GameModel.GAME_RADIUS + 200){
                 engine.removeEntity(asteroid);
             }
-            if(asteroid.getComponent(PositionComponent.class).position.y > GameModel.GAME_RADIUS + 200){
+            if(position.y > GameModel.GAME_RADIUS + 200){
                 engine.removeEntity(asteroid);
             }
-            if(asteroid.getComponent(PositionComponent.class).position.y < -GameModel.GAME_RADIUS + 200){
+            if(position.y < -GameModel.GAME_RADIUS + 200){
                 engine.removeEntity(asteroid);
             }
         }

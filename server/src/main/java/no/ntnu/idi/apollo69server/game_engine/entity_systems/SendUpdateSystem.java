@@ -79,7 +79,7 @@ public class SendUpdateSystem extends EntitySystem {
                     playerComponent.isAlive(),
                     new PositionDto(positionComponent.position.x, positionComponent.position.y),
                     new RotationDto(rotationComponent.degrees, rotationComponent.x, rotationComponent.y),
-                    new VelocityDto(velocityComponent.velocity.x, velocityComponent.velocity.y, velocityComponent.boost)
+                    new VelocityDto(velocityComponent.velocity.x, velocityComponent.velocity.y, velocityComponent.scalar)
             ));
         }
         updateMessage.setPlayerDtoList(playerDtoList);

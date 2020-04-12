@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Listener;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.entities.SpaceshipFactory;
+import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerSpawn;
 import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
 
@@ -22,7 +23,7 @@ public class ServerUpdateListener extends Listener {
     public void received(Connection connection, Object object) {
         if (object instanceof UpdateMessage) {
             UpdateMessage updateMessage = (UpdateMessage) object;
-
+            NetworkClientSingleton.getInstance().getGameClient().setGameState(updateMessage);
         } else if (object instanceof PlayerSpawn) {
             PlayerSpawn playerSpawn = (PlayerSpawn) object;
             System.out.println("A player has joined! Name: " + playerSpawn.getName());

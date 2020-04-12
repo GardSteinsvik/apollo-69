@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
@@ -17,13 +16,12 @@ import no.ntnu.idi.apollo69server.game_engine.entity_factories.SpaceshipFactory;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.MovementSystem;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.ReceivePlayerInputSystem;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.SendUpdateSystem;
-import no.ntnu.idi.apollo69server.game_engine.entity_systems.SpawnSystem;
 import no.ntnu.idi.apollo69server.network.MessageHandlerDelegator;
 import no.ntnu.idi.apollo69server.network.PlayerConnection;
 
 public class GameEngineFactory {
     private final float GAME_UPDATE_SECONDS = 1 / 120f;
-    private final float NETWORK_UPDATE_SECONDS = 1f;
+    private final float NETWORK_UPDATE_SECONDS = 1 / 30f;
 
     private MessageHandlerDelegator messageHandlerDelegator = new MessageHandlerDelegator();
 
@@ -69,8 +67,7 @@ public class GameEngineFactory {
 
         int priority = 0;
         engine.addSystem(new ReceivePlayerInputSystem(priority++, inputQueue));
-        engine.addSystem(new MovementSystem(priority++));
-//        engine.addSystem(new SpawnSystem(priority++));
+        engine.addSystem(new MovementSystem(priority++, GAME_UPDATE_SECONDS));
         engine.addSystem(new SendUpdateSystem(priority, NETWORK_UPDATE_SECONDS));
 
         return new GameEngine(id, engine, messageHandlerDelegator);
