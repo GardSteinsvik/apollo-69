@@ -40,7 +40,7 @@ public class GameEngineFactory {
 
         engine.addSystem(new ShootingSystem());
 
-        engine.addSystem(new AsteroidSystem());
+//        engine.addSystem(new AsteroidSystem());
 
         engine.addSystem(new PowerupSystem(2));
 

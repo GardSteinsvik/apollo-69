@@ -17,6 +17,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Listener;
 
+import java.util.ArrayList;
+
 import no.ntnu.idi.apollo69.game_engine.Background;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
@@ -36,6 +38,7 @@ import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.AsteroidDto;
 
 public class GameModel {
 
@@ -94,8 +97,8 @@ public class GameModel {
             );
         }
     }
-
-    public void renderAsteroids(SpriteBatch batch){
+    // Old renderer
+/*    public void renderAsteroids(SpriteBatch batch){
         ImmutableArray<Entity> asteroids = gameEngine.getEngine().getEntitiesFor(Family.all(AsteroidComponent.class).get());
 
         for (Entity asteroid: asteroids) {
@@ -106,6 +109,10 @@ public class GameModel {
             float height = DimensionComponent.MAPPER.get(asteroid).height;
             batch.draw(asteroidTexture, posX, posY, width, height);
         }
+    }*/
+
+    public void renderAsteroidsFromList(ArrayList<AsteroidDto> asteroids){
+
     }
 
     public void renderSpaceships(SpriteBatch batch) {
