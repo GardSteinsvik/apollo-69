@@ -5,12 +5,16 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.HashMap;
 import java.util.Queue;
 
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.RotationComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 
 public class ReceivePlayerInputSystem extends EntitySystem {
 
@@ -55,6 +59,24 @@ public class ReceivePlayerInputSystem extends EntitySystem {
             return;
         }
 
-        System.out.println("Player " + playerInput.getPlayerId() + ": Rotation " + playerInput.getRotationDto().degrees + " deg");
+        switch (playerInput.getType()) {
+            case MOVE:
+                PositionComponent positionComponent = PositionComponent.MAPPER.get(player);
+                positionComponent.position.set(playerInput.getPosX(), playerInput.getPosY());
+                break;
+
+            case ROTATE:
+                RotationComponent rotationComponent = RotationComponent.MAPPER.get(player);
+                rotationComponent.degrees = playerInput.getRotationDegrees();
+                break;
+            case BOOST:
+
+                break;
+            case SHOOT:
+
+                break;
+            default:
+                break;
+        }
     }
 }

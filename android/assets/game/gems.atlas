@@ -1,0 +1,33 @@
+gems.png
+size: 31, 61
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+coin
+  rotate: false
+  xy: 0, 0
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+meteorite
+  rotate: false
+  xy: 0, 20
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: -1
+ruby
+  rotate: false
+  xy: 15, 20
+  size: 16, 20
+  orig: 16, 20
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 0, 40
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1

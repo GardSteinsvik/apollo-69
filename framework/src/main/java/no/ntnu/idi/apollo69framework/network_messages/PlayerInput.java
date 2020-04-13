@@ -1,13 +1,11 @@
 package no.ntnu.idi.apollo69framework.network_messages;
 
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
-
 public class PlayerInput {
     private String playerId;
     private PlayerInputType type;
-    private VelocityDto velocityDto;
-    private RotationDto rotationDto;
+    private float posX;
+    private float posY;
+    private float rotationDegrees;
     private boolean shooting;
     private boolean boosting;
 
@@ -34,20 +32,28 @@ public class PlayerInput {
         this.type = type;
     }
 
-    public VelocityDto getVelocityDto() {
-        return velocityDto;
+    public float getPosX() {
+        return posX;
     }
 
-    public void setVelocityDto(VelocityDto velocityDto) {
-        this.velocityDto = velocityDto;
+    public void setPosX(float posX) {
+        this.posX = posX;
     }
 
-    public RotationDto getRotationDto() {
-        return rotationDto;
+    public float getPosY() {
+        return posY;
     }
 
-    public void setRotationDto(RotationDto rotationDto) {
-        this.rotationDto = rotationDto;
+    public void setPosY(float posY) {
+        this.posY = posY;
+    }
+
+    public float getRotationDegrees() {
+        return rotationDegrees;
+    }
+
+    public void setRotationDegrees(float rotationDegrees) {
+        this.rotationDegrees = rotationDegrees;
     }
 
     public boolean isShooting() {
@@ -64,16 +70,5 @@ public class PlayerInput {
 
     public void setBoosting(boolean boosting) {
         this.boosting = boosting;
-    }
-
-    @Override
-    public String toString() {
-        return "PlayerInput{" +
-                "playerId='" + playerId + '\'' +
-                ", velocityDto=" + velocityDto +
-                ", rotationDto=" + rotationDto +
-                ", shooting=" + shooting +
-                ", boosting=" + boosting +
-                '}';
     }
 }

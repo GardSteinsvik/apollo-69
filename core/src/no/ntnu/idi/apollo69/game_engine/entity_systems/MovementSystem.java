@@ -13,12 +13,19 @@ import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
+import no.ntnu.idi.apollo69.network.GameClient;
+import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
+import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
+import no.ntnu.idi.apollo69framework.network_messages.PlayerInputType;
 
 public class MovementSystem extends EntitySystem {
 
     private ImmutableArray<Entity> entities;
+    private GameClient gameClient;
 
-    public MovementSystem() {}
+    public MovementSystem() {
+        gameClient = NetworkClientSingleton.getInstance().getGameClient();
+    }
 
     @Override
     public void addedToEngine(Engine engine) {
@@ -31,9 +38,10 @@ public class MovementSystem extends EntitySystem {
             // MOVE ENTITIES
             PositionComponent positionComponent = PositionComponent.MAPPER.get(entity);
             VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(entity);
+            Vector2 position = positionComponent.position;
 
-            positionComponent.position.x += velocityComponent.velocity.x * deltaTime;
-            positionComponent.position.y += velocityComponent.velocity.y * deltaTime;
+            position.x += velocityComponent.velocity.x * deltaTime;
+            position.y += velocityComponent.velocity.y * deltaTime;
 
             // UPDATE BOUNDS IF ANY
             RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(entity);
@@ -41,13 +49,13 @@ public class MovementSystem extends EntitySystem {
             DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(entity);
 
             if (rectangleBoundsComponent != null) {
-                rectangleBoundsComponent.rectangle.setX(positionComponent.position.x);
-                rectangleBoundsComponent.rectangle.setY(positionComponent.position.y);
+                rectangleBoundsComponent.rectangle.setX(position.x);
+                rectangleBoundsComponent.rectangle.setY(position.y);
             }
 
             if (boundingCircleComponent != null) {
-                float boundX = positionComponent.position.x + dimensionComponent.height / 2;
-                float boundY = positionComponent.position.y + dimensionComponent.height / 2;
+                float boundX = position.x + dimensionComponent.height / 2;
+                float boundY = position.y + dimensionComponent.height / 2;
                 boundingCircleComponent.circle.setPosition(boundX, boundY);
             }
         }

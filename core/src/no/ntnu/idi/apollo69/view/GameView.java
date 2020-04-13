@@ -6,7 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -21,10 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import no.ntnu.idi.apollo69.controller.GameController;
-import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
-import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.model.GameModel;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
@@ -37,14 +33,6 @@ public class GameView extends ApplicationAdapter implements Screen {
     private SpriteBatch spriteBatch;
     private ShapeRenderer shapeRenderer;
     private Stage stage;
-
-    // Constants for the screen orthographic camera
-    private final float SCREEN_WIDTH = Gdx.graphics.getWidth();
-    private final float SCREEN_HEIGHT = Gdx.graphics.getHeight();
-    private final float ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
-    private final float HEIGHT = SCREEN_HEIGHT;
-    private final float WIDTH = SCREEN_WIDTH;
-    private final OrthographicCamera orthoCamera = new OrthographicCamera(WIDTH, HEIGHT);
 
     // Debug written to font
     private static BitmapFont font = new BitmapFont();
@@ -89,6 +77,8 @@ public class GameView extends ApplicationAdapter implements Screen {
         shootButtonStyle.font = font;
         shootButtonStyle.up = shootSkin.getDrawable("button_shoot_up");
         shootButtonStyle.down = shootSkin.getDrawable("button_shoot_down");
+        //shootButtonStyle.up = new TextureRegionDrawable(Assets.getActionButtonRegion(ButtonType.BOOST_UP));
+        //shootButtonStyle.down = new TextureRegionDrawable(Assets.getActionButtonRegion(ButtonType.BOOST_DOWN));
         TextButton shootBtn = new TextButton("", shootButtonStyle);
         shootBtn.setPosition(shootBtnX, shootBtnY);
         shootBtn.setSize(btnDim, btnDim);
@@ -110,8 +100,10 @@ public class GameView extends ApplicationAdapter implements Screen {
         boostSkin.addRegions(buttonAtlas);
         TextButton.TextButtonStyle boostButtonStyle = new TextButton.TextButtonStyle();
         boostButtonStyle.font = font;
-        boostButtonStyle.up = shootSkin.getDrawable("button_boost_up");
-        boostButtonStyle.down = shootSkin.getDrawable("button_boost_down");
+        boostButtonStyle.up =shootSkin.getDrawable("button_boost_up");
+        boostButtonStyle.down =shootSkin.getDrawable("button_boost_down");
+        //boostButtonStyle.up = new TextureRegionDrawable(Assets.getActionButtonRegion(ButtonType.SHOOT_UP));//shootSkin.getDrawable("button_boost_up");
+        //boostButtonStyle.down = new TextureRegionDrawable(Assets.getActionButtonRegion(ButtonType.SHOOT_DOWN));//shootSkin.getDrawable("button_boost_down");
         TextButton boostBtn = new TextButton("", boostButtonStyle);
         boostBtn.setPosition(boostBtnX, boostBtnY);
         boostBtn.setSize(btnDim, btnDim);
@@ -141,9 +133,9 @@ public class GameView extends ApplicationAdapter implements Screen {
         font.getData().setScale(1.2f);
 
         // Initialize camera position
-        model.moveCameraToSpaceship(orthoCamera, 0);
+        model.moveCameraToSpaceship();
 
-        model.initSpaceship();
+        model.initSpaceshipForDevice();
 
         // Music
         Music gameMusic = Gdx.audio.newMusic(Gdx.files.internal("game/game.ogg"));
@@ -160,8 +152,8 @@ public class GameView extends ApplicationAdapter implements Screen {
         Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
 
         // Set camera
-        spriteBatch.setProjectionMatrix(orthoCamera.combined);
-        shapeRenderer.setProjectionMatrix(orthoCamera.combined);
+        spriteBatch.setProjectionMatrix(model.getCamera().combined);
+        shapeRenderer.setProjectionMatrix(model.getCamera().combined);
 
         // Render sprites
         spriteBatch.begin();
@@ -171,6 +163,10 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         model.renderPowerups(spriteBatch);
         model.renderSpaceships(spriteBatch);
+
+        // Render data from server
+        model.renderNetworkData(spriteBatch);
+
         this.debug();
         spriteBatch.end();
 
@@ -183,7 +179,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         stage.draw();
 
         // Update camera position
-        model.moveCameraToSpaceship(orthoCamera, delta);
+        model.moveCameraToSpaceship();
 
         // Update game engine
         model.getGameEngine().getEngine().update(delta);
@@ -194,9 +190,9 @@ public class GameView extends ApplicationAdapter implements Screen {
     private void debug() {
         // Debug written to font
         PositionComponent positionComponent = PositionComponent.MAPPER.get(model.getGameEngine().getPlayer());
-        font.draw(spriteBatch,"WIDTH: " + Math.round(WIDTH) + "  X: " +
+        font.draw(spriteBatch,"WIDTH: " + Math.round(Gdx.graphics.getWidth()) + "  X: " +
                 Math.round(positionComponent.position.x), positionComponent.position.x - 50, positionComponent.position.y - 130);
-        font.draw(spriteBatch,"HEIGHT: " + Math.round(HEIGHT) + "  Y: " +
+        font.draw(spriteBatch,"HEIGHT: " + Math.round(Gdx.graphics.getHeight()) + "  Y: " +
                 Math.round(positionComponent.position.y), positionComponent.position.x - 50, positionComponent.position.y - 160);
     }
 

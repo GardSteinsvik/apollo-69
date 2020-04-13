@@ -15,8 +15,8 @@ public class GameController {
     }
 
     public void touchpadMoved(Actor actor) {
-        float x = ((Touchpad)actor).getKnobPercentX();
-        float y = ((Touchpad)actor).getKnobPercentY();
+        float x = ((Touchpad) actor).getKnobPercentX();
+        float y = ((Touchpad) actor).getKnobPercentY();
 
         model.getGameEngine().getPlayerControlSystem().move(new Vector2(x, y));
     }
