@@ -10,11 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
+import no.ntnu.idi.apollo69server.game_engine.components.GemComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.RotationComponent;
@@ -24,6 +28,7 @@ import no.ntnu.idi.apollo69server.network.PlayerConnection;
 public class SendUpdateSystem extends EntitySystem {
 
     private ImmutableArray<Entity> players;
+    private ImmutableArray<Entity> pickups;
     private float interval;
     private float timeAccumulator = 0f;
 
@@ -35,6 +40,7 @@ public class SendUpdateSystem extends EntitySystem {
     @Override
     public void addedToEngine(Engine engine) {
         players = engine.getEntitiesFor(Family.all(NetworkPlayerComponent.class).get());
+        pickups = engine.getEntitiesFor(Family.all(PickupComponent.class).get());
     }
 
     @Override
@@ -85,6 +91,17 @@ public class SendUpdateSystem extends EntitySystem {
         updateMessage.setPlayerDtoList(playerDtoList);
 
         // TODO: Add more data like shots and asteroids here
+
+        List<PickupDto> pickupDtoList = new ArrayList<>();
+        for (Entity pickup : pickups) {
+            PositionComponent positionComponent = PositionComponent.MAPPER.get(pickup);
+            GemComponent gemComponent = GemComponent.MAPPER.get(pickup);
+            pickupDtoList.add(new PickupDto(
+                    new PositionDto(positionComponent.position.x, positionComponent.position.y),
+                    GemType.valueOf(gemComponent.type.name())
+            ));
+        }
+        updateMessage.setPickupDtoList(pickupDtoList);
 
         return updateMessage;
     }

@@ -1,4 +1,4 @@
-package no.ntnu.idi.apollo69.game_engine.entities;
+package no.ntnu.idi.apollo69server.game_engine.entity_factories;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Circle;
@@ -7,18 +7,19 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
 
-import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
-import no.ntnu.idi.apollo69.game_engine.components.GemType;
-import no.ntnu.idi.apollo69.game_engine.components.PickupComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
-import no.ntnu.idi.apollo69.model.GameModel;
+import no.ntnu.idi.apollo69server.game_engine.components.DimensionComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.GemComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.GemType;
+import no.ntnu.idi.apollo69server.game_engine.components.PickupComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.RectangleBoundsComponent;
 
 public class GemFactory {
 
     // If using DesktopLauncher consider 400 as bounds instead of 1000
-    private static Circle bounds = new Circle(0f, 0f, GameModel.GAME_RADIUS);
+    // TODO: change radius to constant value stored in some file for central modifiability
+    private static int radius = 2000;
+    private static Circle bounds = new Circle(0f, 0f, radius);
 
     private Entity generalCreate() {
         Entity gem = new Entity();
@@ -41,14 +42,14 @@ public class GemFactory {
         // copypaste from powerup, simulation of spawn algorithm
         while (!bounds.contains(xBounds, yBounds)) {
             if (random.nextInt(2) == 0) {
-                xBounds = random.nextInt(GameModel.GAME_RADIUS);
+                xBounds = random.nextInt(radius);
             } else {
-                xBounds = -random.nextInt(GameModel.GAME_RADIUS);
+                xBounds = -random.nextInt(radius);
             }
             if (random.nextInt(2) == 0) {
-                yBounds = random.nextInt(GameModel.GAME_RADIUS);
+                yBounds = random.nextInt(radius);
             } else {
-                yBounds = -random.nextInt(GameModel.GAME_RADIUS);
+                yBounds = -random.nextInt(radius);
             }
         }
         PositionComponent positionComponent = PositionComponent.MAPPER.get(gem);

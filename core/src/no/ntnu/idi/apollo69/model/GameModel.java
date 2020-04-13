@@ -56,6 +56,7 @@ import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
 
@@ -95,9 +96,22 @@ public class GameModel {
 
     public void renderNetworkData(SpriteBatch spriteBatch) {
         UpdateMessage updateMessage = gameClient.getGameState();
-
         renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
+        renderPickups(spriteBatch, updateMessage.getPickupDtoList());
     }
+
+    public void renderPickups(SpriteBatch batch, List<PickupDto> pickupDtoList) {
+
+        for (PickupDto pickupDto: pickupDtoList) {
+            //GemType gemType = GemType.valueOf(pickupDto.gemType.name());
+            float posX = pickupDto.positionDto.x;
+            float posY = pickupDto.positionDto.y;
+            float width = 50f;
+            float height = 50f;
+            //RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
+            batch.draw(Assets.getPickupRegion(GemType.COIN), posX, posY, width, height);
+        };
+    };
 
     private void renderSpaceships(SpriteBatch spriteBatch, List<PlayerDto> playerDtoList) {
         for (PlayerDto playerDto: playerDtoList) {
@@ -131,22 +145,6 @@ public class GameModel {
             batch.draw(Assets.getPowerupRegion(powerupType), posX, posY, width, height);
         }
     }
-
-    public void renderPickups(SpriteBatch batch) {
-        Family GemFamily = Family.all(GemComponent.class).get();
-        ImmutableArray<Entity> gemEntities = gameEngine.getEngine().getEntitiesFor(GemFamily);
-
-
-        for (Entity gem : gemEntities) {
-            GemType gemType = GemComponent.MAPPER.get(gem).type;
-            float posX = PositionComponent.MAPPER.get(gem).position.x;
-            float posY = PositionComponent.MAPPER.get(gem).position.y;
-            float width = DimensionComponent.MAPPER.get(gem).width;
-            float height = DimensionComponent.MAPPER.get(gem).height;
-            //RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
-            batch.draw(Assets.getPickupRegion(gemType), posX, posY, width, height);
-        };
-    };
 
     public void initDeviceSpecificAsteroidValues(){
 
