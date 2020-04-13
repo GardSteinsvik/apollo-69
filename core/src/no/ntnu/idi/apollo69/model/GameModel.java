@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -21,9 +20,13 @@ import com.esotericsoftware.kryonet.Listener;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import no.ntnu.idi.apollo69.game_engine.Assets;
+import java.util.List;
+
+import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.game_engine.Background;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
+import no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
 import no.ntnu.idi.apollo69.game_engine.components.GemType;
@@ -33,33 +36,47 @@ import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
 import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
+import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
 import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
+import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
+import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
-import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
-import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
+import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
+import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
 
 public class GameModel {
 
     private Background background;
     private GameEngine gameEngine;
     private Sound shotSound;
-    private ShootThread shootThread;
 
+    private GameClient gameClient;
     private Listener gameUpdateListener;
 
     public static final int GAME_RADIUS = 2000; // Temporary
+
+    // Constants for the screen orthographic camera
+    private final float SCREEN_WIDTH = Gdx.graphics.getWidth();
+    private final float SCREEN_HEIGHT = Gdx.graphics.getHeight();
+    private final float ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
+    private final float HEIGHT = SCREEN_HEIGHT;
+    private final float WIDTH = SCREEN_WIDTH;
+    private final OrthographicCamera camera = new OrthographicCamera(WIDTH/Gdx.graphics.getDensity(), HEIGHT/Gdx.graphics.getDensity());
 
     public GameModel() {
         background = new Background();
@@ -67,27 +84,27 @@ public class GameModel {
         gameEngine = new GameEngineFactory().create();
         shotSound = Gdx.audio.newSound(Gdx.files.internal("game/laser.wav"));
 
+        this.gameClient = NetworkClientSingleton.getInstance().getGameClient();
         gameUpdateListener = new ServerUpdateListener(gameEngine);
         NetworkClientSingleton.getInstance().getClient().addListener(gameUpdateListener);
     }
 
-    public void handleSpaceshipMovement(float x, float y) {
-        gameEngine.getPlayerControlSystem().move(new Vector2(x, y));
-    }
-
-    public void handleShots(boolean shoot) {
-        if (shoot) {
-            shootThread = new ShootThread(250);
-            shootThread.start();
-        } else {
-            if (shootThread != null) {
-                shootThread.stop();
-            }
-        }
-    }
-
     public void renderBackground(SpriteBatch batch) {
-        background.render(batch, gameEngine.getPlayer());
+        background.render(batch, camera);
+    }
+
+    public void renderNetworkData(SpriteBatch spriteBatch) {
+        UpdateMessage updateMessage = gameClient.getGameState();
+
+        renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
+    }
+
+    private void renderSpaceships(SpriteBatch spriteBatch, List<PlayerDto> playerDtoList) {
+        for (PlayerDto playerDto: playerDtoList) {
+            if (playerDto.playerId.equals(Device.DEVICE_ID)) continue; // The current player is rendered from the ECS engine
+            PositionDto positionDto = playerDto.positionDto;
+            spriteBatch.draw(Assets.getSpaceshipRegion(1), positionDto.x, positionDto.y, 30, 30, 60, 60, 1, 1, playerDto.rotationDto.degrees);
+        }
     }
 
     public void renderPowerups(SpriteBatch batch) {
@@ -136,43 +153,43 @@ public class GameModel {
     }
 
     public void renderAsteroids(SpriteBatch batch){
-        Family AsteroidFamily = Family.all(AsteroidComponent.class).get();
-        ImmutableArray<Entity> asteroids = gameEngine.getEngine().getEntitiesFor(AsteroidFamily);
+        ImmutableArray<Entity> asteroids = gameEngine.getEngine().getEntitiesFor(Family.all(AsteroidComponent.class).get());
 
-        for(Entity asteroid : asteroids) {
+        for (Entity asteroid: asteroids) {
             Texture asteroidTexture = SpriteComponent.MAPPER.get(asteroid).idle.getTexture();
             float posX = PositionComponent.MAPPER.get(asteroid).position.x;
             float posY = PositionComponent.MAPPER.get(asteroid).position.y;
             float width = DimensionComponent.MAPPER.get(asteroid).width;
             float height = DimensionComponent.MAPPER.get(asteroid).height;
-            batch.draw(asteroidTexture,posX, posY, width, height);
+            batch.draw(asteroidTexture, posX, posY, width, height);
         }
     }
 
     public void renderSpaceships(SpriteBatch batch) {
-        Family spaceshipFamily = Family.all(PlayerComponent.class).get();
-        ImmutableArray<Entity> spaceships = gameEngine.getEngine().getEntitiesFor(spaceshipFamily);
+        ImmutableArray<Entity> spaceships = gameEngine.getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get());
 
         for (Entity spaceship : spaceships) {
-            SpriteComponent spriteComponent = SpriteComponent.MAPPER.get(spaceship);
-            float dT = System.currentTimeMillis() - spriteComponent.lastUpdated;
+            AtlasRegionComponent atlasRegionComponent = AtlasRegionComponent.MAPPER.get(spaceship);
+
+            float dT = System.currentTimeMillis() - atlasRegionComponent.lastUpdated;
             float posX = PositionComponent.MAPPER.get(spaceship).position.x;
             float posY = PositionComponent.MAPPER.get(spaceship).position.y;
             float width = DimensionComponent.MAPPER.get(spaceship).width;
             float height = DimensionComponent.MAPPER.get(spaceship).height;
             float rotation = RotationComponent.MAPPER.get(spaceship).degrees;
+            int type = SpaceshipComponent.MAPPER.get(spaceship).type;
 
             // Animate booster by alternating sprite every 100 ms
-            if (dT > 100 && spriteComponent.current != spriteComponent.idle) {
-                if (spriteComponent.current == spriteComponent.boost.get(0)) {
-                    spriteComponent.current = spriteComponent.boost.get(1);
+            if (dT > 100 && atlasRegionComponent.region != Assets.getSpaceshipRegion(type)) {
+                if (atlasRegionComponent.region == Assets.getBoostedSpaceshipRegion(type, 1)) {
+                    atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(type, 2);
                 } else {
-                    spriteComponent.current = spriteComponent.boost.get(0);
+                    atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(type, 1);
                 }
-                spriteComponent.lastUpdated = System.currentTimeMillis();
+                atlasRegionComponent.lastUpdated = System.currentTimeMillis();
             }
 
-            batch.draw(spriteComponent.current, posX, posY, width/2, height/2,
+            batch.draw(atlasRegionComponent.region, posX, posY, width/2, height/2,
                     width, height, 1,1, rotation);
         }
     }
@@ -216,6 +233,7 @@ public class GameModel {
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
+    // FIXME: Må flyttes til et EntitySystem
     public void inBoundsCheck() {
         float offset = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).height / 2;
         Circle gameSpace = new Circle(new Vector2(0, 0), GAME_RADIUS - offset);
@@ -225,12 +243,13 @@ public class GameModel {
             // Very brute force direction change - could be improved
             VelocityComponent.MAPPER.get(gameEngine.getPlayer()).velocity.x *= -1;
             VelocityComponent.MAPPER.get(gameEngine.getPlayer()).velocity.y *= -1;
-            RotationComponent.MAPPER.get(gameEngine.getPlayer()).degrees += 180;
+            RotationComponent rotationComponent = RotationComponent.MAPPER.get(gameEngine.getPlayer());
+            rotationComponent.degrees = (rotationComponent.degrees + 180) % 360;
         }
     }
 
     // Initialize device-specific spaceship components
-    public void initSpaceship() {
+    public void initSpaceshipForDevice() {
         DimensionComponent dimComp = DimensionComponent.MAPPER.get(getGameEngine().getPlayer());
         dimComp.width = Gdx.graphics.getHeight() / 10f;
         dimComp.height = Gdx.graphics.getHeight() / 10f;
@@ -238,104 +257,22 @@ public class GameModel {
         AttackingComponent attackComp = AttackingComponent.MAPPER.get(getGameEngine().getPlayer());
         attackComp.shotRadius = dimComp.width / 20;
 
-        SpriteComponent spriteComp = SpriteComponent.MAPPER.get(getGameEngine().getPlayer());
-        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("game/game.atlas"));
-        spriteComp.idle = textureAtlas.createSprite("ship1");
-        spriteComp.boost.add(textureAtlas.createSprite("ship1_boost1"));
-        spriteComp.boost.add(textureAtlas.createSprite("ship1_boost2"));
-        spriteComp.current = spriteComp.idle;
-
         BoundingCircleComponent boundComp = BoundingCircleComponent.MAPPER.get(getGameEngine().getPlayer());
         float offset = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).height / 2;
         Vector2 position = PositionComponent.MAPPER.get(gameEngine.getPlayer()).position;
         boundComp.circle = new Circle(new Vector2(position.x + offset, position.y + offset), offset);
     }
 
-    public void moveCameraToSpaceship(OrthographicCamera camera, float deltaTime) {
-        VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(gameEngine.getPlayer());
-        camera.translate(new Vector2(velocityComponent.velocity.x * deltaTime, velocityComponent.velocity.y * deltaTime));
+    public void moveCameraToSpaceship() {
+        camera.position.set(PositionComponent.MAPPER.get(gameEngine.getPlayer()).position, 0);
         camera.update();
     }
 
-    public void boost(boolean on) {
-        gameEngine.getPlayerControlSystem().boost(on);
-    }
-
-    // Called when picking up boost power-up
-    public void setBoost(float boost) {
-        BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(gameEngine.getPlayer());
-        boosterComponent.boost = boost;
-    }
-
-    public void resetBoost() {
-        BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(gameEngine.getPlayer());
-        boosterComponent.boost = boosterComponent.defaultValue;
-    }
-
-    // Called when picking up hp power-up
-    public void addHealth(float hp) {
-        HealthComponent health = HealthComponent.MAPPER.get(gameEngine.getPlayer());
-        health.hp += hp;
-
-        if (health.hp > 100) {
-            health.hp = 100;
-        }
-    }
-
-    // Called when hit by shot or asteroid
-    public void subtractHealth(float hp) {
-        HealthComponent health = HealthComponent.MAPPER.get(gameEngine.getPlayer());
-        health.hp -= hp;
-    }
-
-    // Called when picking up a shot power-up
-    public void setAttackAttributes(float radius, float damage) {
-        AttackingComponent attack = AttackingComponent.MAPPER.get(gameEngine.getPlayer());
-        attack.shotRadius = radius;
-        attack.shotDamage = damage;
-    }
-
-    public void resetAttackAttributes() {
-        AttackingComponent attack = AttackingComponent.MAPPER.get(gameEngine.getPlayer());
-        DimensionComponent dimension = DimensionComponent.MAPPER.get(gameEngine.getPlayer());
-        attack.shotDamage = 10;
-        attack.shotRadius = dimension.width / 20;
+    public OrthographicCamera getCamera() {
+        return camera;
     }
 
     public GameEngine getGameEngine() {
         return gameEngine;
     }
-
-    class ShootThread implements Runnable {
-        private final AtomicBoolean running = new AtomicBoolean(false);
-        private int interval;
-
-        ShootThread(int interval) {
-            this.interval = interval;
-        }
-
-        void start() {
-            Thread worker = new Thread(this);
-            worker.start();
-        }
-
-        void stop() {
-            running.set(false);
-        }
-
-        @Override
-        public void run() {
-            running.set(true);
-            while (running.get()) {
-                try {
-                    gameEngine.getPlayerControlSystem().shoot(gameEngine);
-                    Thread.sleep(interval);
-                } catch (Exception e) {
-                    System.out.println("ShootThread: something went wrong");
-                }
-            }
-        }
-
-    }
-
 }

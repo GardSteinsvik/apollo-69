@@ -1,23 +1,19 @@
 package no.ntnu.idi.apollo69framework.network_messages;
 
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
-
 public class PlayerInput {
     private String playerId;
-    private VelocityDto velocityDto;
-    private RotationDto rotationDto;
+    private PlayerInputType type;
+    private float posX;
+    private float posY;
+    private float rotationDegrees;
     private boolean shooting;
     private boolean boosting;
 
     public PlayerInput() {
     }
 
-    public PlayerInput(VelocityDto velocityDto, RotationDto rotationDto, boolean shooting, boolean boosting) {
-        this.velocityDto = velocityDto;
-        this.rotationDto = rotationDto;
-        this.shooting = shooting;
-        this.boosting = boosting;
+    public PlayerInput(PlayerInputType type) {
+        this.type = type;
     }
 
     public String getPlayerId() {
@@ -28,20 +24,36 @@ public class PlayerInput {
         this.playerId = playerId;
     }
 
-    public VelocityDto getVelocityDto() {
-        return velocityDto;
+    public PlayerInputType getType() {
+        return type;
     }
 
-    public void setVelocityDto(VelocityDto velocityDto) {
-        this.velocityDto = velocityDto;
+    public void setType(PlayerInputType type) {
+        this.type = type;
     }
 
-    public RotationDto getRotationDto() {
-        return rotationDto;
+    public float getPosX() {
+        return posX;
     }
 
-    public void setRotationDto(RotationDto rotationDto) {
-        this.rotationDto = rotationDto;
+    public void setPosX(float posX) {
+        this.posX = posX;
+    }
+
+    public float getPosY() {
+        return posY;
+    }
+
+    public void setPosY(float posY) {
+        this.posY = posY;
+    }
+
+    public float getRotationDegrees() {
+        return rotationDegrees;
+    }
+
+    public void setRotationDegrees(float rotationDegrees) {
+        this.rotationDegrees = rotationDegrees;
     }
 
     public boolean isShooting() {
@@ -58,16 +70,5 @@ public class PlayerInput {
 
     public void setBoosting(boolean boosting) {
         this.boosting = boosting;
-    }
-
-    @Override
-    public String toString() {
-        return "PlayerInput{" +
-                "playerId='" + playerId + '\'' +
-                ", velocityDto=" + velocityDto +
-                ", rotationDto=" + rotationDto +
-                ", shooting=" + shooting +
-                ", boosting=" + boosting +
-                '}';
     }
 }
