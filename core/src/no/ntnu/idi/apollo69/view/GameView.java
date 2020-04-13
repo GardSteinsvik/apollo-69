@@ -6,7 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -31,14 +30,6 @@ public class GameView extends ApplicationAdapter implements Screen {
     private SpriteBatch spriteBatch;
     private ShapeRenderer shapeRenderer;
     private Stage stage;
-
-    // Constants for the screen orthographic camera
-    private final float SCREEN_WIDTH = Gdx.graphics.getWidth();
-    private final float SCREEN_HEIGHT = Gdx.graphics.getHeight();
-    private final float ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
-    private final float HEIGHT = SCREEN_HEIGHT;
-    private final float WIDTH = SCREEN_WIDTH;
-    private final OrthographicCamera orthoCamera = new OrthographicCamera(WIDTH, HEIGHT);
 
     // Debug written to font
     private static BitmapFont font = new BitmapFont();
@@ -134,7 +125,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         font.getData().setScale(1.2f);
 
         // Initialize camera position
-        model.moveCameraToSpaceship(orthoCamera, 0);
+        model.moveCameraToSpaceship();
 
         model.initSpaceshipForDevice();
 
@@ -153,8 +144,8 @@ public class GameView extends ApplicationAdapter implements Screen {
         Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
 
         // Set camera
-        spriteBatch.setProjectionMatrix(orthoCamera.combined);
-        shapeRenderer.setProjectionMatrix(orthoCamera.combined);
+        spriteBatch.setProjectionMatrix(model.getCamera().combined);
+        shapeRenderer.setProjectionMatrix(model.getCamera().combined);
 
         // Render sprites
         spriteBatch.begin();
@@ -163,6 +154,10 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.renderAsteroids(spriteBatch);
         model.renderPowerups(spriteBatch);
         model.renderSpaceships(spriteBatch);
+
+        // Render data from server
+        model.renderNetworkData(spriteBatch);
+
         this.debug();
         spriteBatch.end();
 
@@ -174,7 +169,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         stage.draw();
 
         // Update camera position
-        model.moveCameraToSpaceship(orthoCamera, delta);
+        model.moveCameraToSpaceship();
 
         // Update game engine
         model.getGameEngine().getEngine().update(delta);
@@ -185,9 +180,9 @@ public class GameView extends ApplicationAdapter implements Screen {
     private void debug() {
         // Debug written to font
         PositionComponent positionComponent = PositionComponent.MAPPER.get(model.getGameEngine().getPlayer());
-        font.draw(spriteBatch,"WIDTH: " + Math.round(WIDTH) + "  X: " +
+        font.draw(spriteBatch,"WIDTH: " + Math.round(Gdx.graphics.getWidth()) + "  X: " +
                 Math.round(positionComponent.position.x), positionComponent.position.x - 50, positionComponent.position.y - 130);
-        font.draw(spriteBatch,"HEIGHT: " + Math.round(HEIGHT) + "  Y: " +
+        font.draw(spriteBatch,"HEIGHT: " + Math.round(Gdx.graphics.getHeight()) + "  Y: " +
                 Math.round(positionComponent.position.y), positionComponent.position.x - 50, positionComponent.position.y - 160);
     }
 

@@ -47,6 +47,7 @@ public class GameEngine implements Runnable, Disposable {
             double deltaTimeSeconds = (now - lastUpdate) / 1_000_000_000d;
 
             engine.update((float) deltaTimeSeconds);
+            lastUpdate = now;
 
             try {
                 Thread.sleep(5);

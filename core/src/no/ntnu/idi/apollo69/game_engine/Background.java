@@ -1,14 +1,13 @@
 package no.ntnu.idi.apollo69.game_engine;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+
 import java.util.ArrayList;
-import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 
 public class Background {
 
@@ -27,8 +26,8 @@ public class Background {
     private ArrayList<BackgroundObject> backgroundObjects = new ArrayList<>();
 
     public Background() {
-        float screenWidth = Gdx.graphics.getHeight() * (16f / 9f);
-        float screenHeight = Gdx.graphics.getHeight();
+        float screenWidth = Gdx.graphics.getHeight() * (16f / 9f) / Gdx.graphics.getDensity();
+        float screenHeight = Gdx.graphics.getHeight() / Gdx.graphics.getDensity();
 
         backgroundObjects.add(new BackgroundObject(
                 new Texture(Gdx.files.internal("game/big_bg.png")),
@@ -61,20 +60,15 @@ public class Background {
         ));
     }
 
-    public void render(SpriteBatch spriteBatch, Entity spaceship) {
-        PositionComponent positionComponent = PositionComponent.MAPPER.get(spaceship);
-        DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(spaceship);
-
-        Vector2 spaceshipCenter = new Vector2(positionComponent.position.x + dimensionComponent.width / 2f, positionComponent.position.y + dimensionComponent.height / 2f);
-
+    public void render(SpriteBatch spriteBatch, OrthographicCamera camera) {
         for (BackgroundObject bo : backgroundObjects) {
             Vector2 objectCenter = new Vector2(bo.bounds.x / 2f, bo.bounds.y / 2f);
 
             float fieldOfView = 250f;
             float scale = fieldOfView / (fieldOfView + bo.position.z);
 
-            float x = (spaceshipCenter.x - objectCenter.x + bo.position.x) * scale;
-            float y = (spaceshipCenter.y - objectCenter.y + bo.position.y) * scale;
+            float x = (camera.position.x - objectCenter.x + bo.position.x) * scale;
+            float y = (camera.position.y - objectCenter.y + bo.position.y) * scale;
 
             float width = bo.bounds.x;
             float height = bo.bounds.y;
@@ -82,5 +76,4 @@ public class Background {
             spriteBatch.draw(bo.texture, x, y, width, height);
         }
     }
-
 }

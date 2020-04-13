@@ -5,8 +5,8 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
+import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.Assets;
-import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
@@ -14,18 +14,15 @@ import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
-import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.model.GameModel;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
+import no.ntnu.idi.apollo69framework.network_messages.PlayerInputType;
 
 public class PlayerControlSystem extends EntitySystem implements InputHandlerInterface {
 
     private Entity player;
-    private PlayerInput playerInput = new PlayerInput();
     private GameClient gameClient;
 
     public PlayerControlSystem(Entity player) {
@@ -47,19 +44,25 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
             rotationComponent.degrees = (float) (Math.atan2(direction.y, direction.x) * (180 / Math.PI) - 90);
             rotationComponent.x = direction.x * velocityComponent.scalar;
             rotationComponent.y = direction.y * velocityComponent.scalar;
-        }
 
-        if (gameClient.isConnected()) {
-            playerInput.setVelocityDto(new VelocityDto(velocityComponent.velocity.x, velocityComponent.velocity.y, velocityComponent.scalar));
-            playerInput.setRotationDto(new RotationDto(rotationComponent.degrees, rotationComponent.x, rotationComponent.y));
-            gameClient.sendMessage(playerInput);
+            // Send input to the server
+            if (gameClient.isConnected()) {
+                PlayerInput playerInput = new PlayerInput(PlayerInputType.ROTATE);
+                playerInput.setRotationDegrees((float) (Math.atan2(direction.y, direction.x) * (180 / Math.PI) - 90));
+                gameClient.sendMessage(playerInput);
+            }
         }
     }
 
     @Override
-    public void shoot(GameEngine engine) {
-        Entity shot = new ShotFactory().create(player);
-        engine.getEngine().addEntity(shot);
+    public void shoot(boolean on) {
+        player.getComponent(AttackingComponent.class).shooting = on;
+
+        if (gameClient.isConnected()) {
+            PlayerInput playerInput = new PlayerInput(PlayerInputType.SHOOT);
+            playerInput.setShooting(on);
+            gameClient.sendMessage(playerInput);
+        }
     }
 
     @Override
@@ -79,6 +82,12 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
             velocityComponent.velocity.x /= boosterComponent.boost;
             velocityComponent.velocity.y /= boosterComponent.boost;
             atlasRegionComponent.region = Assets.getSpaceshipRegion(spaceshipComponent.type);
+        }
+
+        if (gameClient.isConnected()) {
+            PlayerInput playerInput = new PlayerInput(PlayerInputType.BOOST);
+            playerInput.setBoosting(on);
+            gameClient.sendMessage(playerInput);
         }
     }
 

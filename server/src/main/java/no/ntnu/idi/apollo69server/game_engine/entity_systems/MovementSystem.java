@@ -12,9 +12,12 @@ import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 public class MovementSystem extends EntitySystem {
 
     private ImmutableArray<Entity> entities;
+    private float interval;
+    private float timeAccumulator = 0f;
 
-    public MovementSystem(int priority) {
+    public MovementSystem(int priority, float interval) {
         super(priority);
+        this.interval = interval;
     }
 
     @Override
@@ -24,6 +27,14 @@ public class MovementSystem extends EntitySystem {
 
     @Override
     public void update(float deltaTime) {
+        timeAccumulator += deltaTime;
+        if (timeAccumulator >= interval) {
+            move(deltaTime);
+            timeAccumulator = 0f;
+        }
+    }
+
+    private void move(float deltaTime) {
         for (Entity entity : entities) {
             PositionComponent positionComponent = PositionComponent.MAPPER.get(entity);
             VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(entity);
@@ -32,5 +43,4 @@ public class MovementSystem extends EntitySystem {
             positionComponent.position.y += velocityComponent.velocity.y * deltaTime;
         }
     }
-
 }
