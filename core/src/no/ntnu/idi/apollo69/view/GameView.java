@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -21,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import no.ntnu.idi.apollo69.controller.GameController;
+import no.ntnu.idi.apollo69.game_engine.Assets;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.model.GameModel;
 
@@ -57,7 +57,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         float touchpadDim = Gdx.graphics.getHeight() / 5f; // Width & height
 
         // Touchpad
-        Touchpad touchpad = new Touchpad(10, new Skin(Gdx.files.internal("skin/uiskin.json")));
+        Touchpad touchpad = new Touchpad(10, Assets.getUiSkin());
         touchpad.setBounds(touchpadPos, touchpadPos, touchpadDim, touchpadDim);
         touchpad.addListener(new ChangeListener() {
             @Override
@@ -67,27 +67,23 @@ public class GameView extends ApplicationAdapter implements Screen {
         });
 
         // Button parameters
-        float btnDim = Gdx.graphics.getWidth() / 10f;
-        float shootBtnX = Gdx.graphics.getWidth() - btnDim * 5 / 4;
-        float shootBtnY = btnDim * 1;
-        float boostBtnX = shootBtnX - btnDim;// * 5/4;
-        float boostBtnY = btnDim / 4;
+        float btnDiameter = Gdx.graphics.getWidth() / 10f;
+        float shootBtnX = Gdx.graphics.getWidth() - btnDiameter * 5 / 4;
+        float shootBtnY = btnDiameter * 1;
+        float boostBtnX = shootBtnX - btnDiameter;// * 5/4;
+        float boostBtnY = btnDiameter / 4;
         BitmapFont font = new BitmapFont();
-        Skin shootSkin = new Skin();
-        Skin boostSkin = new Skin();
-        TextureAtlas buttonAtlas = new TextureAtlas(Gdx.files.internal("game/game.atlas"));
 
         // Shoot button
-        shootSkin.addRegions(buttonAtlas);
+        Skin shootSkin = new Skin();
+        shootSkin.addRegions(Assets.getGameAtlas());
         TextButton.TextButtonStyle shootButtonStyle = new TextButton.TextButtonStyle();
         shootButtonStyle.font = font;
         shootButtonStyle.up = shootSkin.getDrawable("button_shoot_up");
         shootButtonStyle.down = shootSkin.getDrawable("button_shoot_down");
-        //shootButtonStyle.up = new TextureRegionDrawable(Assets.getActionButtonRegion(ButtonType.BOOST_UP));
-        //shootButtonStyle.down = new TextureRegionDrawable(Assets.getActionButtonRegion(ButtonType.BOOST_DOWN));
         TextButton shootBtn = new TextButton("", shootButtonStyle);
         shootBtn.setPosition(shootBtnX, shootBtnY);
-        shootBtn.setSize(btnDim, btnDim);
+        shootBtn.setSize(btnDiameter, btnDiameter);
 
         shootBtn.addListener(new ClickListener() {
             @Override
@@ -103,16 +99,15 @@ public class GameView extends ApplicationAdapter implements Screen {
         });
 
         // Boost button
-        boostSkin.addRegions(buttonAtlas);
+        Skin boostSkin = new Skin();
+        boostSkin.addRegions(Assets.getGameAtlas());
         TextButton.TextButtonStyle boostButtonStyle = new TextButton.TextButtonStyle();
         boostButtonStyle.font = font;
-        boostButtonStyle.up =shootSkin.getDrawable("button_boost_up");
-        boostButtonStyle.down =shootSkin.getDrawable("button_boost_down");
-        //boostButtonStyle.up = new TextureRegionDrawable(Assets.getActionButtonRegion(ButtonType.SHOOT_UP));//shootSkin.getDrawable("button_boost_up");
-        //boostButtonStyle.down = new TextureRegionDrawable(Assets.getActionButtonRegion(ButtonType.SHOOT_DOWN));//shootSkin.getDrawable("button_boost_down");
+        boostButtonStyle.up = boostSkin.getDrawable("button_boost_up");
+        boostButtonStyle.down = boostSkin.getDrawable("button_boost_down");
         TextButton boostBtn = new TextButton("", boostButtonStyle);
         boostBtn.setPosition(boostBtnX, boostBtnY);
-        boostBtn.setSize(btnDim, btnDim);
+        boostBtn.setSize(btnDiameter, btnDiameter);
 
         boostBtn.addListener(new ClickListener() {
             @Override
@@ -144,7 +139,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.initSpaceshipForDevice();
 
         // Music
-        Music gameMusic = Gdx.audio.newMusic(Gdx.files.internal("game/game.ogg"));
+        Music gameMusic = Assets.getBackgroundMusic();//Gdx.audio.newMusic(Gdx.files.internal("game/game.ogg"));
         gameMusic.setLooping(true);
         gameMusic.setVolume(0.5f);
         //gameMusic.play();

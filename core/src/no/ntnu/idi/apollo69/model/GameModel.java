@@ -201,7 +201,7 @@ public class GameModel {
         shapeRenderer.circle(0, 0, radius);
         shapeRenderer.end();
 
-        renderSpaceshipBoundingCircle(shapeRenderer);
+        //renderSpaceshipBoundingCircle(shapeRenderer);
     }
 
     private void renderSpaceshipBoundingCircle(ShapeRenderer shapeRenderer) {
