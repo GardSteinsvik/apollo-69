@@ -17,4 +17,5 @@ public interface Variables {
     int mediumFontSize = 4;
     float baseFontSize = 0.04f;
 
+    int GAME_RADIUS = 2000;
 }

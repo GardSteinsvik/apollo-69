@@ -231,21 +231,6 @@ public class GameModel {
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
-    // FIXME: Må flyttes til et EntitySystem
-    public void inBoundsCheck() {
-        float offset = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).height / 2;
-        Circle gameSpace = new Circle(new Vector2(0, 0), GAME_RADIUS - offset);
-        Circle spaceship = BoundingCircleComponent.MAPPER.get(gameEngine.getPlayer()).circle;
-
-        if (!gameSpace.contains(spaceship)) {
-            // Very brute force direction change - could be improved
-            VelocityComponent.MAPPER.get(gameEngine.getPlayer()).velocity.x *= -1;
-            VelocityComponent.MAPPER.get(gameEngine.getPlayer()).velocity.y *= -1;
-            RotationComponent rotationComponent = RotationComponent.MAPPER.get(gameEngine.getPlayer());
-            rotationComponent.degrees = (rotationComponent.degrees + 180) % 360;
-        }
-    }
-
     // Initialize device-specific spaceship components
     public void initSpaceshipForDevice() {
         DimensionComponent dimComp = DimensionComponent.MAPPER.get(getGameEngine().getPlayer());

@@ -130,7 +130,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.initSpaceshipForDevice();
 
         // Music
-        Music gameMusic = Assets.getBackgroundMusic();//Gdx.audio.newMusic(Gdx.files.internal("game/game.ogg"));
+        Music gameMusic = Assets.getBackgroundMusic();
         gameMusic.setLooping(true);
         gameMusic.setVolume(0.5f);
         //gameMusic.play();
@@ -156,7 +156,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.renderSpaceships(spriteBatch);
 
         // Render data from server
-        model.renderNetworkData(spriteBatch);
+        //model.renderNetworkData(spriteBatch);
 
         this.debug();
         spriteBatch.end();
@@ -173,8 +173,6 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         // Update game engine
         model.getGameEngine().getEngine().update(delta);
-
-        model.inBoundsCheck();
     }
 
     private void debug() {
