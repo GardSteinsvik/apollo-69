@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -18,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import no.ntnu.idi.apollo69.Variables;
 import no.ntnu.idi.apollo69.controller.GameController;
 import no.ntnu.idi.apollo69.game_engine.Assets;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
@@ -32,7 +35,12 @@ public class GameView extends ApplicationAdapter implements Screen {
     private Stage stage;
 
     // Debug written to font
-    private static BitmapFont font = new BitmapFont();
+    private static BitmapFont debugFont = new BitmapFont();
+
+    private FreeTypeFontGenerator generator;
+    private FreeTypeFontParameter parameter;
+    private BitmapFont font;
+
 
     public GameView(GameModel model, GameController controller) {
         this.model = model;
@@ -63,13 +71,13 @@ public class GameView extends ApplicationAdapter implements Screen {
         float shootBtnY = btnDiameter * 1;
         float boostBtnX = shootBtnX - btnDiameter;// * 5/4;
         float boostBtnY = btnDiameter / 4;
-        BitmapFont font = new BitmapFont();
+        BitmapFont btnFont = new BitmapFont();
 
         // Shoot button
         Skin shootSkin = new Skin();
         shootSkin.addRegions(Assets.getGameAtlas());
         TextButton.TextButtonStyle shootButtonStyle = new TextButton.TextButtonStyle();
-        shootButtonStyle.font = font;
+        shootButtonStyle.font = btnFont;
         shootButtonStyle.up = shootSkin.getDrawable("button_shoot_up");
         shootButtonStyle.down = shootSkin.getDrawable("button_shoot_down");
         TextButton shootBtn = new TextButton("", shootButtonStyle);
@@ -93,7 +101,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         Skin boostSkin = new Skin();
         boostSkin.addRegions(Assets.getGameAtlas());
         TextButton.TextButtonStyle boostButtonStyle = new TextButton.TextButtonStyle();
-        boostButtonStyle.font = font;
+        boostButtonStyle.font = btnFont;
         boostButtonStyle.up = boostSkin.getDrawable("button_boost_up");
         boostButtonStyle.down = boostSkin.getDrawable("button_boost_down");
         TextButton boostBtn = new TextButton("", boostButtonStyle);
@@ -121,8 +129,8 @@ public class GameView extends ApplicationAdapter implements Screen {
         stage.addActor(boostBtn);
 
         // Debug written to font
-        font.setColor(Color.MAROON);
-        font.getData().setScale(1.2f);
+        btnFont.setColor(Color.MAROON);
+        btnFont.getData().setScale(1.2f);
 
         // Initialize camera position
         model.moveCameraToSpaceship();
@@ -134,6 +142,13 @@ public class GameView extends ApplicationAdapter implements Screen {
         gameMusic.setLooping(true);
         gameMusic.setVolume(0.5f);
         //gameMusic.play();
+
+        // Font for displaying scores
+        //generator = new FreeTypeFontGenerator(Assets.getFont());
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("font/baloo.ttf"));
+        parameter = new FreeTypeFontParameter();
+        parameter.size = 75;
+        font = generator.generateFont(parameter);
     }
 
     @Override
@@ -153,6 +168,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.renderPickups(spriteBatch);
         model.renderAsteroids(spriteBatch);
         model.renderPowerups(spriteBatch);
+        model.renderScores(font, spriteBatch);
         model.renderSpaceships(spriteBatch);
 
         // Render data from server
@@ -163,7 +179,7 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         // Render shapes
         model.renderShots(shapeRenderer);
-        model.renderBoundary(shapeRenderer, GameModel.GAME_RADIUS);
+        model.renderBoundary(shapeRenderer, Variables.GAMESPACE_RADIUS);
 
         // Render UI
         stage.draw();
@@ -173,14 +189,15 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         // Update game engine
         model.getGameEngine().getEngine().update(delta);
+
     }
 
     private void debug() {
         // Debug written to font
         PositionComponent positionComponent = PositionComponent.MAPPER.get(model.getGameEngine().getPlayer());
-        font.draw(spriteBatch,"WIDTH: " + Math.round(Gdx.graphics.getWidth()) + "  X: " +
+        debugFont.draw(spriteBatch,"WIDTH: " + Math.round(Gdx.graphics.getWidth()) + "  X: " +
                 Math.round(positionComponent.position.x), positionComponent.position.x - 50, positionComponent.position.y - 130);
-        font.draw(spriteBatch,"HEIGHT: " + Math.round(Gdx.graphics.getHeight()) + "  Y: " +
+        debugFont.draw(spriteBatch,"HEIGHT: " + Math.round(Gdx.graphics.getHeight()) + "  Y: " +
                 Math.round(positionComponent.position.y), positionComponent.position.x - 50, positionComponent.position.y - 160);
     }
 

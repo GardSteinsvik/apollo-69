@@ -5,15 +5,12 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
+import no.ntnu.idi.apollo69.Variables;
 import no.ntnu.idi.apollo69.game_engine.components.AsteroidComponent;
-import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
-import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.entities.AsteroidFactory;
-import no.ntnu.idi.apollo69.model.GameModel;
 
 public class AsteroidSystem extends EntitySystem {
 
@@ -43,16 +40,16 @@ public class AsteroidSystem extends EntitySystem {
         for(Entity asteroid: asteroids){
             PositionComponent positionComponent = PositionComponent.MAPPER.get(asteroid);
             Vector2 position = positionComponent.position;
-            if(position.x > GameModel.GAME_RADIUS + 200){
+            if(position.x > Variables.GAMESPACE_RADIUS + 200){
                 engine.removeEntity(asteroid);
             }
-            if(position.x < -GameModel.GAME_RADIUS + 200){
+            if(position.x < -Variables.GAMESPACE_RADIUS + 200){
                 engine.removeEntity(asteroid);
             }
-            if(position.y > GameModel.GAME_RADIUS + 200){
+            if(position.y > Variables.GAMESPACE_RADIUS + 200){
                 engine.removeEntity(asteroid);
             }
-            if(position.y < -GameModel.GAME_RADIUS + 200){
+            if(position.y < -Variables.GAMESPACE_RADIUS + 200){
                 engine.removeEntity(asteroid);
             }
         }

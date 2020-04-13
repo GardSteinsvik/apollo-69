@@ -4,20 +4,18 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
 
+import no.ntnu.idi.apollo69.Variables;
 import no.ntnu.idi.apollo69.game_engine.components.AsteroidComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
-import no.ntnu.idi.apollo69.model.GameModel;
 
 public class AsteroidFactory {
 
@@ -26,7 +24,7 @@ public class AsteroidFactory {
     public final int MAXIMUM_SPEED_OF_ASTEROID = 600;
     public final int MINIMUM_SPEED_OF_ASTEROID = 0;
 
-    private int maxSpawnDistanceRadius = GameModel.GAME_RADIUS;
+    private int maxSpawnDistanceRadius = Variables.GAMESPACE_RADIUS;
 
     public Entity create (){
         Entity asteroid = new Entity();

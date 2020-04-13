@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
+import no.ntnu.idi.apollo69.Variables;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.Assets;
 import no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent;
@@ -14,7 +15,6 @@ import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
-import no.ntnu.idi.apollo69.model.GameModel;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
@@ -34,7 +34,7 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
     @Override
     public void move(Vector2 direction) {
         float offset = DimensionComponent.MAPPER.get(player).height / 2;
-        Circle gameSpace = new Circle(new Vector2(0, 0), GameModel.GAME_RADIUS - offset);
+        Circle gameSpace = new Circle(new Vector2(0, 0), Variables.GAMESPACE_RADIUS - offset);
         Circle spaceship = BoundingCircleComponent.MAPPER.get(player).circle;
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(player);
         RotationComponent rotationComponent = RotationComponent.MAPPER.get(player);

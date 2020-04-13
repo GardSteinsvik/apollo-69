@@ -9,15 +9,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Listener;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import no.ntnu.idi.apollo69.game_engine.Assets;
 import java.util.List;
@@ -30,28 +27,19 @@ import no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
 import no.ntnu.idi.apollo69.game_engine.components.GemType;
-import no.ntnu.idi.apollo69.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69.game_engine.components.AsteroidComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
 import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
+import no.ntnu.idi.apollo69.game_engine.components.ScoreComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
-import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
-import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
-import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
-import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
-import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
-import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
@@ -68,8 +56,6 @@ public class GameModel {
     private GameClient gameClient;
     private Listener gameUpdateListener;
 
-    public static final int GAME_RADIUS = 2000; // Temporary
-
     // Constants for the screen orthographic camera
     private final float SCREEN_WIDTH = Gdx.graphics.getWidth();
     private final float SCREEN_HEIGHT = Gdx.graphics.getHeight();
@@ -82,7 +68,8 @@ public class GameModel {
         background = new Background();
         Assets.load();
         gameEngine = new GameEngineFactory().create();
-        shotSound = Gdx.audio.newSound(Gdx.files.internal("game/laser.wav"));
+        //shotSound = Gdx.audio.newSound(Gdx.files.internal("game/laser.wav"));
+        shotSound = Assets.getLaserSound();
 
         this.gameClient = NetworkClientSingleton.getInstance().getGameClient();
         gameUpdateListener = new ServerUpdateListener(gameEngine);
@@ -105,6 +92,17 @@ public class GameModel {
             PositionDto positionDto = playerDto.positionDto;
             spriteBatch.draw(Assets.getSpaceshipRegion(1), positionDto.x, positionDto.y, 30, 30, 60, 60, 1, 1, playerDto.rotationDto.degrees);
         }
+    }
+
+    // FIXME: Change this to TextButton with transparent background to avoid stuttering
+    public void renderScores(BitmapFont font, SpriteBatch spriteBatch) {
+        PositionComponent positionComponent = PositionComponent.MAPPER.get(gameEngine.getPlayer());
+        String score = String.valueOf(ScoreComponent.MAPPER.get(gameEngine.getPlayer()).score);
+
+        float scoreX = positionComponent.position.x - (Math.round(Gdx.graphics.getWidth()) / 20f) * 19;
+        float scoreY = positionComponent.position.y + (Math.round(Gdx.graphics.getHeight()) / 10f) * 9;
+
+        font.draw(spriteBatch, score, scoreX, scoreY);
     }
 
     public void renderPowerups(SpriteBatch batch) {

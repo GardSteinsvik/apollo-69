@@ -2,11 +2,17 @@ package no.ntnu.idi.apollo69.game_engine;
 
 // Singleton to provide game assets to the rendering in the View (Android phone)
 
+import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
+
+import java.awt.Font;
 
 import no.ntnu.idi.apollo69.game_engine.components.GemType;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
@@ -18,12 +24,16 @@ public class Assets {
     private static Class<TextureAtlas> TEXTURE_ATLAS = TextureAtlas.class;
     private static Class<Skin> SKIN = Skin.class;
     private static Class<Music> MUSIC = Music.class;
+    private static Class<Sound> SOUND = Sound.class;
+    private static Class<FileHandle> FILE_HANDLE = FileHandle.class;
 
     private static final String POWERUPS_ATLAS = "game/powerups.atlas";
     private static final String GEMS_ATLAS = "game/gems.atlas";
     private static final String GAME_ATLAS = "game/game.atlas";
     private static final String UI_SKIN = "skin/uiskin.json";
     private static final String THEME = "game/game.ogg";
+    private static final String LASER = "game/laser.wav";
+    private static final String FONT = "font/BalooPaaji2-Medium.tff";
 
     private static ObjectMap<String, TextureAtlas.AtlasRegion> textureCache = new ObjectMap<>();
 
@@ -37,6 +47,10 @@ public class Assets {
         am.load(GAME_ATLAS, TEXTURE_ATLAS);
         am.load(UI_SKIN, SKIN);
         am.load(THEME, MUSIC);
+        am.load(LASER, SOUND);
+
+        // TODO: Find a workaround to load FileHandle.class
+        //am.load(FONT, FILE_HANDLE);
 
         // Make sure all Assets have finished loading before use (!)
         // Not doing this will cause the rendering system to attempt to render unloaded
@@ -132,6 +146,14 @@ public class Assets {
 
     public static Music getBackgroundMusic() {
         return am.get(THEME, MUSIC);
+    }
+
+    public static Sound getLaserSound() {
+        return am.get(LASER, SOUND);
+    }
+
+    public static FileHandle getFont() {
+        return am.get(FONT, FILE_HANDLE);
     }
 
 }

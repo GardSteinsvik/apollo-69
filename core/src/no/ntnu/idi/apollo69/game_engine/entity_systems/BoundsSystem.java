@@ -45,7 +45,7 @@ public class BoundsSystem extends EntitySystem {
 
     private void inBoundsCheck(Entity spaceship) {
         float offset = DimensionComponent.MAPPER.get(spaceship).height / 2;
-        Circle gameSpace = new Circle(new Vector2(0, 0), Variables.GAME_RADIUS - offset);
+        Circle gameSpace = new Circle(new Vector2(0, 0), Variables.GAMESPACE_RADIUS - offset);
         Circle shipBounds = BoundingCircleComponent.MAPPER.get(spaceship).circle;
 
         if (!gameSpace.contains(shipBounds)) {
