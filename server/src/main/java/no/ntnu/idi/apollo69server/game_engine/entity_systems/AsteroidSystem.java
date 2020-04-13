@@ -14,22 +14,21 @@ public class AsteroidSystem extends EntitySystem {
 
     private Engine engine;
     ImmutableArray<Entity> asteroids;
-    public final int AMOUNT_OF_ASTEROIDS_TO_KEEP_ON_THE_MAP = 30;
+    public final int AMOUNT_OF_ASTEROIDS_TO_KEEP_ON_THE_MAP = 4;
 
-    public AsteroidSystem(){
+    public AsteroidSystem(int priority){
+        super(priority);
     }
 
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
         this.engine = engine;
-
         asteroids = engine.getEntitiesFor(Family.all(AsteroidComponent.class).get());
     }
 
     @Override
     public void update(float deltaTime) {
-        // Always keeping it to 3 asteroids in the field.
         for(int i = asteroids.size(); i < AMOUNT_OF_ASTEROIDS_TO_KEEP_ON_THE_MAP; i++) {
             Entity asteroid = new AsteroidFactory().create();
             engine.addEntity(asteroid);

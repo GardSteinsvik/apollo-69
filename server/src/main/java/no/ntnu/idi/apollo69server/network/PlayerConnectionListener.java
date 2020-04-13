@@ -1,7 +1,6 @@
 package no.ntnu.idi.apollo69server.network;
 
-import org.jetbrains.annotations.Nullable;
-
+import com.sun.istack.internal.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;

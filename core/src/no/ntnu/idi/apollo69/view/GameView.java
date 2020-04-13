@@ -26,6 +26,9 @@ import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.model.GameModel;
+import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
+import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
+import sun.net.NetworkClient;
 
 public class GameView extends ApplicationAdapter implements Screen {
 
@@ -165,6 +168,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.renderBackground(spriteBatch);
         model.renderPickups(spriteBatch);
 //        model.renderAsteroids(spriteBatch);
+
         model.renderPowerups(spriteBatch);
         model.renderSpaceships(spriteBatch);
         this.debug();
