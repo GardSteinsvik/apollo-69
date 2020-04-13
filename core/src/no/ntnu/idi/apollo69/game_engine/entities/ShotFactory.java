@@ -8,6 +8,7 @@ import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
+import no.ntnu.idi.apollo69.game_engine.components.TtlComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 
 public class ShotFactory {
@@ -18,6 +19,7 @@ public class ShotFactory {
         shot.add(new VelocityComponent());
         shot.add(new DamageComponent());
         shot.add(new DimensionComponent());
+        shot.add(new TtlComponent());
 
         PositionComponent shotPosition = PositionComponent.MAPPER.get(shot);
         PositionComponent spaceshipPosition = PositionComponent.MAPPER.get(player);
@@ -44,6 +46,10 @@ public class ShotFactory {
         // Set shot damage according to spaceship attacking attributes
         DamageComponent damage = DamageComponent.MAPPER.get(shot);
         damage.force = attackingComponent.shotDamage;
+
+        // Set shot to die after three seconds if no obstacle is hit
+        TtlComponent ttlComponent = TtlComponent.MAPPER.get(shot);
+        ttlComponent.timeToDie = System.currentTimeMillis() + 3000;
 
         return shot;
     }

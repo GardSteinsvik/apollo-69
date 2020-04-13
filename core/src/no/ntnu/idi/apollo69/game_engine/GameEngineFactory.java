@@ -13,6 +13,7 @@ import no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.PowerupSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.SendPositionSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.ShootingSystem;
+import no.ntnu.idi.apollo69.game_engine.entity_systems.TtlValidationSystem;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.UpdateGameStateSystem;
 
 public class GameEngineFactory {
@@ -46,6 +47,8 @@ public class GameEngineFactory {
         engine.addSystem(new BoundsSystem());
 
         engine.addSystem(new ShootingSystem());
+
+        engine.addSystem(new TtlValidationSystem());
 
         engine.addSystem(new AsteroidSystem());
 
