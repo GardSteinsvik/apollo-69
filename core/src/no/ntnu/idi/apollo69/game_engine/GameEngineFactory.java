@@ -46,8 +46,6 @@ public class GameEngineFactory {
 
         engine.addSystem(new AsteroidSystem());
 
-        engine.addSystem(new PowerupSystem(2));
-
         engine.addSystem(new SendPositionSystem(3, NETWORK_UPDATE_SECONDS));
 
 

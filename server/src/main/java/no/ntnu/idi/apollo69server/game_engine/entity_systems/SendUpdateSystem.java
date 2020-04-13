@@ -14,6 +14,7 @@ import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemT
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
 import no.ntnu.idi.apollo69server.game_engine.components.GemComponent;
@@ -21,6 +22,7 @@ import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69server.network.PlayerConnection;
@@ -29,6 +31,7 @@ public class SendUpdateSystem extends EntitySystem {
 
     private ImmutableArray<Entity> players;
     private ImmutableArray<Entity> pickups;
+    private ImmutableArray<Entity> powerups;
     private float interval;
     private float timeAccumulator = 0f;
 
@@ -41,6 +44,7 @@ public class SendUpdateSystem extends EntitySystem {
     public void addedToEngine(Engine engine) {
         players = engine.getEntitiesFor(Family.all(NetworkPlayerComponent.class).get());
         pickups = engine.getEntitiesFor(Family.all(PickupComponent.class).get());
+        powerups = engine.getEntitiesFor(Family.all(PowerupComponent.class).get());
     }
 
     @Override
@@ -98,10 +102,21 @@ public class SendUpdateSystem extends EntitySystem {
             GemComponent gemComponent = GemComponent.MAPPER.get(pickup);
             pickupDtoList.add(new PickupDto(
                     new PositionDto(positionComponent.position.x, positionComponent.position.y),
-                    GemType.valueOf(gemComponent.type.name())
+                    gemComponent.type
             ));
         }
         updateMessage.setPickupDtoList(pickupDtoList);
+
+        List<PowerupDto> powerupDtoList = new ArrayList<>();
+        for (Entity powerup : powerups) {
+            PositionComponent positionComponent = PositionComponent.MAPPER.get(powerup);
+            PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
+            powerupDtoList.add(new PowerupDto(
+                    new PositionDto(positionComponent.position.x, positionComponent.position.y),
+                    powerupComponent.type
+            ));
+        }
+        updateMessage.setPowerupDtoList(powerupDtoList);
 
         return updateMessage;
     }

@@ -17,6 +17,8 @@ import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemT
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
 
@@ -37,7 +39,9 @@ public class Apollo69Framework {
                 PlayerMatchmade.class,
                 UpdateMessage.class,
                 PickupDto.class,
-                GemType.class
+                GemType.class,
+                PowerupDto.class,
+                PowerupType.class
         ));
     }
 

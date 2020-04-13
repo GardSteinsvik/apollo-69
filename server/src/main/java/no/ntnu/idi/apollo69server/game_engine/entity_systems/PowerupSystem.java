@@ -1,4 +1,4 @@
-package no.ntnu.idi.apollo69.game_engine.entity_systems;
+package no.ntnu.idi.apollo69server.game_engine.entity_systems;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -9,15 +9,15 @@ import com.badlogic.gdx.math.Intersector;
 
 import java.time.Instant;
 
-import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
-import no.ntnu.idi.apollo69.game_engine.components.EnergyComponent;
-import no.ntnu.idi.apollo69.game_engine.components.InvisibleComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
-import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
-import no.ntnu.idi.apollo69.game_engine.components.ShieldComponent;
-import no.ntnu.idi.apollo69.game_engine.entities.PowerupFactory;
+import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.EnergyComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.InvisibleComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
+import no.ntnu.idi.apollo69server.game_engine.components.RectangleBoundsComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent;
+import no.ntnu.idi.apollo69server.game_engine.entity_factories.PowerupFactory;
 
 public class PowerupSystem extends EntitySystem {
 

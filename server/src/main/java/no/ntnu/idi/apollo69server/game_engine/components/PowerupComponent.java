@@ -1,8 +1,8 @@
-package no.ntnu.idi.apollo69.game_engine.components;
+package no.ntnu.idi.apollo69server.game_engine.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
 
 public class PowerupComponent implements Component {
     public static final ComponentMapper<PowerupComponent> MAPPER = ComponentMapper.getFor(PowerupComponent.class);

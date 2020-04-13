@@ -9,7 +9,7 @@ import java.util.Random;
 
 import no.ntnu.idi.apollo69server.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.GemComponent;
-import no.ntnu.idi.apollo69server.game_engine.components.GemType;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
 import no.ntnu.idi.apollo69server.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.RectangleBoundsComponent;
@@ -30,8 +30,8 @@ public class GemFactory {
         int xBounds = Integer.MAX_VALUE;
         int yBounds = Integer.MAX_VALUE;
 
-        float width = 50f;
-        float height = 50f;
+        float width = 20f;
+        float height = 20f;
 
         gem.add(new PositionComponent());
         gem.add(new DimensionComponent());

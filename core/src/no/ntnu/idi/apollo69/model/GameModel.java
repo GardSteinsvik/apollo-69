@@ -10,14 +10,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Listener;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import no.ntnu.idi.apollo69.game_engine.Assets;
 import java.util.List;
@@ -28,30 +24,19 @@ import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
 import no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
-import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
-import no.ntnu.idi.apollo69.game_engine.components.GemType;
-import no.ntnu.idi.apollo69.game_engine.components.PickupComponent;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
 import no.ntnu.idi.apollo69.game_engine.components.AsteroidComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
-import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
 import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
-import no.ntnu.idi.apollo69.game_engine.entities.ShotFactory;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
-import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
-import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
-import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
-import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
-import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
@@ -98,18 +83,38 @@ public class GameModel {
         UpdateMessage updateMessage = gameClient.getGameState();
         renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
         renderPickups(spriteBatch, updateMessage.getPickupDtoList());
+        renderPowerups(spriteBatch, updateMessage.getPowerupDtoList());
+    }
+
+    public void renderPowerups(SpriteBatch batch, List<PowerupDto> powerupDtoList) {
+        // Render Powerup(s), first so that it renders under the spaceship, change this after logic is in place on touch anyway?
+
+        for (PowerupDto powerupDto : powerupDtoList) {
+            PowerupType powerupType = powerupDto.powerupType;
+            float posX = powerupDto.positionDto.x;
+            float posY = powerupDto.positionDto.y;
+            float width = 48f;
+            float height = 28.8f;
+
+            // Density adjustements would ruin bounds, not appropriate application (!)
+            // float density = Gdx.graphics.getDensity();
+
+            //batch.draw(powerup, posX, posY, width * density, height * density);
+            //batch.draw(powerup, posX, posY, width, height);
+            batch.draw(Assets.getPowerupRegion(powerupType), posX, posY, width, height);
+        }
     }
 
     public void renderPickups(SpriteBatch batch, List<PickupDto> pickupDtoList) {
 
         for (PickupDto pickupDto: pickupDtoList) {
-            //GemType gemType = GemType.valueOf(pickupDto.gemType.name());
+            GemType gemType = pickupDto.gemType;
             float posX = pickupDto.positionDto.x;
             float posY = pickupDto.positionDto.y;
-            float width = 50f;
-            float height = 50f;
+            float width = 20f;
+            float height = 20f;
             //RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
-            batch.draw(Assets.getPickupRegion(GemType.COIN), posX, posY, width, height);
+            batch.draw(Assets.getPickupRegion(gemType), posX, posY, width, height);
         };
     };
 
@@ -118,31 +123,6 @@ public class GameModel {
             if (playerDto.playerId.equals(Device.DEVICE_ID)) continue; // The current player is rendered from the ECS engine
             PositionDto positionDto = playerDto.positionDto;
             spriteBatch.draw(Assets.getSpaceshipRegion(1), positionDto.x, positionDto.y, 30, 30, 60, 60, 1, 1, playerDto.rotationDto.degrees);
-        }
-    }
-
-    public void renderPowerups(SpriteBatch batch) {
-        // Render Powerup(s), first so that it renders under the spaceship, change this after logic is in place on touch anyway?
-
-        Family powerupFamily = Family.all(PowerupComponent.class).get();
-
-        ImmutableArray<Entity> powerupEntities = gameEngine.getEngine().getEntitiesFor(powerupFamily);
-
-        for (int i = 0; i < powerupEntities.size(); i++) {
-            Entity entity = powerupEntities.get(i);
-            //Texture powerup = PowerupComponent.MAPPER.get(entity).powerup.getTexture();
-            PowerupType powerupType = PowerupComponent.MAPPER.get(entity).type;
-            float posX = PositionComponent.MAPPER.get(entity).position.x;
-            float posY = PositionComponent.MAPPER.get(entity).position.y;
-            float width = DimensionComponent.MAPPER.get(entity).width;
-            float height = DimensionComponent.MAPPER.get(entity).height;
-
-            // Density adjustements would ruin bounds, not appropriate application (!)
-            // float density = Gdx.graphics.getDensity();
-
-            //batch.draw(powerup, posX, posY, width * density, height * density);
-            //batch.draw(powerup, posX, posY, width, height);
-            batch.draw(Assets.getPowerupRegion(powerupType), posX, posY, width, height);
         }
     }
 

@@ -7,15 +7,13 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Intersector;
 
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
 import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.GemComponent;
-import no.ntnu.idi.apollo69server.game_engine.components.GemType;
 import no.ntnu.idi.apollo69server.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
-import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.ScoreComponent;
-import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69server.game_engine.entity_factories.GemFactory;
 
 public class PickupSystem extends EntitySystem {
