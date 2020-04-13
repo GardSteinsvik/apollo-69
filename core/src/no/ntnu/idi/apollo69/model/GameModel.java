@@ -96,7 +96,7 @@ public class GameModel {
 
     public void renderNetworkData(SpriteBatch spriteBatch) {
         UpdateMessage updateMessage = gameClient.getGameState();
-
+        renderAsteroidsFromList(spriteBatch, updateMessage.getAsteroidDtoList());
         renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
     }
 
@@ -106,6 +106,20 @@ public class GameModel {
             PositionDto positionDto = playerDto.positionDto;
             spriteBatch.draw(Assets.getSpaceshipRegion(1), positionDto.x, positionDto.y, 30, 30, 60, 60, 1, 1, playerDto.rotationDto.degrees);
         }
+    }
+
+    public void renderAsteroidsFromList(SpriteBatch spriteBatch, List<AsteroidDto> asteroidDtoList){
+        for (AsteroidDto asteroidDto: asteroidDtoList){
+            PositionDto positionDto = asteroidDto.positionDto;
+            int hp = asteroidDto.hp;
+            // TODO: 240, 240 should be changed into variables. It's the size of the asteroid.
+            spriteBatch.draw(Assets.getAsteroidRegion(), positionDto.x, positionDto.y, 240, 240);
+        }
+    }
+
+    public void setHealthBar(float posX, float posY, int hp, ShapeRenderer shapeRenderer){
+        float hpTimesTwo = hp * 2;
+        shapeRenderer.rectLine(posX, posY-20, posX + hpTimesTwo, posY-20, 5);
     }
 
     public void renderPowerups(SpriteBatch batch) {
@@ -149,8 +163,9 @@ public class GameModel {
     public void initDeviceSpecificAsteroidValues(){
 
     }
-    // Old renderer
-/*    public void renderAsteroids(SpriteBatch batch){
+
+    @Deprecated
+    public void renderAsteroids(SpriteBatch batch){
         ImmutableArray<Entity> asteroids = gameEngine.getEngine().getEntitiesFor(Family.all(AsteroidComponent.class).get());
 
         for (Entity asteroid: asteroids) {
@@ -161,10 +176,6 @@ public class GameModel {
             float height = DimensionComponent.MAPPER.get(asteroid).height;
             batch.draw(asteroidTexture, posX, posY, width, height);
         }
-    }*/
-
-    public void renderAsteroidsFromList(ArrayList<AsteroidDto> asteroids){
-
     }
 
     public void renderSpaceships(SpriteBatch batch) {
@@ -191,8 +202,9 @@ public class GameModel {
                 atlasRegionComponent.lastUpdated = System.currentTimeMillis();
             }
 
-            batch.draw(atlasRegionComponent.region, posX, posY, width/2, height/2,
-                    width, height, 1,1, rotation);
+            //FIXME: Quickfix size spaceship
+            batch.draw(atlasRegionComponent.region, posX, posY, 30, 30,
+                    60, 60, 1,1, rotation);
         }
     }
 
@@ -213,7 +225,8 @@ public class GameModel {
         shapeRenderer.end();
     }
 
-    public void renderHealthBar(ShapeRenderer shapeRenderer){
+    @Deprecated
+    public void renderHealthBar(ShapeRenderer shapeRenderer, int hp){
         Family healthFamily = Family.all(HealthComponent.class).get();
         ImmutableArray<Entity> healthBars = gameEngine.getEngine().getEntitiesFor(healthFamily);
 
@@ -223,7 +236,7 @@ public class GameModel {
         for (Entity healthBar : healthBars){
             float posX = PositionComponent.MAPPER.get(healthBar).position.x;
             float posY = PositionComponent.MAPPER.get(healthBar).position.y;
-            float hpTimesTwo = HealthComponent.MAPPER.get(healthBar).hp * 2;
+            float hpTimesTwo = hp * 2;
 
             shapeRenderer.rectLine(posX, posY-20, posX + hpTimesTwo, posY-20, 5);
         }

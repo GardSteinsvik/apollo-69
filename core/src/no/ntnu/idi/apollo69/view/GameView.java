@@ -173,7 +173,6 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Render shapes
         model.renderShots(shapeRenderer);
         model.renderBoundary(shapeRenderer, GameModel.GAME_RADIUS);
-        model.renderHealthBar(shapeRenderer);
 
         // Render UI
         stage.draw();

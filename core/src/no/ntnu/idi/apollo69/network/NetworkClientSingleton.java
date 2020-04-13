@@ -15,7 +15,7 @@ public class NetworkClientSingleton {
 
     private NetworkClientSingleton() {
         this.client = new Client(8192 * 2, 2048 * 2);
-        this.defaultServerHost = "localhost";
+        this.defaultServerHost = "192.168.43.124";
         this.tcpPort = 54555;
         this.udpPort = 54777;
         this.gameClient = new GameClient(client, getHost(), tcpPort, udpPort);

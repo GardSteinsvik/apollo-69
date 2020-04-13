@@ -17,6 +17,7 @@ public class Assets {
     public static AssetManager am;
     public static Class<TextureAtlas> TEXTURE_ATLAS = TextureAtlas.class;
     private static final String POWERUPS_ATLAS = "game/powerups.atlas";
+    private static final String ASTEROID_ATLAS = "game/asteroids/asteroids.atlas";
     private static final String GEMS_ATLAS = "game/gems.atlas";
     private static final String GAME_ATLAS = "game/game.atlas";
     private static ObjectMap<String, TextureAtlas.AtlasRegion> textureCache = new ObjectMap<>();
@@ -29,6 +30,8 @@ public class Assets {
         am.load(POWERUPS_ATLAS, TEXTURE_ATLAS);
         am.load(GEMS_ATLAS, TEXTURE_ATLAS);
         am.load(GAME_ATLAS, TEXTURE_ATLAS);
+        am.load(ASTEROID_ATLAS, TEXTURE_ATLAS);
+
         // Make sure all Assets have finished loading before use (!)
         // Not doing this will cause the rendering system to attempt to render unloaded
         // TextureAtlas' and the game would most likely crash
@@ -126,4 +129,7 @@ public class Assets {
         }
     }
 
+    public static TextureAtlas.AtlasRegion getAsteroidRegion() {
+        return getRegion(ASTEROID_ATLAS, "meteor-1");
+    }
 }

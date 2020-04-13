@@ -92,11 +92,9 @@ public class SendUpdateSystem extends EntitySystem {
         List<AsteroidDto> asteroidDtoList = new ArrayList<>();
         for (Entity asteroidEntity : asteroids){
             PositionComponent positionComponent = PositionComponent.MAPPER.get(asteroidEntity);
-            VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(asteroidEntity);
             HealthComponent healthComponent = HealthComponent.MAPPER.get(asteroidEntity);
             asteroidDtoList.add(new AsteroidDto(
                     new PositionDto(positionComponent.position.x, positionComponent.position.y),
-                    new VelocityDto(velocityComponent.velocity.x, velocityComponent.velocity.y, velocityComponent.boost),
                     healthComponent.hp
             ));
         }

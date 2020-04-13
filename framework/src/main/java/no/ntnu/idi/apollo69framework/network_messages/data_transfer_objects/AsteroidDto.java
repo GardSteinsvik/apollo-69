@@ -8,9 +8,8 @@ public class AsteroidDto {
     public AsteroidDto() {
     }
 
-    public AsteroidDto(PositionDto positionDto, VelocityDto velocityDto, int hp) {
+    public AsteroidDto(PositionDto positionDto, int hp) {
         this.positionDto = positionDto;
-        this.velocityDto = velocityDto;
         this.hp = hp;
     }
 }
