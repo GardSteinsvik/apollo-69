@@ -39,6 +39,7 @@ import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69.network.GameClient;
@@ -84,6 +85,7 @@ public class GameModel {
         UpdateMessage updateMessage = gameClient.getGameState();
         if (updateMessage == null) return;
 
+        renderAsteroidsFromList(spriteBatch, updateMessage.getAsteroidDtoList());
         renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
     }
 
@@ -93,6 +95,20 @@ public class GameModel {
             PositionDto positionDto = playerDto.positionDto;
             spriteBatch.draw(Assets.getSpaceshipRegion(1), positionDto.x, positionDto.y, 30, 30, 60, 60, 1, 1, playerDto.rotationDto.degrees);
         }
+    }
+
+    public void renderAsteroidsFromList(SpriteBatch spriteBatch, List<AsteroidDto> asteroidDtoList){
+        for (AsteroidDto asteroidDto: asteroidDtoList){
+            PositionDto positionDto = asteroidDto.positionDto;
+            int hp = asteroidDto.hp;
+            // TODO: 240, 240 should be changed into variables. It's the size of the asteroid.
+            spriteBatch.draw(Assets.getAsteroidRegion(), positionDto.x, positionDto.y, 240, 240);
+        }
+    }
+
+    public void setHealthBar(float posX, float posY, int hp, ShapeRenderer shapeRenderer){
+        float hpTimesTwo = hp * 2;
+        shapeRenderer.rectLine(posX, posY-20, posX + hpTimesTwo, posY-20, 5);
     }
 
     // FIXME: Change this to TextButton with transparent background to avoid stuttering
@@ -135,7 +151,6 @@ public class GameModel {
         Family GemFamily = Family.all(GemComponent.class).get();
         ImmutableArray<Entity> gemEntities = gameEngine.getEngine().getEntitiesFor(GemFamily);
 
-
         for (Entity gem : gemEntities) {
             GemType gemType = GemComponent.MAPPER.get(gem).type;
             GemComponent gemComponent = GemComponent.MAPPER.get(gem);
@@ -144,23 +159,6 @@ public class GameModel {
                     rectangleBoundsComponent.rectangle.getWidth(), rectangleBoundsComponent.rectangle.getHeight());
         };
     };
-
-    public void initDeviceSpecificAsteroidValues(){
-
-    }
-
-    public void renderAsteroids(SpriteBatch batch){
-        ImmutableArray<Entity> asteroids = gameEngine.getEngine().getEntitiesFor(Family.all(AsteroidComponent.class).get());
-
-        for (Entity asteroid: asteroids) {
-            Texture asteroidTexture = SpriteComponent.MAPPER.get(asteroid).idle.getTexture();
-            float posX = PositionComponent.MAPPER.get(asteroid).position.x;
-            float posY = PositionComponent.MAPPER.get(asteroid).position.y;
-            float width = DimensionComponent.MAPPER.get(asteroid).width;
-            float height = DimensionComponent.MAPPER.get(asteroid).height;
-            batch.draw(asteroidTexture, posX, posY, width, height);
-        }
-    }
 
     public void renderSpaceships(SpriteBatch batch) {
         ImmutableArray<Entity> spaceships = gameEngine.getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get());
