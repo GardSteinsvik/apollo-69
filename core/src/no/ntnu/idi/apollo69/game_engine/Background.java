@@ -26,8 +26,8 @@ public class Background {
     private ArrayList<BackgroundObject> backgroundObjects = new ArrayList<>();
 
     public Background() {
-        float screenWidth = Gdx.graphics.getHeight() * (16f / 9f) / Gdx.graphics.getDensity();
-        float screenHeight = Gdx.graphics.getHeight() / Gdx.graphics.getDensity();
+        float screenWidth = 480 * (16f/9f);
+        float screenHeight = 480;
 
         backgroundObjects.add(new BackgroundObject(
                 new Texture(Gdx.files.internal("game/big_bg.png")),

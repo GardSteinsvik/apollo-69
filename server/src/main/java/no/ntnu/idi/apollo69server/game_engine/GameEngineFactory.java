@@ -13,7 +13,10 @@ import no.ntnu.idi.apollo69framework.network_messages.PlayerSpawn;
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.entity_factories.SpaceshipFactory;
+import no.ntnu.idi.apollo69server.game_engine.entity_systems.AsteroidSystem;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.MovementSystem;
+import no.ntnu.idi.apollo69server.game_engine.entity_systems.PickupSystem;
+import no.ntnu.idi.apollo69server.game_engine.entity_systems.PowerupSystem;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.ReceivePlayerInputSystem;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.SendUpdateSystem;
 import no.ntnu.idi.apollo69server.network.MessageHandlerDelegator;
@@ -69,6 +72,9 @@ public class GameEngineFactory {
         engine.addSystem(new ReceivePlayerInputSystem(priority++, inputQueue));
         engine.addSystem(new MovementSystem(priority++, GAME_UPDATE_SECONDS));
         engine.addSystem(new SendUpdateSystem(priority, NETWORK_UPDATE_SECONDS));
+        engine.addSystem(new AsteroidSystem(priority));
+        engine.addSystem(new PickupSystem(priority));
+        engine.addSystem(new PowerupSystem(priority));
 
         return new GameEngine(id, engine, messageHandlerDelegator);
     }

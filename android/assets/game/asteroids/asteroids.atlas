@@ -1,0 +1,47 @@
+
+asteroids.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+unamed
+  rotate: false
+  xy: 1, 59
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+meteor-1
+  rotate: false
+  xy: 1, 18
+  size: 42, 39
+  orig: 42, 39
+  offset: 0, 0
+  index: -1
+meteor-3
+  rotate: false
+  xy: 131, 87
+  size: 31, 36
+  orig: 31, 36
+  offset: 0, 0
+  index: -1
+meteor-4
+  rotate: false
+  xy: 45, 30
+  size: 26, 27
+  orig: 26, 27
+  offset: 0, 0
+  index: -1
+meteor-2
+  rotate: false
+  xy: 131, 65
+  size: 22, 20
+  orig: 22, 20
+  offset: 0, 0
+  index: -1
+meteor-5
+  rotate: false
+  xy: 1, 1
+  size: 17, 15
+  orig: 17, 15
+  offset: 0, 0
+  index: -1

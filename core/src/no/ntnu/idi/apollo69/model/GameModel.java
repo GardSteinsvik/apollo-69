@@ -20,32 +20,32 @@ import no.ntnu.idi.apollo69.game_engine.Assets;
 import java.util.List;
 
 import no.ntnu.idi.apollo69.Device;
+import no.ntnu.idi.apollo69.game_engine.Assets;
 import no.ntnu.idi.apollo69.game_engine.Background;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
 import no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
-import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
-import no.ntnu.idi.apollo69.game_engine.components.GemType;
-import no.ntnu.idi.apollo69.game_engine.components.AsteroidComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
-import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
-import no.ntnu.idi.apollo69.game_engine.components.ScoreComponent;
-import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
-import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
-import no.ntnu.idi.apollo69.game_engine.components.SpriteComponent;
 import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
+import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
+import no.ntnu.idi.apollo69.game_engine.components.ScoreComponent;
+import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
+import no.ntnu.idi.apollo69framework.GameObjectDimensions;
 import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.AsteroidDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
 
 public class GameModel {
 
@@ -62,7 +62,7 @@ public class GameModel {
     private final float ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
     private final float HEIGHT = SCREEN_HEIGHT;
     private final float WIDTH = SCREEN_WIDTH;
-    private final OrthographicCamera camera = new OrthographicCamera(WIDTH/Gdx.graphics.getDensity(), HEIGHT/Gdx.graphics.getDensity());
+    private final OrthographicCamera camera = new OrthographicCamera(480 * (WIDTH/HEIGHT), 480);
 
     public GameModel() {
         background = new Background();
@@ -80,18 +80,69 @@ public class GameModel {
         background.render(batch, camera);
     }
 
-    public void renderNetworkData(SpriteBatch spriteBatch) {
+    public void renderNetworkBatch(SpriteBatch spriteBatch) {
         UpdateMessage updateMessage = gameClient.getGameState();
+        if (updateMessage == null) return;
 
-        //renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
+        renderAsteroids(spriteBatch, updateMessage.getAsteroidDtoList());
+        renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
+        renderPickups(spriteBatch, updateMessage.getPickupDtoList());
+        renderPowerups(spriteBatch, updateMessage.getPowerupDtoList());
     }
 
     private void renderSpaceships(SpriteBatch spriteBatch, List<PlayerDto> playerDtoList) {
+        float spaceShipHeight = GameObjectDimensions.SPACE_SHIP_HEIGHT;
+        float spaceShipWidth = GameObjectDimensions.SPACE_SHIP_WIDTH;
         for (PlayerDto playerDto: playerDtoList) {
             if (playerDto.playerId.equals(Device.DEVICE_ID)) continue; // The current player is rendered from the ECS engine
             PositionDto positionDto = playerDto.positionDto;
-            spriteBatch.draw(Assets.getSpaceshipRegion(1), positionDto.x, positionDto.y, 30, 30, 60, 60, 1, 1, playerDto.rotationDto.degrees);
+            spriteBatch.draw(
+                    Assets.getSpaceshipRegion(3),
+                    positionDto.x, positionDto.y,
+                    spaceShipWidth/2f, spaceShipHeight/2f,
+                    spaceShipWidth, spaceShipHeight,
+                    1, 1,
+                    playerDto.rotationDto.degrees
+            );
         }
+    }
+
+    private void renderAsteroids(SpriteBatch spriteBatch, List<AsteroidDto> asteroidDtoList){
+
+        for (AsteroidDto asteroidDto: asteroidDtoList) {
+            PositionDto positionDto = asteroidDto.positionDto;
+            int hp = asteroidDto.hp;
+            // TODO: 240, 240 should be changed into variables. It's the size of the asteroid.
+            spriteBatch.draw(Assets.getAsteroidRegion(), positionDto.x, positionDto.y, 40, 40, 80, 80, 1, 1, 0);
+        }
+    }
+
+    public void renderNetworkShapes(ShapeRenderer shapeRenderer) {
+        UpdateMessage gameState = gameClient.getGameState();
+        if (gameState == null) return;
+
+        shapeRenderer.setColor(Color.LIME);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        Vector2 position = PositionComponent.MAPPER.get(gameEngine.getPlayer()).position;
+        renderHealthBar(shapeRenderer, position.x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, position.y, 50);
+
+        for (AsteroidDto asteroidDto: gameState.getAsteroidDtoList()) {
+            PositionDto positionDto = asteroidDto.positionDto;
+            renderHealthBar(shapeRenderer, positionDto.x, positionDto.y, asteroidDto.hp);
+        }
+
+        for (PlayerDto playerDto: gameState.getPlayerDtoList()) {
+            if (playerDto.playerId.equals(Device.DEVICE_ID)) continue;
+            PositionDto positionDto = playerDto.positionDto;
+            renderHealthBar(shapeRenderer, positionDto.x, positionDto.y, 50);
+        }
+        shapeRenderer.end();
+    }
+
+    private void renderHealthBar(ShapeRenderer shapeRenderer, float posX, float posY, int hp) {
+        hp = (int) posX % 100;
+        shapeRenderer.rectLine(posX - hp/2f, posY-10, posX + hp/2f, posY-10, 3);
     }
 
     // FIXME: Change this to TextButton with transparent background to avoid stuttering
@@ -105,21 +156,15 @@ public class GameModel {
         font.draw(spriteBatch, score, scoreX, scoreY);
     }
 
-    public void renderPowerups(SpriteBatch batch) {
+    public void renderPowerups(SpriteBatch batch, List<PowerupDto> powerupDtoList) {
         // Render Powerup(s), first so that it renders under the spaceship, change this after logic is in place on touch anyway?
 
-        Family powerupFamily = Family.all(PowerupComponent.class).get();
-
-        ImmutableArray<Entity> powerupEntities = gameEngine.getEngine().getEntitiesFor(powerupFamily);
-
-        for (int i = 0; i < powerupEntities.size(); i++) {
-            Entity entity = powerupEntities.get(i);
-            //Texture powerup = PowerupComponent.MAPPER.get(entity).powerup.getTexture();
-            PowerupType powerupType = PowerupComponent.MAPPER.get(entity).type;
-            float posX = PositionComponent.MAPPER.get(entity).position.x;
-            float posY = PositionComponent.MAPPER.get(entity).position.y;
-            float width = DimensionComponent.MAPPER.get(entity).width;
-            float height = DimensionComponent.MAPPER.get(entity).height;
+        for (PowerupDto powerupDto : powerupDtoList) {
+            PowerupType powerupType = powerupDto.powerupType;
+            float posX = powerupDto.positionDto.x;
+            float posY = powerupDto.positionDto.y;
+            float width = 48f;
+            float height = 28.8f;
 
             // Density adjustements would ruin bounds, not appropriate application (!)
             // float density = Gdx.graphics.getDensity();
@@ -130,64 +175,51 @@ public class GameModel {
         }
     }
 
-    public void renderPickups(SpriteBatch batch) {
-        Family GemFamily = Family.all(GemComponent.class).get();
-        ImmutableArray<Entity> gemEntities = gameEngine.getEngine().getEntitiesFor(GemFamily);
+    public void renderPickups(SpriteBatch batch, List<PickupDto> pickupDtoList) {
 
-
-        for (Entity gem : gemEntities) {
-            GemType gemType = GemComponent.MAPPER.get(gem).type;
-            GemComponent gemComponent = GemComponent.MAPPER.get(gem);
-            RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
-            batch.draw(Assets.getPickupRegion(gemType), rectangleBoundsComponent.rectangle.getX(), rectangleBoundsComponent.rectangle.getY(),
-                    rectangleBoundsComponent.rectangle.getWidth(), rectangleBoundsComponent.rectangle.getHeight());
+        for (PickupDto pickupDto: pickupDtoList) {
+            GemType gemType = pickupDto.gemType;
+            float posX = pickupDto.positionDto.x;
+            float posY = pickupDto.positionDto.y;
+            float width = 20f;
+            float height = 20f;
+            //RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
+            batch.draw(Assets.getPickupRegion(gemType), posX, posY, width, height);
         };
     };
 
-    public void initDeviceSpecificAsteroidValues(){
+    public void renderPlayerSpaceship(SpriteBatch batch) {
+        Entity player = gameEngine.getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
 
-    }
+        float spaceShipHeight = GameObjectDimensions.SPACE_SHIP_HEIGHT;
+        float spaceShipWidth = GameObjectDimensions.SPACE_SHIP_WIDTH;
 
-    public void renderAsteroids(SpriteBatch batch){
-        ImmutableArray<Entity> asteroids = gameEngine.getEngine().getEntitiesFor(Family.all(AsteroidComponent.class).get());
+        AtlasRegionComponent atlasRegionComponent = AtlasRegionComponent.MAPPER.get(player);
 
-        for (Entity asteroid: asteroids) {
-            Texture asteroidTexture = SpriteComponent.MAPPER.get(asteroid).idle.getTexture();
-            float posX = PositionComponent.MAPPER.get(asteroid).position.x;
-            float posY = PositionComponent.MAPPER.get(asteroid).position.y;
-            float width = DimensionComponent.MAPPER.get(asteroid).width;
-            float height = DimensionComponent.MAPPER.get(asteroid).height;
-            batch.draw(asteroidTexture, posX, posY, width, height);
-        }
-    }
+        float dT = System.currentTimeMillis() - atlasRegionComponent.lastUpdated;
+        float posX = PositionComponent.MAPPER.get(player).position.x;
+        float posY = PositionComponent.MAPPER.get(player).position.y;
+        float rotation = RotationComponent.MAPPER.get(player).degrees;
+        int type = SpaceshipComponent.MAPPER.get(player).type;
 
-    public void renderSpaceships(SpriteBatch batch) {
-        ImmutableArray<Entity> spaceships = gameEngine.getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get());
-
-        for (Entity spaceship : spaceships) {
-            AtlasRegionComponent atlasRegionComponent = AtlasRegionComponent.MAPPER.get(spaceship);
-
-            float dT = System.currentTimeMillis() - atlasRegionComponent.lastUpdated;
-            float posX = PositionComponent.MAPPER.get(spaceship).position.x;
-            float posY = PositionComponent.MAPPER.get(spaceship).position.y;
-            float width = DimensionComponent.MAPPER.get(spaceship).width;
-            float height = DimensionComponent.MAPPER.get(spaceship).height;
-            float rotation = RotationComponent.MAPPER.get(spaceship).degrees;
-            int type = SpaceshipComponent.MAPPER.get(spaceship).type;
-
-            // Animate booster by alternating sprite every 100 ms
-            if (dT > 100 && atlasRegionComponent.region != Assets.getSpaceshipRegion(type)) {
-                if (atlasRegionComponent.region == Assets.getBoostedSpaceshipRegion(type, 1)) {
-                    atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(type, 2);
-                } else {
-                    atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(type, 1);
-                }
-                atlasRegionComponent.lastUpdated = System.currentTimeMillis();
+        // Animate booster by alternating sprite every 100 ms
+        if (dT > 100 && atlasRegionComponent.region != Assets.getSpaceshipRegion(type)) {
+            if (atlasRegionComponent.region == Assets.getBoostedSpaceshipRegion(type, 1)) {
+                atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(type, 2);
+            } else {
+                atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(type, 1);
             }
-
-            batch.draw(atlasRegionComponent.region, posX, posY, width/2, height/2,
-                    width, height, 1,1, rotation);
+            atlasRegionComponent.lastUpdated = System.currentTimeMillis();
         }
+
+        batch.draw(
+            atlasRegionComponent.region,
+            posX, posY,
+            spaceShipWidth/2f, spaceShipHeight/2f,
+            spaceShipWidth, spaceShipHeight,
+            1, 1,
+            rotation
+        );
     }
 
     public void renderShots(ShapeRenderer shapeRenderer) {
@@ -213,7 +245,7 @@ public class GameModel {
         shapeRenderer.circle(0, 0, radius);
         shapeRenderer.end();
 
-        renderSpaceshipBoundingCircle(shapeRenderer);
+        //renderSpaceshipBoundingCircle(shapeRenderer);
     }
 
     private void renderSpaceshipBoundingCircle(ShapeRenderer shapeRenderer) {

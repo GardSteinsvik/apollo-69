@@ -12,10 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
 
-import java.awt.Font;
-
-import no.ntnu.idi.apollo69.game_engine.components.GemType;
-import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
 
 public class Assets {
 
@@ -28,6 +26,7 @@ public class Assets {
     private static Class<FileHandle> FILE_HANDLE = FileHandle.class;
 
     private static final String POWERUPS_ATLAS = "game/powerups.atlas";
+    private static final String ASTEROID_ATLAS = "game/asteroids/asteroids.atlas";
     private static final String GEMS_ATLAS = "game/gems.atlas";
     private static final String GAME_ATLAS = "game/game.atlas";
     private static final String UI_SKIN = "skin/uiskin.json";
@@ -45,6 +44,8 @@ public class Assets {
         am.load(POWERUPS_ATLAS, TEXTURE_ATLAS);
         am.load(GEMS_ATLAS, TEXTURE_ATLAS);
         am.load(GAME_ATLAS, TEXTURE_ATLAS);
+        am.load(ASTEROID_ATLAS, TEXTURE_ATLAS);
+
         am.load(UI_SKIN, SKIN);
         am.load(THEME, MUSIC);
         am.load(LASER, SOUND);
@@ -156,4 +157,7 @@ public class Assets {
         return am.get(FONT, FILE_HANDLE);
     }
 
+    public static TextureAtlas.AtlasRegion getAsteroidRegion() {
+        return getRegion(ASTEROID_ATLAS, "meteor-1");
+    }
 }

@@ -1,12 +1,16 @@
 package no.ntnu.idi.apollo69server.game_engine;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.Disposable;
 import com.esotericsoftware.kryonet.Listener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
 import no.ntnu.idi.apollo69server.network.BasePlayerConnectionListener;
 import no.ntnu.idi.apollo69server.network.MatchmakingServer;
 import no.ntnu.idi.apollo69server.network.MessageHandlerDelegator;
@@ -83,6 +87,13 @@ public class GameEngine implements Runnable, Disposable {
     public void removePlayerFromGame(PlayerConnection playerConnection) {
         synchronized (playerConnectionList) {
             playerConnectionList.remove(playerConnection);
+        }
+
+        ImmutableArray<Entity> players = engine.getEntitiesFor(Family.all(NetworkPlayerComponent.class).get());
+        for (Entity player: players) {
+            if (NetworkPlayerComponent.MAPPER.get(player).getPlayerConnection().equals(playerConnection)) {
+                engine.removeEntity(player);
+            }
         }
 
         playerConnection.removeListener(playerConnectionListener);
