@@ -28,6 +28,7 @@ public class Assets {
     private static Class<FileHandle> FILE_HANDLE = FileHandle.class;
 
     private static final String POWERUPS_ATLAS = "game/powerups.atlas";
+    private static final String ASTEROID_ATLAS = "game/asteroids/asteroids.atlas";
     private static final String GEMS_ATLAS = "game/gems.atlas";
     private static final String GAME_ATLAS = "game/game.atlas";
     private static final String UI_SKIN = "skin/uiskin.json";
@@ -45,6 +46,8 @@ public class Assets {
         am.load(POWERUPS_ATLAS, TEXTURE_ATLAS);
         am.load(GEMS_ATLAS, TEXTURE_ATLAS);
         am.load(GAME_ATLAS, TEXTURE_ATLAS);
+        am.load(ASTEROID_ATLAS, TEXTURE_ATLAS);
+
         am.load(UI_SKIN, SKIN);
         am.load(THEME, MUSIC);
         am.load(LASER, SOUND);
@@ -156,4 +159,7 @@ public class Assets {
         return am.get(FONT, FILE_HANDLE);
     }
 
+    public static TextureAtlas.AtlasRegion getAsteroidRegion() {
+        return getRegion(ASTEROID_ATLAS, "meteor-1");
+    }
 }

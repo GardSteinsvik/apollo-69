@@ -50,8 +50,6 @@ public class GameEngineFactory {
 
         engine.addSystem(new TtlValidationSystem());
 
-        engine.addSystem(new AsteroidSystem());
-
         engine.addSystem(new PowerupSystem(2));
 
         engine.addSystem(new PickupSystem(2));

@@ -31,7 +31,6 @@ public class PickupSystem extends EntitySystem {
         this.engine = engine;
         pickups = engine.getEntitiesFor(Family.all(PickupComponent.class).get());
         spaceships = engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
-
     }
 
     private void handleGemPickup(Entity spaceShip, GemComponent gemComponent) {
