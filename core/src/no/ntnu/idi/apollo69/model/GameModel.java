@@ -82,6 +82,7 @@ public class GameModel {
 
     public void renderNetworkData(SpriteBatch spriteBatch) {
         UpdateMessage updateMessage = gameClient.getGameState();
+        if (updateMessage == null) return;
 
         renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
     }
