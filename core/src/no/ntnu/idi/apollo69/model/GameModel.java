@@ -83,7 +83,7 @@ public class GameModel {
     public void renderNetworkData(SpriteBatch spriteBatch) {
         UpdateMessage updateMessage = gameClient.getGameState();
 
-        renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
+        //renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
     }
 
     private void renderSpaceships(SpriteBatch spriteBatch, List<PlayerDto> playerDtoList) {
@@ -213,18 +213,18 @@ public class GameModel {
         shapeRenderer.circle(0, 0, radius);
         shapeRenderer.end();
 
-        //renderSpaceshipBoundingCircle(shapeRenderer);
+        renderSpaceshipBoundingCircle(shapeRenderer);
     }
 
     private void renderSpaceshipBoundingCircle(ShapeRenderer shapeRenderer) {
         Circle c = BoundingCircleComponent.MAPPER.get(gameEngine.getPlayer()).circle;
-        float dim = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).height;
+        float dim = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).width / 3;
         float w = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).width;
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(new Color(0, 1, 0, 0.25f));
-        shapeRenderer.circle(c.x, c.y, dim/2);
+        shapeRenderer.circle(c.x, c.y, dim);
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
