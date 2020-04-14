@@ -31,7 +31,6 @@ import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.GemComponent;
 import no.ntnu.idi.apollo69.game_engine.components.GemType;
 import no.ntnu.idi.apollo69.game_engine.components.PickupComponent;
-import no.ntnu.idi.apollo69.game_engine.components.AsteroidComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
@@ -159,24 +158,6 @@ public class GameModel {
                     rectangleBoundsComponent.rectangle.getWidth(), rectangleBoundsComponent.rectangle.getHeight());
         };
     };
-
-    public void initDeviceSpecificAsteroidValues(){
-
-    }
-
-    @Deprecated
-    public void renderAsteroids(SpriteBatch batch){
-        ImmutableArray<Entity> asteroids = gameEngine.getEngine().getEntitiesFor(Family.all(AsteroidComponent.class).get());
-
-        for (Entity asteroid: asteroids) {
-            Texture asteroidTexture = SpriteComponent.MAPPER.get(asteroid).idle.getTexture();
-            float posX = PositionComponent.MAPPER.get(asteroid).position.x;
-            float posY = PositionComponent.MAPPER.get(asteroid).position.y;
-            float width = DimensionComponent.MAPPER.get(asteroid).width;
-            float height = DimensionComponent.MAPPER.get(asteroid).height;
-            batch.draw(asteroidTexture, posX, posY, width, height);
-        }
-    }
 
     public void renderSpaceships(SpriteBatch batch) {
         ImmutableArray<Entity> spaceships = gameEngine.getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get());
