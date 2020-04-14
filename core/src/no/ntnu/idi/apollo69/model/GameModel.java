@@ -46,6 +46,7 @@ import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.AsteroidDto;
+import no.ntnu.idi.apollo69framework.GameObjectDimensions;
 import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
@@ -65,7 +66,7 @@ public class GameModel {
     private final float ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
     private final float HEIGHT = SCREEN_HEIGHT;
     private final float WIDTH = SCREEN_WIDTH;
-    private final OrthographicCamera camera = new OrthographicCamera(WIDTH/Gdx.graphics.getDensity(), HEIGHT/Gdx.graphics.getDensity());
+    private final OrthographicCamera camera = new OrthographicCamera(480 * (WIDTH/HEIGHT), 480);
 
     public GameModel() {
         background = new Background();
@@ -92,10 +93,19 @@ public class GameModel {
     }
 
     private void renderSpaceships(SpriteBatch spriteBatch, List<PlayerDto> playerDtoList) {
+        float spaceShipHeight = GameObjectDimensions.SPACE_SHIP_HEIGHT;
+        float spaceShipWidth = GameObjectDimensions.SPACE_SHIP_WIDTH;
         for (PlayerDto playerDto: playerDtoList) {
             if (playerDto.playerId.equals(Device.DEVICE_ID)) continue; // The current player is rendered from the ECS engine
             PositionDto positionDto = playerDto.positionDto;
-            spriteBatch.draw(Assets.getSpaceshipRegion(1), positionDto.x, positionDto.y, 30, 30, 60, 60, 1, 1, playerDto.rotationDto.degrees);
+            spriteBatch.draw(
+                    Assets.getSpaceshipRegion(3),
+                    positionDto.x, positionDto.y,
+                    spaceShipWidth/2f, spaceShipHeight/2f,
+                    spaceShipWidth, spaceShipHeight,
+                    1, 1,
+                    playerDto.rotationDto.degrees
+            );
         }
     }
 
@@ -162,33 +172,38 @@ public class GameModel {
         };
     };
 
-    public void renderSpaceships(SpriteBatch batch) {
-        ImmutableArray<Entity> spaceships = gameEngine.getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get());
+    public void renderPlayerSpaceship(SpriteBatch batch) {
+        Entity player = gameEngine.getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
 
-        for (Entity spaceship : spaceships) {
-            AtlasRegionComponent atlasRegionComponent = AtlasRegionComponent.MAPPER.get(spaceship);
+        float spaceShipHeight = GameObjectDimensions.SPACE_SHIP_HEIGHT;
+        float spaceShipWidth = GameObjectDimensions.SPACE_SHIP_WIDTH;
 
-            float dT = System.currentTimeMillis() - atlasRegionComponent.lastUpdated;
-            float posX = PositionComponent.MAPPER.get(spaceship).position.x;
-            float posY = PositionComponent.MAPPER.get(spaceship).position.y;
-            float width = DimensionComponent.MAPPER.get(spaceship).width;
-            float height = DimensionComponent.MAPPER.get(spaceship).height;
-            float rotation = RotationComponent.MAPPER.get(spaceship).degrees;
-            int type = SpaceshipComponent.MAPPER.get(spaceship).type;
+        AtlasRegionComponent atlasRegionComponent = AtlasRegionComponent.MAPPER.get(player);
 
-            // Animate booster by alternating sprite every 100 ms
-            if (dT > 100 && atlasRegionComponent.region != Assets.getSpaceshipRegion(type)) {
-                if (atlasRegionComponent.region == Assets.getBoostedSpaceshipRegion(type, 1)) {
-                    atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(type, 2);
-                } else {
-                    atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(type, 1);
-                }
-                atlasRegionComponent.lastUpdated = System.currentTimeMillis();
+        float dT = System.currentTimeMillis() - atlasRegionComponent.lastUpdated;
+        float posX = PositionComponent.MAPPER.get(player).position.x;
+        float posY = PositionComponent.MAPPER.get(player).position.y;
+        float rotation = RotationComponent.MAPPER.get(player).degrees;
+        int type = SpaceshipComponent.MAPPER.get(player).type;
+
+        // Animate booster by alternating sprite every 100 ms
+        if (dT > 100 && atlasRegionComponent.region != Assets.getSpaceshipRegion(type)) {
+            if (atlasRegionComponent.region == Assets.getBoostedSpaceshipRegion(type, 1)) {
+                atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(type, 2);
+            } else {
+                atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(type, 1);
             }
-
-            batch.draw(atlasRegionComponent.region, posX, posY, width/2, height/2,
-                    width, height, 1,1, rotation);
+            atlasRegionComponent.lastUpdated = System.currentTimeMillis();
         }
+
+        batch.draw(
+            atlasRegionComponent.region,
+            posX, posY,
+            spaceShipWidth/2f, spaceShipHeight/2f,
+            spaceShipWidth, spaceShipHeight,
+            1, 1,
+            rotation
+        );
     }
 
     public void renderShots(ShapeRenderer shapeRenderer) {

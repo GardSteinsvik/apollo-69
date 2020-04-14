@@ -46,7 +46,7 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
     @Override
     public void show() {
 
-        backgroundTexture = new Texture(Gdx.files.internal("background.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("game/bg.png"));
         HorizontalGroup group = new HorizontalGroup();
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
@@ -134,8 +134,6 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-        backgroundTexture = new Texture(Gdx.files.internal("background.png"));
         stage.getBatch().begin();
         stage.getBatch().draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getBatch().end();
