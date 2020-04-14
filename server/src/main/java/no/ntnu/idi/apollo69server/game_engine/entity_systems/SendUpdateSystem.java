@@ -11,15 +11,21 @@ import java.util.List;
 
 import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.AsteroidDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
 import no.ntnu.idi.apollo69server.game_engine.components.AsteroidComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.HealthComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.GemComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69server.network.PlayerConnection;
@@ -27,6 +33,8 @@ import no.ntnu.idi.apollo69server.network.PlayerConnection;
 public class SendUpdateSystem extends EntitySystem {
 
     private ImmutableArray<Entity> players;
+    private ImmutableArray<Entity> pickups;
+    private ImmutableArray<Entity> powerups;
     private ImmutableArray<Entity> asteroids;
     private float interval;
     private float timeAccumulator = 0f;
@@ -40,6 +48,8 @@ public class SendUpdateSystem extends EntitySystem {
     public void addedToEngine(Engine engine) {
         players = engine.getEntitiesFor(Family.all(NetworkPlayerComponent.class).get());
         asteroids = engine.getEntitiesFor(Family.all(AsteroidComponent.class).get());
+        pickups = engine.getEntitiesFor(Family.all(PickupComponent.class).get());
+        powerups = engine.getEntitiesFor(Family.all(PowerupComponent.class).get());
     }
 
     @Override
@@ -100,6 +110,28 @@ public class SendUpdateSystem extends EntitySystem {
         }
         updateMessage.setAsteroidDtoList(asteroidDtoList);
         // TODO: Add more data like shots here
+
+        List<PickupDto> pickupDtoList = new ArrayList<>();
+        for (Entity pickup : pickups) {
+            PositionComponent positionComponent = PositionComponent.MAPPER.get(pickup);
+            GemComponent gemComponent = GemComponent.MAPPER.get(pickup);
+            pickupDtoList.add(new PickupDto(
+                    new PositionDto(positionComponent.position.x, positionComponent.position.y),
+                    gemComponent.type
+            ));
+        }
+        updateMessage.setPickupDtoList(pickupDtoList);
+
+        List<PowerupDto> powerupDtoList = new ArrayList<>();
+        for (Entity powerup : powerups) {
+            PositionComponent positionComponent = PositionComponent.MAPPER.get(powerup);
+            PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
+            powerupDtoList.add(new PowerupDto(
+                    new PositionDto(positionComponent.position.x, positionComponent.position.y),
+                    powerupComponent.type
+            ));
+        }
+        updateMessage.setPowerupDtoList(powerupDtoList);
 
         return updateMessage;
     }

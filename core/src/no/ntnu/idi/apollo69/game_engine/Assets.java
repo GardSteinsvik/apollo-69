@@ -12,10 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
 
-import java.awt.Font;
-
-import no.ntnu.idi.apollo69.game_engine.components.GemType;
-import no.ntnu.idi.apollo69.game_engine.components.PowerupType;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
 
 public class Assets {
 

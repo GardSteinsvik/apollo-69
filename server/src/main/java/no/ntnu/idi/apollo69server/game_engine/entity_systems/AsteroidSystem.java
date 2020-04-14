@@ -14,7 +14,7 @@ public class AsteroidSystem extends EntitySystem {
 
     private Engine engine;
     ImmutableArray<Entity> asteroids;
-    public final int AMOUNT_OF_ASTEROIDS_TO_KEEP_ON_THE_MAP = 4;
+    private final int AMOUNT_OF_ASTEROIDS_TO_KEEP_ON_THE_MAP = 10;
 
     public AsteroidSystem(int priority){
         super(priority);

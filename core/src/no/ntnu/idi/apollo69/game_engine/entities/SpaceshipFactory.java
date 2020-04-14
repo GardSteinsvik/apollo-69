@@ -36,7 +36,6 @@ public class SpaceshipFactory {
         spaceship.add(new AttackingComponent());
         spaceship.add(new PlayerComponent());
         spaceship.add(new BoundingCircleComponent());
-        spaceship.add(new RectangleBoundsComponent());
         spaceship.add(new ScoreComponent());
         spaceship.add(new SpaceshipComponent());
         spaceship.add(new AtlasRegionComponent());
@@ -44,9 +43,6 @@ public class SpaceshipFactory {
         DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(spaceship);
         dimensionComponent.width = Gdx.graphics.getHeight() / 10f;
         dimensionComponent.height = Gdx.graphics.getHeight() / 10f;
-
-        RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(spaceship);
-        rectangleBoundsComponent.rectangle = new Rectangle(0, 0, dimensionComponent.width, dimensionComponent.height);
 
         // Set initial spaceship attacking attributes (can be altered by power-ups)
         AttackingComponent attackingComponent = AttackingComponent.MAPPER.get(spaceship);

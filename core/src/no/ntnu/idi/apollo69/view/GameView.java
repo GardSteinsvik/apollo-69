@@ -160,21 +160,21 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         // Set camera
         spriteBatch.setProjectionMatrix(model.getCamera().combined);
-        shapeRenderer.setProjectionMatrix(model.getCamera().combined);
 
         // Render sprites
         spriteBatch.begin();
         model.renderBackground(spriteBatch);
-        model.renderPickups(spriteBatch);
-        model.renderPowerups(spriteBatch);
         model.renderScores(font, spriteBatch);
-        model.renderPlayerSpaceship(spriteBatch);
 
         // Render data from server
-        model.renderNetworkData(spriteBatch);
+        model.renderNetworkBatch(spriteBatch);
 
+        model.renderPlayerSpaceship(spriteBatch);
         this.debug();
         spriteBatch.end();
+
+        shapeRenderer.setProjectionMatrix(model.getCamera().combined);
+        model.renderNetworkShapes(shapeRenderer);
 
         // Render shapes
         model.renderShots(shapeRenderer);
