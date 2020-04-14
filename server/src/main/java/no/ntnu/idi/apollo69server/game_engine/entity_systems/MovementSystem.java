@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 
-import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 
@@ -39,9 +38,6 @@ public class MovementSystem extends EntitySystem {
         for (Entity entity : entities) {
             PositionComponent positionComponent = PositionComponent.MAPPER.get(entity);
             VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(entity);
-            BoundingCircleComponent boundingCircleComponent = BoundingCircleComponent.MAPPER.get(entity);
-            boundingCircleComponent.circle.x += velocityComponent.velocity.x * deltaTime;
-            boundingCircleComponent.circle.y += velocityComponent.velocity.y * deltaTime;
             positionComponent.position.x += velocityComponent.velocity.x * deltaTime;
             positionComponent.position.y += velocityComponent.velocity.y * deltaTime;
         }
