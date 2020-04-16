@@ -32,7 +32,7 @@ public class MessageHandlerDelegator {
             messageHandler.handle(connection, message);
         } else {
             if (!(message instanceof FrameworkMessage.KeepAlive)) {
-                System.out.println("Unhandled message: " + message);
+//                System.out.println("Unhandled message: " + message);
             }
         }
     }

@@ -3,9 +3,13 @@ package no.ntnu.idi.apollo69server.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import no.ntnu.idi.apollo69framework.Apollo69Framework;
 import no.ntnu.idi.apollo69framework.network_messages.DeviceInfo;
@@ -15,7 +19,7 @@ import no.ntnu.idi.apollo69server.game_engine.GameEngineFactory;
 
 public class MatchmakingServer implements Runnable {
 
-    public static final int MAX_GAME_SERVERS = 1;
+    public static final int MAX_GAME_SERVERS = 4;
     public static final int MAX_PLAYERS = 8;
 
     private int tcpPort;
@@ -50,17 +54,15 @@ public class MatchmakingServer implements Runnable {
 
         Apollo69Framework.getMessageClasses().forEach(server.getKryo()::register);
 
-        for (int i = 0; i < MAX_GAME_SERVERS; i++) {
-            addGameServer();
-        }
+        addGameServer();
     }
 
     @Override
     public void run() {
         server.addListener(new PlayerConnectionListener(
-                connections,
-                messageHandlerDelegator,
-                () -> gameEngineList.stream().filter(gameEngine -> !gameEngine.isFull()).findFirst().orElse(null)
+            connections,
+            messageHandlerDelegator,
+            this
         ));
 
         try {
@@ -72,19 +74,33 @@ public class MatchmakingServer implements Runnable {
         server.run();
     }
 
-    private void addGameServer() {
-        int i = gameEngineList.size();
-        System.out.println("Starting GameEngine" + i);
-        GameEngine gameEngine = new GameEngineFactory().create(i);
-        gameEngineList.add(gameEngine);
+    void addGameServer() {
+        if (gameEngineList.size() < MAX_GAME_SERVERS) {
+            UUID id = UUID.randomUUID();
+            System.out.println("Starting GameEngine " + id);
+            GameEngine gameEngine = new GameEngineFactory().create(id);
+            gameEngineList.add(gameEngine);
 
-        Thread gameEngineThread = new Thread(gameEngineThreadGroup, gameEngine, "GameEngine" + i);
-        gameEngineThread.setDaemon(true);
-        gameEngineThread.start();
+            Thread gameEngineThread = new Thread(gameEngineThreadGroup, gameEngine, "GE-" + id);
+            gameEngineThread.setDaemon(true);
+            gameEngineThread.start();
+        }
     }
 
-    private void removeGameServer() {
+    void removeEmptyGameServers() {
+        for (Iterator<GameEngine> iterator = gameEngineList.iterator(); iterator.hasNext(); ) {
+            GameEngine gameEngine = iterator.next();
+            if (gameEngine.getPlayerConnectionList().isEmpty()) {
+                System.out.println("Stopping GameEngine " + gameEngine.getId());
+                iterator.remove();
+                gameEngine.stop();
+            }
+        }
+    }
 
+    @Nullable
+    GameEngine getAvailableGameServer() {
+        return gameEngineList.stream().filter(gameEngine -> !gameEngine.isFull()).findFirst().orElse(null);
     }
 
     public void stop() {

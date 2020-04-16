@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInQueue;
@@ -15,13 +16,13 @@ public class PlayerConnectionListener extends BasePlayerConnectionListener {
     final private List<PlayerConnection> connections;
     final private List<PlayerConnection> waitingConnections = new ArrayList<>();
     private MessageHandlerDelegator handlerDelegator;
-    private GameEngineProvider gameEngineProvider;
+    private MatchmakingServer matchmakingServer;
 
 
-    public PlayerConnectionListener(List<PlayerConnection> connections, MessageHandlerDelegator handlerDelegator, GameEngineProvider gameEngineProvider) {
+    public PlayerConnectionListener(List<PlayerConnection> connections, MessageHandlerDelegator handlerDelegator, MatchmakingServer matchmakingServer) {
         this.connections = connections;
         this.handlerDelegator = handlerDelegator;
-        this.gameEngineProvider = gameEngineProvider;
+        this.matchmakingServer = matchmakingServer;
     }
 
     @Override
@@ -53,25 +54,30 @@ public class PlayerConnectionListener extends BasePlayerConnectionListener {
     }
 
     private void matchmakeQueue() {
-        GameEngine gameEngine = gameEngineProvider.getNotFullGameEngine();
+        GameEngine gameEngine = matchmakingServer.getAvailableGameServer();
 
+        // Add GameServer if every server is full
+        if (gameEngine == null && !waitingConnections.isEmpty()) {
+            matchmakingServer.addGameServer();
+            gameEngine = matchmakingServer.getAvailableGameServer();
+        }
+
+        // Add players in queue to available game servers
         while (gameEngine != null && !waitingConnections.isEmpty()) {
             PlayerConnection playerToBeAdded = waitingConnections.remove(0);
             gameEngine.addPlayerToGame(playerToBeAdded);
             playerToBeAdded.sendTCP(new PlayerMatchmade());
-            gameEngine = gameEngineProvider.getNotFullGameEngine();
+            gameEngine = matchmakingServer.getAvailableGameServer();
         }
 
+        // Update position in queue
         AtomicInteger positionInQueue = new AtomicInteger(1);
         for (PlayerConnection playerConnection : waitingConnections) {
             playerConnection.sendTCP(new PlayerInQueue(positionInQueue.get(), waitingConnections.size()));
             positionInQueue.getAndIncrement();
         }
-    }
 
-    @FunctionalInterface
-    interface GameEngineProvider {
-        @Nullable
-        GameEngine getNotFullGameEngine();
+        // Remove empty game servers
+        matchmakingServer.removeEmptyGameServers();
     }
 }

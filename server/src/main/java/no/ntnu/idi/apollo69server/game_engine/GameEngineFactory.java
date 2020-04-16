@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 
+import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
@@ -28,7 +29,7 @@ public class GameEngineFactory {
 
     private MessageHandlerDelegator messageHandlerDelegator = new MessageHandlerDelegator();
 
-    public GameEngine create(int id) {
+    public GameEngine create(UUID id) {
         Engine engine = new Engine();
 
         final ConcurrentLinkedQueue<PlayerInput> inputQueue = new ConcurrentLinkedQueue<>();

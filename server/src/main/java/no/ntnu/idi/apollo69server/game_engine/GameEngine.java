@@ -9,6 +9,7 @@ import com.esotericsoftware.kryonet.Listener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
 import no.ntnu.idi.apollo69server.network.BasePlayerConnectionListener;
@@ -18,14 +19,14 @@ import no.ntnu.idi.apollo69server.network.PlayerConnection;
 
 public class GameEngine implements Runnable, Disposable {
 
-    private final int id;
+    private final UUID id;
     private Engine engine;
     private boolean serverAlive = true;
 
     private final Listener playerConnectionListener;
     private final List<PlayerConnection> playerConnectionList = new ArrayList<>();
 
-    public GameEngine(int id, Engine engine, MessageHandlerDelegator messageHandlerDelegator) {
+    public GameEngine(UUID id, Engine engine, MessageHandlerDelegator messageHandlerDelegator) {
         this.id = id;
         this.engine = engine;
 
@@ -63,11 +64,16 @@ public class GameEngine implements Runnable, Disposable {
 
     @Override
     public void dispose() {
-
+        engine.removeAllEntities();
+        engine = null;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
+    }
+
+    public void stop() {
+        serverAlive = false;
     }
 
     public boolean isFull() {
@@ -99,7 +105,7 @@ public class GameEngine implements Runnable, Disposable {
         playerConnection.removeListener(playerConnectionListener);
     }
 
-    public void setServerAlive(boolean serverAlive) {
-        this.serverAlive = serverAlive;
+    public List<PlayerConnection> getPlayerConnectionList() {
+        return playerConnectionList;
     }
 }
