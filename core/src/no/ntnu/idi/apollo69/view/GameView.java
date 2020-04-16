@@ -135,8 +135,6 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Initialize camera position
         model.moveCameraToSpaceship();
 
-        model.initSpaceshipForDevice();
-
         // Music
         Music gameMusic = Assets.getBackgroundMusic();
         gameMusic.setLooping(true);

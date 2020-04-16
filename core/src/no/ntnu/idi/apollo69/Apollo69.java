@@ -29,7 +29,7 @@ public class Apollo69 extends ApplicationAdapter {
 		System.out.println("Device ID: " + deviceId);
 		Device.DEVICE_ID = deviceId;
 		navigator = new Navigator();
-		navigator.changeScreen(ScreenType.MATCHMAKING);
+		navigator.changeScreen(ScreenType.GAME);
 	}
 
 	@Override
