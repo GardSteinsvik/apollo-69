@@ -16,7 +16,7 @@ import no.ntnu.idi.apollo69server.game_engine.GameEngineFactory;
 public class MatchmakingServer implements Runnable {
 
     public static final int MAX_GAME_SERVERS = 1;
-    public static final int MAX_PLAYERS = 2;
+    public static final int MAX_PLAYERS = 8;
 
     private int tcpPort;
     private int udpPort;
@@ -69,7 +69,6 @@ public class MatchmakingServer implements Runnable {
             System.err.println("Failed to start matchmaking server. Perhaps another server is already running?");
             System.exit(69);
         }
-
         server.run();
     }
 

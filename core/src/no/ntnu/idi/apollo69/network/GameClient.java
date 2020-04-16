@@ -3,6 +3,7 @@ package no.ntnu.idi.apollo69.network;
 import com.esotericsoftware.kryonet.Client;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
 
@@ -41,6 +42,12 @@ public class GameClient {
         client.start();
         while (failed) {
             try {
+                InetAddress inetAddress = client.discoverHost(udpPort, 5000);
+
+                if (inetAddress != null) {
+                    serverIp = inetAddress.getHostAddress();
+                }
+
                 client.connect(5000, serverIp, tcpPort, udpPort);
                 failed = false;
             } catch (IOException e) {
@@ -51,7 +58,7 @@ public class GameClient {
                     if (waitTimeMs > maxWaitMs) {
                         client.stop();
                         clientConnecting = false;
-                        throw new IOException("Unable to connectBlocking after too many retries", e);
+                        throw new IOException("Unable to connect after too many retries", e);
                     }
                 } catch (InterruptedException ex) {
                     System.err.println("Connecting interrupted: " + ex);

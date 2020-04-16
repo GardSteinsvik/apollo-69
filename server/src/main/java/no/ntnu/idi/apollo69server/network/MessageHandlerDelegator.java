@@ -5,7 +5,6 @@ import com.esotericsoftware.kryonet.FrameworkMessage;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class MessageHandlerDelegator {
 
     private final Map<Class, MessageHandler> handlers = new HashMap<>();
@@ -33,7 +32,7 @@ public class MessageHandlerDelegator {
             messageHandler.handle(connection, message);
         } else {
             if (!(message instanceof FrameworkMessage.KeepAlive)) {
-//                System.out.println("Unhandled message: " + message);
+                System.out.println("Unhandled message: " + message);
             }
         }
     }

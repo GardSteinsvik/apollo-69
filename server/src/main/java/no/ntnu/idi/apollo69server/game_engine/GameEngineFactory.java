@@ -31,18 +31,6 @@ public class GameEngineFactory {
     public GameEngine create(int id) {
         Engine engine = new Engine();
 
-        engine.addEntityListener(new EntityListener() {
-            @Override
-            public void entityAdded(Entity entity) {
-                System.out.println("New entity: " + entity);
-            }
-
-            @Override
-            public void entityRemoved(Entity entity) {
-                System.out.println("Entity " + entity + " removed");
-            }
-        });
-
         final ConcurrentLinkedQueue<PlayerInput> inputQueue = new ConcurrentLinkedQueue<>();
 
         /* INPUT HANDLER */
@@ -69,12 +57,17 @@ public class GameEngineFactory {
         }, PlayerSpawn.class);
 
         int priority = 0;
+        // Receive input
         engine.addSystem(new ReceivePlayerInputSystem(priority++, inputQueue));
-        engine.addSystem(new MovementSystem(priority++, GAME_UPDATE_SECONDS));
-        engine.addSystem(new SendUpdateSystem(priority, NETWORK_UPDATE_SECONDS));
+
+        // Calculate game state
+        engine.addSystem(new MovementSystem(priority, GAME_UPDATE_SECONDS));
         engine.addSystem(new AsteroidSystem(priority));
         engine.addSystem(new PickupSystem(priority));
         engine.addSystem(new PowerupSystem(priority));
+
+        // Send updates
+        engine.addSystem(new SendUpdateSystem(++priority, NETWORK_UPDATE_SECONDS));
 
         return new GameEngine(id, engine, messageHandlerDelegator);
     }
