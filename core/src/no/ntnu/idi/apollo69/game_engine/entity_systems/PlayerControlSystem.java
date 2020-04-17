@@ -42,8 +42,6 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
         if (gameSpace.contains(spaceship) && (direction.x != 0 || direction.y != 0)) {
             velocityComponent.velocity = direction.scl(velocityComponent.scalar);
             rotationComponent.degrees = (float) (Math.atan2(direction.y, direction.x) * (180 / Math.PI) - 90);
-            rotationComponent.x = direction.x * velocityComponent.scalar;
-            rotationComponent.y = direction.y * velocityComponent.scalar;
 
             // Send input to the server
             if (gameClient.isConnected()) {

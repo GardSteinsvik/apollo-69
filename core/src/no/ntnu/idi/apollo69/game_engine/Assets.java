@@ -2,13 +2,15 @@ package no.ntnu.idi.apollo69.game_engine;
 
 // Singleton to provide game assets to the rendering in the View (Android phone)
 
-import com.badlogic.gdx.Audio;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
 
@@ -17,14 +19,15 @@ import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.Powe
 
 public class Assets {
 
-    // Constant values
     private static AssetManager am;
+
+    // Classes to be loaded
     private static Class<TextureAtlas> TEXTURE_ATLAS = TextureAtlas.class;
     private static Class<Skin> SKIN = Skin.class;
     private static Class<Music> MUSIC = Music.class;
     private static Class<Sound> SOUND = Sound.class;
-    private static Class<FileHandle> FILE_HANDLE = FileHandle.class;
 
+    // Internal file paths to be loaded
     private static final String POWERUPS_ATLAS = "game/powerups.atlas";
     private static final String ASTEROID_ATLAS = "game/asteroids/asteroids.atlas";
     private static final String GEMS_ATLAS = "game/gems.atlas";
@@ -32,8 +35,19 @@ public class Assets {
     private static final String UI_SKIN = "skin/uiskin.json";
     private static final String THEME = "game/game.ogg";
     private static final String LASER = "game/laser.wav";
-    private static final String FONT = "font/BalooPaaji2-Medium.tff";
 
+    // Font
+    private static BitmapFont bigFont = new BitmapFont();
+    private static BitmapFont smallFont = new BitmapFont();
+    private static BitmapFont yellowFont = new BitmapFont();
+    private static FreeTypeFontGenerator bigGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/baloo.ttf"));
+    private static FreeTypeFontGenerator smallGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/baloo.ttf"));
+    private static FreeTypeFontGenerator yellowGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/baloo.ttf"));
+    private static FreeTypeFontParameter bigParameter = new FreeTypeFontParameter();
+    private static FreeTypeFontParameter smallParameter = new FreeTypeFontParameter();
+    private static FreeTypeFontParameter yellowParameter = new FreeTypeFontParameter();
+
+    // Cache for quick access
     private static ObjectMap<String, TextureAtlas.AtlasRegion> textureCache = new ObjectMap<>();
 
     // To be called in another context to initialize the AssetManager
@@ -50,13 +64,22 @@ public class Assets {
         am.load(THEME, MUSIC);
         am.load(LASER, SOUND);
 
-        // TODO: Find a workaround to load FileHandle.class
-        //am.load(FONT, FILE_HANDLE);
-
         // Make sure all Assets have finished loading before use (!)
         // Not doing this will cause the rendering system to attempt to render unloaded
         // TextureAtlas' and the game would most likely crash
         am.finishLoading();
+
+        // Font cannot be loaded directly into AssetManager due to the lack
+        // of FileHandle.class support (might be another workaround)
+        bigParameter.size = 75;
+        bigFont = bigGenerator.generateFont(bigParameter);
+
+        smallParameter.size = 25;
+        smallFont = smallGenerator.generateFont(smallParameter);
+
+        yellowParameter.size = 30;
+        yellowParameter.color = Color.YELLOW;
+        yellowFont = yellowGenerator.generateFont(yellowParameter);
     }
 
     private static TextureAtlas.AtlasRegion getRegion(String atlas, String name) {
@@ -153,8 +176,16 @@ public class Assets {
         return am.get(LASER, SOUND);
     }
 
-    public static FileHandle getFont() {
-        return am.get(FONT, FILE_HANDLE);
+    public static BitmapFont getBigFont() {
+        return bigFont;
+    }
+
+    public static BitmapFont getSmallFont() {
+        return smallFont;
+    }
+
+    public static BitmapFont getYellowFont() {
+        return yellowFont;
     }
 
     public static TextureAtlas.AtlasRegion getAsteroidRegion() {

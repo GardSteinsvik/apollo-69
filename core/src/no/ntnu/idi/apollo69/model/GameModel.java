@@ -10,22 +10,26 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.esotericsoftware.kryonet.Listener;
 
 import no.ntnu.idi.apollo69.game_engine.Assets;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import no.ntnu.idi.apollo69.Device;
-import no.ntnu.idi.apollo69.game_engine.Assets;
 import no.ntnu.idi.apollo69.game_engine.Background;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
 import no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
@@ -69,6 +73,8 @@ public class GameModel {
     private final float WIDTH = SCREEN_WIDTH;
     private final OrthographicCamera camera = new OrthographicCamera(480 * (WIDTH/HEIGHT), 480);
 
+    private HashMap<String, Integer> players = new HashMap<>();
+
     public GameModel() {
         background = new Background();
         Assets.load();
@@ -79,6 +85,10 @@ public class GameModel {
         this.gameClient = NetworkClientSingleton.getInstance().getGameClient();
         gameUpdateListener = new ServerUpdateListener(gameEngine);
         NetworkClientSingleton.getInstance().getClient().addListener(gameUpdateListener);
+
+        players.put("VapeNaysh", 0);
+        players.put("Harambe", 1000);
+        players.put("playerOne", 5000);
     }
 
     public void renderBackground(SpriteBatch batch) {
@@ -156,13 +166,27 @@ public class GameModel {
         shapeRenderer.rectLine(posX - hp/2f, posY-10, posX + hp/2f, posY-10, 3);
     }
 
+    public TextButton getTextButton(float width, float height, float x, float y, String text, BitmapFont font, int alignment) {
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.font = font;
+        SpriteDrawable sd = new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("game/bg.png"))));
+        sd.tint(new Color(0,0,0,1));
+        TextButton button = new TextButton(text, style);
+        button.background(sd);
+        button.setHeight(height);
+        button.setWidth(width);
+        button.setPosition(x, y);
+        button.getLabel().setAlignment(alignment);
+        return button;
+    }
+
     // FIXME: Change this to TextButton with transparent background to avoid stuttering
     public void renderScores(BitmapFont font, SpriteBatch spriteBatch) {
         PositionComponent positionComponent = PositionComponent.MAPPER.get(gameEngine.getPlayer());
         String score = String.valueOf(ScoreComponent.MAPPER.get(gameEngine.getPlayer()).score);
 
-        float scoreX = positionComponent.position.x - (Math.round(Gdx.graphics.getWidth()) / 20f) * 19;
-        float scoreY = positionComponent.position.y + (Math.round(Gdx.graphics.getHeight()) / 10f) * 9;
+        float scoreX = positionComponent.position.x - 50;//Gdx.graphics.getWidth() / 2f + 50;//(Math.round(Gdx.graphics.getWidth()) / 20f) * 19;
+        float scoreY = positionComponent.position.y + 50;//Gdx.graphics.getHeight() / 2f;// - 50;//(Math.round(Gdx.graphics.getHeight()) / 10f) * 9;
 
         font.draw(spriteBatch, score, scoreX, scoreY);
     }
@@ -256,35 +280,24 @@ public class GameModel {
     }
 
     private void renderSpaceshipBoundingCircle(ShapeRenderer shapeRenderer) {
-        Circle c = BoundingCircleComponent.MAPPER.get(gameEngine.getPlayer()).circle;
-        float dim = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).width / 3;
-        float w = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).width;
+        Circle boundsCircle = BoundingCircleComponent.MAPPER.get(gameEngine.getPlayer()).circle;
+
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(new Color(0, 1, 0, 0.25f));
-        shapeRenderer.circle(c.x, c.y, dim);
+        shapeRenderer.circle(boundsCircle.x, boundsCircle.y, boundsCircle.radius);
         shapeRenderer.end();
+
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
-    // Initialize device-specific spaceship components
-    public void initSpaceshipForDevice() {
-        DimensionComponent dimComp = DimensionComponent.MAPPER.get(getGameEngine().getPlayer());
-        dimComp.width = Gdx.graphics.getHeight() / 10f;
-        dimComp.height = Gdx.graphics.getHeight() / 10f;
-
-        AttackingComponent attackComp = AttackingComponent.MAPPER.get(getGameEngine().getPlayer());
-        attackComp.shotRadius = dimComp.width / 20;
-
-        BoundingCircleComponent boundComp = BoundingCircleComponent.MAPPER.get(getGameEngine().getPlayer());
-        float offset = DimensionComponent.MAPPER.get(gameEngine.getPlayer()).height / 2;
-        Vector2 position = PositionComponent.MAPPER.get(gameEngine.getPlayer()).position;
-        boundComp.circle = new Circle(new Vector2(position.x + offset, position.y + offset), offset);
-    }
-
     public void moveCameraToSpaceship() {
-        camera.position.set(PositionComponent.MAPPER.get(gameEngine.getPlayer()).position, 0);
+        Vector2 position = PositionComponent.MAPPER.get(gameEngine.getPlayer()).position;
+        DimensionComponent dimension = DimensionComponent.MAPPER.get(gameEngine.getPlayer());
+        Vector2 cameraPosition = new Vector2(position.x + dimension.width / 2, position.y + dimension.height / 2);
+        camera.position.set(cameraPosition, 0);
         camera.update();
     }
 

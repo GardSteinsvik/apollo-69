@@ -1,6 +1,7 @@
 package no.ntnu.idi.apollo69.game_engine.entities;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Circle;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -25,6 +26,7 @@ public class SpaceshipFactory {
     public Entity create(int type) {
         Entity spaceship = new Entity();
         spaceship.add(new PositionComponent());
+        spaceship.add(new BoundingCircleComponent());
         spaceship.add(new VelocityComponent());
         spaceship.add(new RotationComponent());
 
@@ -33,20 +35,23 @@ public class SpaceshipFactory {
         spaceship.add(new BoosterComponent());
         spaceship.add(new AttackingComponent());
         spaceship.add(new PlayerComponent());
-        spaceship.add(new BoundingCircleComponent());
         spaceship.add(new ScoreComponent());
         spaceship.add(new SpaceshipComponent());
         spaceship.add(new AtlasRegionComponent());
+        spaceship.add(new ScoreComponent());
 
-        DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(spaceship);
-        dimensionComponent.width = GameObjectDimensions.SPACE_SHIP_WIDTH;
-        dimensionComponent.height = GameObjectDimensions.SPACE_SHIP_HEIGHT;
+        DimensionComponent spaceshipDimension = DimensionComponent.MAPPER.get(spaceship);
+        spaceshipDimension.width = GameObjectDimensions.SPACE_SHIP_WIDTH;
+        spaceshipDimension.height = GameObjectDimensions.SPACE_SHIP_HEIGHT;
 
-        // Set initial spaceship attacking attributes (can be altered by power-ups)
-        AttackingComponent attackingComponent = AttackingComponent.MAPPER.get(spaceship);
-        attackingComponent.shotDamage = 10;
-        HealthComponent healthComponent = new HealthComponent();
-        healthComponent.hp = 100;
+        PositionComponent positionComponent = PositionComponent.MAPPER.get(spaceship);
+        positionComponent.position = new Vector2(0,0);
+
+        BoundingCircleComponent boundComp = BoundingCircleComponent.MAPPER.get(spaceship);
+        boundComp.circle = new Circle(new Vector2(
+                positionComponent.position.x + GameObjectDimensions.SPACE_SHIP_WIDTH / 2,
+                positionComponent.position.y + GameObjectDimensions.SPACE_SHIP_HEIGHT / 2),
+                spaceshipDimension.width / 3);
 
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(spaceship);
         velocityComponent.scalar = velocityComponent.idle;
@@ -55,12 +60,19 @@ public class SpaceshipFactory {
         BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(spaceship);
         boosterComponent.boost = boosterComponent.defaultValue;
 
+        AttackingComponent attackingComponent = AttackingComponent.MAPPER.get(spaceship);
+        attackingComponent.shotDamage = 10;
+        attackingComponent.shotRadius = spaceshipDimension.width / 20;
+
         SpaceshipComponent spaceshipComponent = SpaceshipComponent.MAPPER.get(spaceship);
         spaceshipComponent.type = type;
 
         AtlasRegionComponent atlasRegionComponent = AtlasRegionComponent.MAPPER.get(spaceship);
         atlasRegionComponent.region = Assets.getSpaceshipRegion(spaceshipComponent.type);
         atlasRegionComponent.lastUpdated = System.currentTimeMillis();
+
+        ScoreComponent scoreComponent = ScoreComponent.MAPPER.get(spaceship);
+        scoreComponent.score = 0;
 
         return spaceship;
     }
