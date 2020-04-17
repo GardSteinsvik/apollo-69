@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -36,11 +34,6 @@ public class GameView extends ApplicationAdapter implements Screen {
 
     // Debug written to font
     private static BitmapFont debugFont = new BitmapFont();
-
-    private FreeTypeFontGenerator generator;
-    private FreeTypeFontParameter parameter;
-    private BitmapFont font;
-
 
     public GameView(GameModel model, GameController controller) {
         this.model = model;
@@ -140,13 +133,6 @@ public class GameView extends ApplicationAdapter implements Screen {
         gameMusic.setLooping(true);
         gameMusic.setVolume(0.5f);
         //gameMusic.play();
-
-        // Font for displaying scores
-        //generator = new FreeTypeFontGenerator(Assets.getFont());
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("font/baloo.ttf"));
-        parameter = new FreeTypeFontParameter();
-        parameter.size = 75;
-        font = generator.generateFont(parameter);
     }
 
     @Override
@@ -162,7 +148,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Render sprites
         spriteBatch.begin();
         model.renderBackground(spriteBatch);
-        model.renderScores(font, spriteBatch);
+        model.renderScores(Assets.getFont(), spriteBatch);
 
         // Render data from server
         model.renderNetworkBatch(spriteBatch);

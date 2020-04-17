@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Listener;
 
+import no.ntnu.idi.apollo69.Variables;
 import no.ntnu.idi.apollo69.game_engine.Assets;
 import java.util.List;
 
@@ -147,8 +148,8 @@ public class GameModel {
         PositionComponent positionComponent = PositionComponent.MAPPER.get(gameEngine.getPlayer());
         String score = String.valueOf(ScoreComponent.MAPPER.get(gameEngine.getPlayer()).score);
 
-        float scoreX = positionComponent.position.x - (Math.round(Gdx.graphics.getWidth()) / 20f) * 19;
-        float scoreY = positionComponent.position.y + (Math.round(Gdx.graphics.getHeight()) / 10f) * 9;
+        float scoreX = positionComponent.position.x - Gdx.graphics.getWidth() / 2f + 50;//(Math.round(Gdx.graphics.getWidth()) / 20f) * 19;
+        float scoreY = positionComponent.position.y + Gdx.graphics.getHeight() / 2f - 50;//(Math.round(Gdx.graphics.getHeight()) / 10f) * 9;
 
         font.draw(spriteBatch, score, scoreX, scoreY);
     }
