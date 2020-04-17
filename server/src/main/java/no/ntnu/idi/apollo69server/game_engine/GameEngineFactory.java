@@ -5,13 +5,16 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerSpawn;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.entity_factories.SpaceshipFactory;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.AsteroidSystem;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.DamageSystem;
@@ -44,17 +47,10 @@ public class GameEngineFactory {
         }, PlayerInput.class);
 
         messageHandlerDelegator.registerHandler((connection, message) -> {
-            ImmutableArray<Entity> existingPlayers = engine.getEntitiesFor(Family.all(NetworkPlayerComponent.class).get());
             Entity spaceship = new SpaceshipFactory().create(connection, message.getName());
+            PositionDto positionDto = message.getPositionDto();
+            PositionComponent.MAPPER.get(spaceship).position = new Vector2(positionDto.x, positionDto.y);
             engine.addEntity(spaceship);
-
-
-            PlayerSpawn playerSpawn = new PlayerSpawn(connection.getDeviceId(), message.getName());
-
-            for (Entity player : existingPlayers) {
-                PlayerConnection playerConnection = NetworkPlayerComponent.MAPPER.get(player).getPlayerConnection();
-                playerConnection.sendTCP(playerSpawn);
-            }
         }, PlayerSpawn.class);
 
         int priority = 0;

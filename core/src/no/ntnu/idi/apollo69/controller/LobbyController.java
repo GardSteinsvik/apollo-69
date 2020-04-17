@@ -1,5 +1,7 @@
 package no.ntnu.idi.apollo69.controller;
 
+import com.badlogic.gdx.math.Vector2;
+
 import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.model.LobbyModel;
 import no.ntnu.idi.apollo69.navigation.Navigator;
@@ -22,7 +24,7 @@ public class LobbyController {
 
     public void joinButtonPressed(String nickname) {
         if (nickname != null && !nickname.trim().equals("")) {
-            gameClient.sendMessage(new PlayerSpawn(Device.DEVICE_ID, nickname));
+            gameClient.sendMessage(new PlayerSpawn(Device.DEVICE_ID, nickname, new Vector2(0, 0)));
             navigator.changeScreen(ScreenType.GAME);
         }
     }
