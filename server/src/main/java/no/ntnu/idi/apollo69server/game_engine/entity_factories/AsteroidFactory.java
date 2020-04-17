@@ -32,9 +32,9 @@ public class AsteroidFactory {
 
         asteroid.add(new AsteroidComponent());
         asteroid.add(new PositionComponent());
-        asteroid.add(new DamageComponent());
+        asteroid.add(new DamageComponent("Asteroid", DAMAGE_OF_ASTEROID));
         asteroid.add(new VelocityComponent());
-        asteroid.add(new HealthComponent());
+        asteroid.add(new HealthComponent("Asteroid", HP_OF_ASTEROID));
         asteroid.add(new BoundingCircleComponent());
         Random random = new Random();
 
@@ -43,12 +43,7 @@ public class AsteroidFactory {
 
         PositionComponent positionComponent = PositionComponent.MAPPER.get(asteroid);
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(asteroid);
-        HealthComponent healthComponent = HealthComponent.MAPPER.get(asteroid);
-        DamageComponent damageComponent = DamageComponent.MAPPER.get(asteroid);
         BoundingCircleComponent boundingCircleComponent = BoundingCircleComponent.MAPPER.get(asteroid);
-
-        damageComponent.force = DAMAGE_OF_ASTEROID;
-        healthComponent.hp = HP_OF_ASTEROID;
 
         // Random spawn same as powerups
         // TODO: Optimize spawn method.

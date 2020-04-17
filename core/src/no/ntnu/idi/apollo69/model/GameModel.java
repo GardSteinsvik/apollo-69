@@ -128,19 +128,21 @@ public class GameModel {
         shapeRenderer.setColor(Color.LIME);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        Vector2 position = PositionComponent.MAPPER.get(gameEngine.getPlayer()).position;
-        renderHealthBar(shapeRenderer, position.x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, position.y, 50);
-
         for (AsteroidDto asteroidDto: gameState.getAsteroidDtoList()) {
             PositionDto positionDto = asteroidDto.positionDto;
-            renderHealthBar(shapeRenderer, positionDto.x, positionDto.y, asteroidDto.hp);
+            renderHealthBar(shapeRenderer, positionDto.x + GameObjectDimensions.ASTEROID_WIDHT/2f, positionDto.y, asteroidDto.hp);
         }
 
         for (PlayerDto playerDto: gameState.getPlayerDtoList()) {
-            if (playerDto.playerId.equals(Device.DEVICE_ID)) continue;
             PositionDto positionDto = playerDto.positionDto;
-            System.out.println(playerDto.hp + " PID: " + playerDto.playerId + " DID: " + Device.DEVICE_ID);
-            renderHealthBar(shapeRenderer, positionDto.x, positionDto.y, playerDto.hp);
+            float x = positionDto.x;
+            float y = positionDto.y;
+            if (playerDto.playerId.equals(Device.DEVICE_ID)) {
+                PositionComponent positionComponent = PositionComponent.MAPPER.get(gameEngine.getPlayer());
+                x = positionComponent.position.x;
+                y = positionComponent.position.y;
+            }
+            renderHealthBar(shapeRenderer, x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, y, playerDto.hp);
         }
         shapeRenderer.end();
     }
