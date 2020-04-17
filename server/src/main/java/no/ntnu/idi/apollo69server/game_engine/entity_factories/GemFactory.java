@@ -14,12 +14,13 @@ import no.ntnu.idi.apollo69server.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.RectangleBoundsComponent;
 
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GAME_RADIUS;
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_HEIGHT;
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_WIDTH;
+
 public class GemFactory {
 
-    // If using DesktopLauncher consider 400 as bounds instead of 1000
-    // TODO: change radius to constant value stored in some file for central modifiability
-    private static int radius = 2000;
-    private static Circle bounds = new Circle(0f, 0f, radius);
+    private static Circle bounds = new Circle(0f, 0f, GAME_RADIUS);
 
     private Entity generalCreate() {
         Entity gem = new Entity();
@@ -30,8 +31,8 @@ public class GemFactory {
         int xBounds = Integer.MAX_VALUE;
         int yBounds = Integer.MAX_VALUE;
 
-        float width = 20f;
-        float height = 20f;
+        float width = GEM_WIDTH;
+        float height = GEM_HEIGHT;
 
         gem.add(new PositionComponent());
         gem.add(new DimensionComponent());
@@ -42,14 +43,14 @@ public class GemFactory {
         // copypaste from powerup, simulation of spawn algorithm
         while (!bounds.contains(xBounds, yBounds)) {
             if (random.nextInt(2) == 0) {
-                xBounds = random.nextInt(radius);
+                xBounds = random.nextInt(GAME_RADIUS);
             } else {
-                xBounds = -random.nextInt(radius);
+                xBounds = -random.nextInt(GAME_RADIUS);
             }
             if (random.nextInt(2) == 0) {
-                yBounds = random.nextInt(radius);
+                yBounds = random.nextInt(GAME_RADIUS);
             } else {
-                yBounds = -random.nextInt(radius);
+                yBounds = -random.nextInt(GAME_RADIUS);
             }
         }
         PositionComponent positionComponent = PositionComponent.MAPPER.get(gem);
@@ -57,8 +58,8 @@ public class GemFactory {
         RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
 
         positionComponent.position = new Vector2(xBounds, yBounds);
-        dimensionComponent.height = height;
         dimensionComponent.width = width;
+        dimensionComponent.height = height;
         rectangleBoundsComponent.rectangle = new Rectangle(xBounds, yBounds, width, height);
 
         return gem;

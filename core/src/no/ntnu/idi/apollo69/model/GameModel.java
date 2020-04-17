@@ -47,6 +47,11 @@ import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.Posi
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
 
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_HEIGHT;
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_WIDTH;
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.POWERUP_HEIGHT;
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.POWERUP_WIDTH;
+
 public class GameModel {
 
     private Background background;
@@ -163,15 +168,13 @@ public class GameModel {
             PowerupType powerupType = powerupDto.powerupType;
             float posX = powerupDto.positionDto.x;
             float posY = powerupDto.positionDto.y;
-            float width = 48f;
-            float height = 28.8f;
 
             // Density adjustements would ruin bounds, not appropriate application (!)
             // float density = Gdx.graphics.getDensity();
 
             //batch.draw(powerup, posX, posY, width * density, height * density);
             //batch.draw(powerup, posX, posY, width, height);
-            batch.draw(Assets.getPowerupRegion(powerupType), posX, posY, width, height);
+            batch.draw(Assets.getPowerupRegion(powerupType), posX, posY, POWERUP_WIDTH, POWERUP_HEIGHT);
         }
     }
 
@@ -181,10 +184,8 @@ public class GameModel {
             GemType gemType = pickupDto.gemType;
             float posX = pickupDto.positionDto.x;
             float posY = pickupDto.positionDto.y;
-            float width = 20f;
-            float height = 20f;
             //RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
-            batch.draw(Assets.getPickupRegion(gemType), posX, posY, width, height);
+            batch.draw(Assets.getPickupRegion(gemType), posX, posY, GEM_WIDTH, GEM_HEIGHT);
         };
     };
 

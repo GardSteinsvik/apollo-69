@@ -13,12 +13,13 @@ import no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
 import no.ntnu.idi.apollo69server.game_engine.components.RectangleBoundsComponent;
 
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GAME_RADIUS;
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.POWERUP_HEIGHT;
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.POWERUP_WIDTH;
+
 public class PowerupFactory {
 
-    // If using DesktopLauncher consider 400 as bounds instead of 1000
-    // TODO: change radius to constant value stored in some file for central modifiability
-    private static int radius = 2000;
-    private static Circle bounds = new Circle(0f, 0f, radius);
+    private static Circle bounds = new Circle(0f, 0f, GAME_RADIUS);
 
     private Entity create() {
         Entity powerup = new Entity();
@@ -39,22 +40,22 @@ public class PowerupFactory {
 
         while (!bounds.contains(xBounds, yBounds)) {
             if (random.nextInt(2) == 0) {
-                xBounds = random.nextInt(radius);
+                xBounds = random.nextInt(GAME_RADIUS);
             } else {
-                xBounds = -random.nextInt(radius);
+                xBounds = -random.nextInt(GAME_RADIUS);
             }
             if (random.nextInt(2) == 0) {
-                yBounds = random.nextInt(radius);
+                yBounds = random.nextInt(GAME_RADIUS);
             } else {
-                yBounds = -random.nextInt(radius);
+                yBounds = -random.nextInt(GAME_RADIUS);
             }
         }
 
         positionComponent.position = new Vector2(xBounds, yBounds);
-        rectangleBoundsComponent.rectangle = new Rectangle(xBounds, yBounds, 120f, 72f);
+        rectangleBoundsComponent.rectangle = new Rectangle(xBounds, yBounds, POWERUP_WIDTH, POWERUP_HEIGHT);
 
-        dimensionComponent.height = 28.8f;
-        dimensionComponent.width = 48f;
+        dimensionComponent.width = POWERUP_WIDTH;
+        dimensionComponent.height = POWERUP_HEIGHT;
 
         return powerup;
     }
