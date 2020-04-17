@@ -12,7 +12,6 @@ import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent
 import no.ntnu.idi.apollo69server.game_engine.components.GemComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
-import no.ntnu.idi.apollo69server.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.ScoreComponent;
 import no.ntnu.idi.apollo69server.game_engine.entity_factories.GemFactory;
 
@@ -66,11 +65,10 @@ public class PickupSystem extends EntitySystem {
             engine.addEntity(gem);
         }
         for (Entity spaceship : spaceships) {
-            //RectangleBoundsComponent spaceshipBounds = RectangleBoundsComponent.MAPPER.get(spaceship);
-            BoundingCircleComponent spaceshipboundingCircleComponent = BoundingCircleComponent.MAPPER.get(spaceship);
+            BoundingCircleComponent spaceshipBoundingCircleComponent = BoundingCircleComponent.MAPPER.get(spaceship);
             for (Entity pickup : pickups) {
-                RectangleBoundsComponent pickupBounds = RectangleBoundsComponent.MAPPER.get(pickup);
-                if (Intersector.overlaps(spaceshipboundingCircleComponent.circle, pickupBounds.rectangle)) {
+                BoundingCircleComponent pickupBounds = BoundingCircleComponent.MAPPER.get(pickup);
+                if (Intersector.overlaps(spaceshipBoundingCircleComponent.circle, pickupBounds.circle)) {
                     GemComponent gemComponent = GemComponent.MAPPER.get(pickup);
                     handleGemPickup(spaceship, gemComponent);
                     engine.removeEntity(pickup);

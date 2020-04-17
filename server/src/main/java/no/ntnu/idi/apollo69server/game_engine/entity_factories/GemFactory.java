@@ -31,14 +31,12 @@ public class GemFactory {
         gem.add(new DimensionComponent());
         gem.add(new PickupComponent());
         gem.add(new GemComponent());
-        gem.add(new BoundingCircleComponent());
+        gem.add(new BoundingCircleComponent(new Circle(xBounds, yBounds, GEM_RADIUS)));
 
         PositionComponent positionComponent = PositionComponent.MAPPER.get(gem);
         DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(gem);
-        BoundingCircleComponent boundingCircleComponent = BoundingCircleComponent.MAPPER.get(gem);
 
         positionComponent.position = new Vector2(xBounds, yBounds);
-        boundingCircleComponent.circle = new Circle(xBounds, yBounds, GEM_RADIUS);
 
         dimensionComponent.width = GEM_WIDTH;
         dimensionComponent.height = GEM_HEIGHT;

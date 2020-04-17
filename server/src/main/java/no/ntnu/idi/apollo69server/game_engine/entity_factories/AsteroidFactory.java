@@ -20,7 +20,6 @@ public class AsteroidFactory {
     private final float DAMAGE_OF_ASTEROID = 25f;
     private final int MAXIMUM_SPEED_OF_ASTEROID = 400;
     private final int MINIMUM_SPEED_OF_ASTEROID = 50;
-    private final float RADIUS_OF_ASTEROID = (GameObjectDimensions.ASTEROID_HEIGHT + GameObjectDimensions.ASTEROID_WIDHT) / 4f;
 
     // FIXME: Get real variable for radius (radius of map)
     private int mapSpawnDistanceRadius = 2000;
@@ -35,7 +34,7 @@ public class AsteroidFactory {
         asteroid.add(new DamageComponent("Asteroid", DAMAGE_OF_ASTEROID));
         asteroid.add(new VelocityComponent());
         asteroid.add(new HealthComponent("Asteroid", HP_OF_ASTEROID));
-        asteroid.add(new BoundingCircleComponent());
+        asteroid.add(new BoundingCircleComponent(new Circle(0, 0, GameObjectDimensions.ASTEROID_HEIGHT/2f)));
         Random random = new Random();
 
         int xBounds;
@@ -63,8 +62,7 @@ public class AsteroidFactory {
             }
             positionOfAsteroid.add(xBounds, yBounds);
         }
-        boundingCircleComponent.circle.radius = RADIUS_OF_ASTEROID;
-        boundingCircleComponent.circle.setPosition(positionOfAsteroid.x, positionOfAsteroid.y);
+
         positionComponent.position = positionOfAsteroid;
 
         // Random which direction the asteroid goes.

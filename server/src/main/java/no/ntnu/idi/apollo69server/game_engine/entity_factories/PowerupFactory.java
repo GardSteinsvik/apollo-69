@@ -28,14 +28,12 @@ public class PowerupFactory {
         powerup.add(new PositionComponent());
         powerup.add(new DimensionComponent());
         powerup.add(new PowerupComponent());
-        powerup.add(new BoundingCircleComponent());
+        powerup.add(new BoundingCircleComponent(new Circle(xBounds, yBounds, POWERUP_RADIUS)));
 
         PositionComponent positionComponent = PositionComponent.MAPPER.get(powerup);
         DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(powerup);
-        BoundingCircleComponent boundingCircleComponent = BoundingCircleComponent.MAPPER.get(powerup);
 
         positionComponent.position = new Vector2(xBounds, yBounds);
-        boundingCircleComponent.circle = new Circle(xBounds, yBounds, POWERUP_RADIUS);
 
         dimensionComponent.width = POWERUP_WIDTH;
         dimensionComponent.height = POWERUP_HEIGHT;

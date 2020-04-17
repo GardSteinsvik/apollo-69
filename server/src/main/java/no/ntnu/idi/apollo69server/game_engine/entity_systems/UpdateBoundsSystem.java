@@ -8,6 +8,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 
 import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 
 public class UpdateBoundsSystem extends EntitySystem {
 
@@ -19,7 +20,7 @@ public class UpdateBoundsSystem extends EntitySystem {
 
     @Override
     public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Family.all(PositionComponent.class, BoundingCircleComponent.class).get());
+        entities = engine.getEntitiesFor(Family.all(PositionComponent.class, BoundingCircleComponent.class, VelocityComponent.class).get());
     }
 
     @Override

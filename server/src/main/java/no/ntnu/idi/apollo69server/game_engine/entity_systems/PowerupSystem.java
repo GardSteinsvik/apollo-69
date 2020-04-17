@@ -9,13 +9,12 @@ import com.badlogic.gdx.math.Intersector;
 
 import java.time.Instant;
 
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
 import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.EnergyComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.InvisibleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
-import no.ntnu.idi.apollo69server.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent;
 import no.ntnu.idi.apollo69server.game_engine.entity_factories.PowerupFactory;
 
@@ -53,42 +52,14 @@ public class PowerupSystem extends EntitySystem {
         PowerupType powerupType = powerupComponent.type;
         switch(powerupType) {
             case ENERGY:
-                /*EnergyComponent energyComponent = EnergyComponent.MAPPER.get(spaceShip);
-                try {
-                    if (energyComponent.energy < 100) {
-                        energyComponent.energy = 100;
-                    }
-                } catch (Exception e) {
-                    // Assume Nullpointer, create missing EnergyComponent:
-                    spaceShip.add(new EnergyComponent());
-                } */
                 spaceShip.add(new EnergyComponent());
                 System.out.println("Energy powerup");
                 break;
             case SHIELD:
-                /*ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(spaceShip);
-                try {
-                    if (shieldComponent.hp < 100) {
-                        shieldComponent.hp = 100;
-                    }
-                } catch (Exception e) {
-                    // Assume Nullpointer, create missing ShieldComponent:
-                    spaceShip.add(new ShieldComponent());
-                }*/
                 spaceShip.add(new ShieldComponent());
                 System.out.println("Shield powerup");
                 break;
             case INVISIBLE:
-                /*InvisibleComponent invisibleComponent = InvisibleComponent.MAPPER.get(spaceShip);
-                try {
-                    Instant time = Instant.now();
-                    if (invisibleComponent.time.isBefore(time)) {
-                        invisibleComponent.time = time;
-                    }
-                } catch (Exception e) {
-                    // Assume Nullpointer, create missing ShieldComponent:
-                    spaceShip.add(new InvisibleComponent());
-                }*/
                 spaceShip.add(new InvisibleComponent());
                 System.out.println("Invisible powerup");
                 break;
@@ -111,13 +82,11 @@ public class PowerupSystem extends EntitySystem {
         for (int i = 0; i < spaceships.size(); i++) {
             // Should the logic for this only be for the client ship? (server-side frame optimization rendering)
             Entity spaceship = spaceships.get(i);
-            //RectangleBoundsComponent spaceshipRectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(spaceship);
             BoundingCircleComponent spaceshipboundingCircleComponent = BoundingCircleComponent.MAPPER.get(spaceship);
             for (int j = 0; j < powerups.size(); j++) {
                 Entity powerup = powerups.get(j);
-                RectangleBoundsComponent powerupRectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(powerup);
-                //if (Intersector.overlaps(powerupRectangleBoundsComponent.rectangle, spaceshipRectangleBoundsComponent.rectangle)) {
-                if (Intersector.overlaps(spaceshipboundingCircleComponent.circle, powerupRectangleBoundsComponent.rectangle)) {
+                BoundingCircleComponent powerupBounds = BoundingCircleComponent.MAPPER.get(powerup);
+                if (Intersector.overlaps(spaceshipboundingCircleComponent.circle, powerupBounds.circle)) {
                     PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
                     handlePickup(spaceship, powerupComponent);
                     //pickupSound.play();
