@@ -111,9 +111,13 @@ public class GameModel {
 
         for (AsteroidDto asteroidDto: asteroidDtoList) {
             PositionDto positionDto = asteroidDto.positionDto;
-            int hp = asteroidDto.hp;
+            float hp = asteroidDto.hp;
             // TODO: 240, 240 should be changed into variables. It's the size of the asteroid.
-            spriteBatch.draw(Assets.getAsteroidRegion(), positionDto.x, positionDto.y, 40, 40, 80, 80, 1, 1, 0);
+            spriteBatch.draw(Assets.getAsteroidRegion(),
+                    positionDto.x, positionDto.y,
+                    GameObjectDimensions.ASTEROID_WIDHT/2, GameObjectDimensions.ASTEROID_HEIGHT/2,
+                    GameObjectDimensions.ASTEROID_WIDHT, GameObjectDimensions.ASTEROID_HEIGHT,
+                    1, 1, 0);
         }
     }
 
@@ -124,24 +128,26 @@ public class GameModel {
         shapeRenderer.setColor(Color.LIME);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        Vector2 position = PositionComponent.MAPPER.get(gameEngine.getPlayer()).position;
-        renderHealthBar(shapeRenderer, position.x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, position.y, 50);
-
         for (AsteroidDto asteroidDto: gameState.getAsteroidDtoList()) {
             PositionDto positionDto = asteroidDto.positionDto;
-            renderHealthBar(shapeRenderer, positionDto.x, positionDto.y, asteroidDto.hp);
+            renderHealthBar(shapeRenderer, positionDto.x + GameObjectDimensions.ASTEROID_WIDHT/2f, positionDto.y, asteroidDto.hp);
         }
 
         for (PlayerDto playerDto: gameState.getPlayerDtoList()) {
-            if (playerDto.playerId.equals(Device.DEVICE_ID)) continue;
             PositionDto positionDto = playerDto.positionDto;
-            renderHealthBar(shapeRenderer, positionDto.x, positionDto.y, 50);
+            float x = positionDto.x;
+            float y = positionDto.y;
+            if (playerDto.playerId.equals(Device.DEVICE_ID)) {
+                PositionComponent positionComponent = PositionComponent.MAPPER.get(gameEngine.getPlayer());
+                x = positionComponent.position.x;
+                y = positionComponent.position.y;
+            }
+            renderHealthBar(shapeRenderer, x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, y, playerDto.hp);
         }
         shapeRenderer.end();
     }
 
-    private void renderHealthBar(ShapeRenderer shapeRenderer, float posX, float posY, int hp) {
-        hp = (int) posX % 100;
+    private void renderHealthBar(ShapeRenderer shapeRenderer, float posX, float posY, float hp) {
         shapeRenderer.rectLine(posX - hp/2f, posY-10, posX + hp/2f, posY-10, 3);
     }
 

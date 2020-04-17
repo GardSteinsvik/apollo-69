@@ -117,7 +117,7 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
         join.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                lobbyController.joinButtonPressed();
+                lobbyController.joinButtonPressed(nickname.getText());
             }
         });
 

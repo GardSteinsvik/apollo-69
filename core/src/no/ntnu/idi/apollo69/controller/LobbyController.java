@@ -17,12 +17,14 @@ public class LobbyController {
     public LobbyController(Navigator navigator, LobbyModel lobbyModel) {
         this.navigator = navigator;
         this.lobbyModel = lobbyModel;
-        gameClient = NetworkClientSingleton.getInstance().getGameClient();
+        this.gameClient = NetworkClientSingleton.getInstance().getGameClient();
     }
 
-    public void joinButtonPressed() {
-        gameClient.sendMessage(new PlayerSpawn(Device.DEVICE_ID, "Player_" + Device.DEVICE_ID)); // TODO: Bytt navn til tekst fra input-feltet
-        navigator.changeScreen(ScreenType.GAME);
+    public void joinButtonPressed(String nickname) {
+        if (nickname != null && !nickname.trim().equals("")) {
+            gameClient.sendMessage(new PlayerSpawn(Device.DEVICE_ID, nickname));
+            navigator.changeScreen(ScreenType.GAME);
+        }
     }
 
     public void exitButtonPressed() {

@@ -9,8 +9,7 @@ public class PlayerInput {
     private boolean shooting;
     private boolean boosting;
 
-    public PlayerInput() {
-    }
+    public PlayerInput(){}
 
     public PlayerInput(PlayerInputType type) {
         this.type = type;

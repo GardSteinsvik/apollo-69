@@ -6,7 +6,7 @@ public interface Variables {
     float sizeButton = 3f;
     String textJoin = "Join";
     String textExit = "Exit lobby";
-    String textNickname = "nickname";
+    String textNickname = "";
     float spacing = 20f * Gdx.graphics.getDensity();
     float buttonHeight = 64f * Gdx.graphics.getDensity();
     float buttonWidth = 230f * Gdx.graphics.getDensity();

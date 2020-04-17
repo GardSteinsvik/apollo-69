@@ -43,7 +43,6 @@ public class ReceivePlayerInputSystem extends EntitySystem {
                     NetworkPlayerComponent networkPlayerComponent = NetworkPlayerComponent.MAPPER.get(player);
                     playerMap.put(networkPlayerComponent.getPlayerConnection().getDeviceId(), player);
                 }
-
                 PlayerInput playerInput;
                 while ((playerInput = inputQueue.poll()) != null) {
                     processInput(playerInput, playerMap);

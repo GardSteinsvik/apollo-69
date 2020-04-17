@@ -4,6 +4,7 @@ public class PlayerDto {
     public String playerId;
     public String name;
     public boolean alive;
+    public float hp;
     public PositionDto positionDto;
     public RotationDto rotationDto;
     public VelocityDto velocityDto;
@@ -11,10 +12,11 @@ public class PlayerDto {
     public PlayerDto() {
     }
 
-    public PlayerDto(String playerId, String name, boolean alive, PositionDto positionDto, RotationDto rotationDto, VelocityDto velocityDto) {
+    public PlayerDto(String playerId, String name, boolean alive,float hp, PositionDto positionDto, RotationDto rotationDto, VelocityDto velocityDto) {
         this.playerId = playerId;
         this.name = name;
         this.alive = alive;
+        this.hp = hp;
         this.positionDto = positionDto;
         this.rotationDto = rotationDto;
         this.velocityDto = velocityDto;
