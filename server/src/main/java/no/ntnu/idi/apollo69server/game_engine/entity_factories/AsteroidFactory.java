@@ -5,7 +5,10 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
+
+import no.ntnu.idi.apollo69framework.GameObjectDimensions;
 import no.ntnu.idi.apollo69server.game_engine.components.AsteroidComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
@@ -13,10 +16,11 @@ import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 
 public class AsteroidFactory {
 
-    public final int HP_OF_ASTEROID = 50;
-    public final float DAMAGE_OF_ASTEROID = 50f;
-    public final int MAXIMUM_SPEED_OF_ASTEROID = 400;
-    public final int MINIMUM_SPEED_OF_ASTEROID = 50;
+    private final float HP_OF_ASTEROID = 50f;
+    private final float DAMAGE_OF_ASTEROID = 25f;
+    private final int MAXIMUM_SPEED_OF_ASTEROID = 400;
+    private final int MINIMUM_SPEED_OF_ASTEROID = 50;
+    private final float RADIUS_OF_ASTEROID = (GameObjectDimensions.ASTEROID_HEIGHT + GameObjectDimensions.ASTEROID_WIDHT) / 4f;
 
     // FIXME: Get real variable for radius (radius of map)
     private int mapSpawnDistanceRadius = 2000;
@@ -31,6 +35,7 @@ public class AsteroidFactory {
         asteroid.add(new DamageComponent());
         asteroid.add(new VelocityComponent());
         asteroid.add(new HealthComponent());
+        asteroid.add(new BoundingCircleComponent());
         Random random = new Random();
 
         int xBounds;
@@ -40,6 +45,7 @@ public class AsteroidFactory {
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(asteroid);
         HealthComponent healthComponent = HealthComponent.MAPPER.get(asteroid);
         DamageComponent damageComponent = DamageComponent.MAPPER.get(asteroid);
+        BoundingCircleComponent boundingCircleComponent = BoundingCircleComponent.MAPPER.get(asteroid);
 
         damageComponent.force = DAMAGE_OF_ASTEROID;
         healthComponent.hp = HP_OF_ASTEROID;
@@ -62,6 +68,8 @@ public class AsteroidFactory {
             }
             positionOfAsteroid.add(xBounds, yBounds);
         }
+        boundingCircleComponent.circle.radius = RADIUS_OF_ASTEROID;
+        boundingCircleComponent.circle.setPosition(positionOfAsteroid.x, positionOfAsteroid.y);
         positionComponent.position = positionOfAsteroid;
 
         // Random which direction the asteroid goes.

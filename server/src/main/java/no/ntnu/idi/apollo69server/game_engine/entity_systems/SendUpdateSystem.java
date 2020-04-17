@@ -88,10 +88,12 @@ public class SendUpdateSystem extends EntitySystem {
             PositionComponent positionComponent = PositionComponent.MAPPER.get(playerEntity);
             RotationComponent rotationComponent = RotationComponent.MAPPER.get(playerEntity);
             VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(playerEntity);
+            HealthComponent healthComponent = HealthComponent.MAPPER.get(playerEntity);
             playerDtoList.add(new PlayerDto(
                     playerComponent.getId(),
                     playerComponent.getName(),
                     playerComponent.isAlive(),
+                    healthComponent.hp,
                     new PositionDto(positionComponent.position.x, positionComponent.position.y),
                     new RotationDto(rotationComponent.degrees, rotationComponent.x, rotationComponent.y),
                     new VelocityDto(velocityComponent.velocity.x, velocityComponent.velocity.y, velocityComponent.scalar)

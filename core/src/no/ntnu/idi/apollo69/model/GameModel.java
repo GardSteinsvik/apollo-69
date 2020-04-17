@@ -111,9 +111,13 @@ public class GameModel {
 
         for (AsteroidDto asteroidDto: asteroidDtoList) {
             PositionDto positionDto = asteroidDto.positionDto;
-            int hp = asteroidDto.hp;
+            float hp = asteroidDto.hp;
             // TODO: 240, 240 should be changed into variables. It's the size of the asteroid.
-            spriteBatch.draw(Assets.getAsteroidRegion(), positionDto.x, positionDto.y, 40, 40, 80, 80, 1, 1, 0);
+            spriteBatch.draw(Assets.getAsteroidRegion(),
+                    positionDto.x, positionDto.y,
+                    GameObjectDimensions.ASTEROID_WIDHT/2, GameObjectDimensions.ASTEROID_HEIGHT/2,
+                    GameObjectDimensions.ASTEROID_WIDHT, GameObjectDimensions.ASTEROID_HEIGHT,
+                    1, 1, 0);
         }
     }
 
@@ -135,13 +139,13 @@ public class GameModel {
         for (PlayerDto playerDto: gameState.getPlayerDtoList()) {
             if (playerDto.playerId.equals(Device.DEVICE_ID)) continue;
             PositionDto positionDto = playerDto.positionDto;
-            renderHealthBar(shapeRenderer, positionDto.x, positionDto.y, 50);
+            System.out.println(playerDto.hp + " PID: " + playerDto.playerId + " DID: " + Device.DEVICE_ID);
+            renderHealthBar(shapeRenderer, positionDto.x, positionDto.y, playerDto.hp);
         }
         shapeRenderer.end();
     }
 
-    private void renderHealthBar(ShapeRenderer shapeRenderer, float posX, float posY, int hp) {
-        hp = (int) posX % 100;
+    private void renderHealthBar(ShapeRenderer shapeRenderer, float posX, float posY, float hp) {
         shapeRenderer.rectLine(posX - hp/2f, posY-10, posX + hp/2f, posY-10, 3);
     }
 

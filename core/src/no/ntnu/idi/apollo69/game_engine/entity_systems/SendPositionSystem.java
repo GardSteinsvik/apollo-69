@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 
 import no.ntnu.idi.apollo69.game_engine.components.PlayableComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
@@ -41,7 +40,6 @@ public class SendPositionSystem extends EntitySystem {
             PlayerInput playerInput = new PlayerInput(PlayerInputType.MOVE);
             playerInput.setPosX(positionComponent.position.x);
             playerInput.setPosY(positionComponent.position.y);
-
             gameClient.sendMessage(playerInput);
             timeAccumulator = 0f;
         }

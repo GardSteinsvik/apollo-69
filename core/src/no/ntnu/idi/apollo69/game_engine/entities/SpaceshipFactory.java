@@ -22,6 +22,7 @@ import no.ntnu.idi.apollo69.game_engine.components.RectangleBoundsComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
+import no.ntnu.idi.apollo69framework.GameObjectDimensions;
 
 public class SpaceshipFactory {
     public Entity create(int type) {
@@ -47,6 +48,8 @@ public class SpaceshipFactory {
         // Set initial spaceship attacking attributes (can be altered by power-ups)
         AttackingComponent attackingComponent = AttackingComponent.MAPPER.get(spaceship);
         attackingComponent.shotDamage = 10;
+        HealthComponent healthComponent = new HealthComponent();
+        healthComponent.hp = GameObjectDimensions.START_HP_OF_SPACESHIP;
 
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(spaceship);
         velocityComponent.scalar = velocityComponent.idle;
