@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -36,9 +37,15 @@ public class Assets {
     private static final String LASER = "game/laser.wav";
 
     // Font
-    private static BitmapFont font = new BitmapFont();
-    private static FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/baloo.ttf"));
-    private static FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+    private static BitmapFont bigFont = new BitmapFont();
+    private static BitmapFont smallFont = new BitmapFont();
+    private static BitmapFont yellowFont = new BitmapFont();
+    private static FreeTypeFontGenerator bigGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/baloo.ttf"));
+    private static FreeTypeFontGenerator smallGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/baloo.ttf"));
+    private static FreeTypeFontGenerator yellowGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/baloo.ttf"));
+    private static FreeTypeFontParameter bigParameter = new FreeTypeFontParameter();
+    private static FreeTypeFontParameter smallParameter = new FreeTypeFontParameter();
+    private static FreeTypeFontParameter yellowParameter = new FreeTypeFontParameter();
 
     // Cache for quick access
     private static ObjectMap<String, TextureAtlas.AtlasRegion> textureCache = new ObjectMap<>();
@@ -64,8 +71,15 @@ public class Assets {
 
         // Font cannot be loaded directly into AssetManager due to the lack
         // of FileHandle.class support (might be another workaround)
-        parameter.size = 75;
-        font = generator.generateFont(parameter);
+        bigParameter.size = 75;
+        bigFont = bigGenerator.generateFont(bigParameter);
+
+        smallParameter.size = 25;
+        smallFont = smallGenerator.generateFont(smallParameter);
+
+        yellowParameter.size = 30;
+        yellowParameter.color = Color.YELLOW;
+        yellowFont = yellowGenerator.generateFont(yellowParameter);
     }
 
     private static TextureAtlas.AtlasRegion getRegion(String atlas, String name) {
@@ -162,8 +176,16 @@ public class Assets {
         return am.get(LASER, SOUND);
     }
 
-    public static BitmapFont getFont() {
-        return font;
+    public static BitmapFont getBigFont() {
+        return bigFont;
+    }
+
+    public static BitmapFont getSmallFont() {
+        return smallFont;
+    }
+
+    public static BitmapFont getYellowFont() {
+        return yellowFont;
     }
 
     public static TextureAtlas.AtlasRegion getAsteroidRegion() {

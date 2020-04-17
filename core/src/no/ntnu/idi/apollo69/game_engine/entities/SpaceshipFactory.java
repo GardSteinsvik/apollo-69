@@ -38,6 +38,7 @@ public class SpaceshipFactory {
         spaceship.add(new ScoreComponent());
         spaceship.add(new SpaceshipComponent());
         spaceship.add(new AtlasRegionComponent());
+        spaceship.add(new ScoreComponent());
 
         DimensionComponent spaceshipDimension = DimensionComponent.MAPPER.get(spaceship);
         spaceshipDimension.width = GameObjectDimensions.SPACE_SHIP_WIDTH;
@@ -69,6 +70,9 @@ public class SpaceshipFactory {
         AtlasRegionComponent atlasRegionComponent = AtlasRegionComponent.MAPPER.get(spaceship);
         atlasRegionComponent.region = Assets.getSpaceshipRegion(spaceshipComponent.type);
         atlasRegionComponent.lastUpdated = System.currentTimeMillis();
+
+        ScoreComponent scoreComponent = ScoreComponent.MAPPER.get(spaceship);
+        scoreComponent.score = 0;
 
         return spaceship;
     }

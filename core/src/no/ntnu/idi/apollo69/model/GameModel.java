@@ -8,16 +8,22 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.esotericsoftware.kryonet.Listener;
 
-import no.ntnu.idi.apollo69.Variables;
 import no.ntnu.idi.apollo69.game_engine.Assets;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.game_engine.Background;
@@ -62,6 +68,8 @@ public class GameModel {
     private final float WIDTH = SCREEN_WIDTH;
     private final OrthographicCamera camera = new OrthographicCamera(480 * (WIDTH/HEIGHT), 480);
 
+    private HashMap<String, Integer> players = new HashMap<>();
+
     public GameModel() {
         background = new Background();
         Assets.load();
@@ -72,6 +80,10 @@ public class GameModel {
         this.gameClient = NetworkClientSingleton.getInstance().getGameClient();
         gameUpdateListener = new ServerUpdateListener(gameEngine);
         NetworkClientSingleton.getInstance().getClient().addListener(gameUpdateListener);
+
+        players.put("VapeNaysh", 0);
+        players.put("Harambe", 1000);
+        players.put("playerOne", 5000);
     }
 
     public void renderBackground(SpriteBatch batch) {
@@ -143,13 +155,27 @@ public class GameModel {
         shapeRenderer.rectLine(posX - hp/2f, posY-10, posX + hp/2f, posY-10, 3);
     }
 
+    public TextButton getTextButton(float width, float height, float x, float y, String text, BitmapFont font, int alignment) {
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.font = font;
+        SpriteDrawable sd = new SpriteDrawable(new Sprite(new Texture(Gdx.files.internal("game/bg.png"))));
+        sd.tint(new Color(0,0,0,1));
+        TextButton button = new TextButton(text, style);
+        button.background(sd);
+        button.setHeight(height);
+        button.setWidth(width);
+        button.setPosition(x, y);
+        button.getLabel().setAlignment(alignment);
+        return button;
+    }
+
     // FIXME: Change this to TextButton with transparent background to avoid stuttering
     public void renderScores(BitmapFont font, SpriteBatch spriteBatch) {
         PositionComponent positionComponent = PositionComponent.MAPPER.get(gameEngine.getPlayer());
         String score = String.valueOf(ScoreComponent.MAPPER.get(gameEngine.getPlayer()).score);
 
-        float scoreX = positionComponent.position.x - Gdx.graphics.getWidth() / 2f + 50;//(Math.round(Gdx.graphics.getWidth()) / 20f) * 19;
-        float scoreY = positionComponent.position.y + Gdx.graphics.getHeight() / 2f - 50;//(Math.round(Gdx.graphics.getHeight()) / 10f) * 9;
+        float scoreX = positionComponent.position.x - 50;//Gdx.graphics.getWidth() / 2f + 50;//(Math.round(Gdx.graphics.getWidth()) / 20f) * 19;
+        float scoreY = positionComponent.position.y + 50;//Gdx.graphics.getHeight() / 2f;// - 50;//(Math.round(Gdx.graphics.getHeight()) / 10f) * 9;
 
         font.draw(spriteBatch, score, scoreX, scoreY);
     }

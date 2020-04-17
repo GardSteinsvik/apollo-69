@@ -6,7 +6,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -17,11 +19,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.utils.Align;
+
+import java.util.HashMap;
 
 import no.ntnu.idi.apollo69.Variables;
 import no.ntnu.idi.apollo69.controller.GameController;
 import no.ntnu.idi.apollo69.game_engine.Assets;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69.game_engine.components.ScoreComponent;
 import no.ntnu.idi.apollo69.model.GameModel;
 
 public class GameView extends ApplicationAdapter implements Screen {
@@ -34,6 +41,9 @@ public class GameView extends ApplicationAdapter implements Screen {
 
     // Debug written to font
     private static BitmapFont debugFont = new BitmapFont();
+
+    //TextButton playerScore;
+    private TextButton playerScore, header, highScore1, highScore2, highScore3;
 
     public GameView(GameModel model, GameController controller) {
         this.model = model;
@@ -133,6 +143,62 @@ public class GameView extends ApplicationAdapter implements Screen {
         gameMusic.setLooping(true);
         gameMusic.setVolume(0.5f);
         //gameMusic.play();
+
+
+        Color white = new Color(Color.WHITE);
+        Color yellow = new Color(Color.YELLOW);
+
+        // Player score (top left)
+        /*
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.font = Assets.getBigFont();
+        Sprite sprite = new Sprite(new Texture(Gdx.files.internal("game/bg.png")));
+        SpriteDrawable sd = new SpriteDrawable(sprite);
+        sd.tint(new Color(0,0,0,0));
+        String score = String.valueOf(ScoreComponent.MAPPER.get(model.getGameEngine().getPlayer()).score);
+        TextButton playerScore = new TextButton(score, style);
+        playerScore.background(sd);
+        playerScore.setHeight(Gdx.graphics.getHeight() / 10f);
+        playerScore.setWidth(Gdx.graphics.getWidth() / 15f);
+        playerScore.setPosition(Gdx.graphics.getWidth() / 25f, Gdx.graphics.getHeight() / 20f * 17);
+        playerScore.getLabel().setAlignment(Align.left);
+        */
+        playerScore = model.getTextButton(
+                Gdx.graphics.getWidth() / 15f, Gdx.graphics.getHeight() / 10f,
+                Gdx.graphics.getWidth() / 25f, Gdx.graphics.getHeight() / 20f * 17,
+                String.valueOf(ScoreComponent.MAPPER.get(model.getGameEngine().getPlayer()).score + 2800),
+                Assets.getBigFont(), Align.left);
+        stage.addActor(playerScore);
+
+        float highscoreWidth = Gdx.graphics.getWidth() / 7f;
+        float hightscoreHeight = Gdx.graphics.getHeight() / 10f;
+        float highscoreX = Gdx.graphics.getWidth() / 25f * 21;
+
+        header = model.getTextButton(
+                highscoreWidth, hightscoreHeight,
+                highscoreX,  Gdx.graphics.getHeight() / 20f * 18,
+                "Leaderboard", Assets.getYellowFont(), Align.left);
+        stage.addActor(header);
+
+        highScore1 = model.getTextButton(
+                highscoreWidth, hightscoreHeight,
+                highscoreX, Gdx.graphics.getHeight() / 20f * 17,
+                "(1) VapeNaysh : 69696", Assets.getSmallFont(), Align.left);
+        stage.addActor(highScore1);
+
+
+        highScore2 = model.getTextButton(
+                highscoreWidth, hightscoreHeight,
+                highscoreX, Gdx.graphics.getHeight() / 20f * 16,
+                "(2) Harambe : 8350", Assets.getSmallFont(), Align.left);
+        stage.addActor(highScore2);
+
+        highScore3 = model.getTextButton(
+                highscoreWidth, hightscoreHeight,
+                highscoreX, Gdx.graphics.getHeight() / 20f * 15,
+                "(3) playerOne : 5200", Assets.getSmallFont(), Align.left);
+        stage.addActor(highScore3);
+
     }
 
     @Override
@@ -148,7 +214,6 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Render sprites
         spriteBatch.begin();
         model.renderBackground(spriteBatch);
-        model.renderScores(Assets.getFont(), spriteBatch);
 
         // Render data from server
         model.renderNetworkBatch(spriteBatch);
@@ -164,6 +229,8 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.renderShots(shapeRenderer);
         model.renderBoundary(shapeRenderer, Variables.GAMESPACE_RADIUS);
 
+        //model.updateHighscoreList(model.getTopPlayers(), highScore1, highScore2, highScore3);
+
         // Render UI
         stage.draw();
 
@@ -173,6 +240,14 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Update game engine
         model.getGameEngine().getEngine().update(delta);
 
+        //incrementScore();
+    }
+
+    private void incrementScore() {
+        playerScore.setText(String.valueOf(Integer.parseInt(playerScore.getText().toString()) + 1));
+        highScore1.setText(String.valueOf(Integer.parseInt(highScore1.getText().toString()) + 1));
+        highScore2.setText(String.valueOf(Integer.parseInt(highScore2.getText().toString()) + 30));
+        highScore3.setText(String.valueOf(Integer.parseInt(highScore3.getText().toString()) + 80));
     }
 
     private void debug() {
