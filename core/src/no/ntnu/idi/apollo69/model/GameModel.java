@@ -23,7 +23,6 @@ import no.ntnu.idi.apollo69.game_engine.Assets;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.game_engine.Background;
@@ -130,8 +129,8 @@ public class GameModel {
             // TODO: 240, 240 should be changed into variables. It's the size of the asteroid.
             spriteBatch.draw(Assets.getAsteroidRegion(),
                     positionDto.x, positionDto.y,
-                    GameObjectDimensions.ASTEROID_WIDHT/2, GameObjectDimensions.ASTEROID_HEIGHT/2,
-                    GameObjectDimensions.ASTEROID_WIDHT, GameObjectDimensions.ASTEROID_HEIGHT,
+                    GameObjectDimensions.ASTEROID_WIDTH /2, GameObjectDimensions.ASTEROID_HEIGHT/2,
+                    GameObjectDimensions.ASTEROID_WIDTH, GameObjectDimensions.ASTEROID_HEIGHT,
                     1, 1, 0);
         }
     }
@@ -145,7 +144,7 @@ public class GameModel {
 
         for (AsteroidDto asteroidDto: gameState.getAsteroidDtoList()) {
             PositionDto positionDto = asteroidDto.positionDto;
-            renderHealthBar(shapeRenderer, positionDto.x + GameObjectDimensions.ASTEROID_WIDHT/2f, positionDto.y, asteroidDto.hp);
+            renderHealthBar(shapeRenderer, positionDto.x + GameObjectDimensions.ASTEROID_WIDTH /2f, positionDto.y, asteroidDto.hp);
         }
 
         for (PlayerDto playerDto: gameState.getPlayerDtoList()) {

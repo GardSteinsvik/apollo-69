@@ -16,6 +16,6 @@ public class GameObjectDimensions {
     public static final float POWERUP_RADIUS = POWERUP_HEIGHT/2f;
 
     public static final float ASTEROID_HEIGHT = 80;
-    public static final float ASTEROID_WIDHT = 80;
+    public static final float ASTEROID_WIDTH = 80;
 
 }

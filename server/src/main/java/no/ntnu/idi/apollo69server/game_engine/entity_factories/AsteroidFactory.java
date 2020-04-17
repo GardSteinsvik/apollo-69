@@ -34,7 +34,10 @@ public class AsteroidFactory {
         asteroid.add(new DamageComponent("Asteroid", DAMAGE_OF_ASTEROID));
         asteroid.add(new VelocityComponent());
         asteroid.add(new HealthComponent("Asteroid", HP_OF_ASTEROID));
-        asteroid.add(new BoundingCircleComponent(new Circle(0, 0, GameObjectDimensions.ASTEROID_HEIGHT/2f)));
+        asteroid.add(new BoundingCircleComponent(
+                new Circle(0, 0, GameObjectDimensions.ASTEROID_HEIGHT/2f),
+                new Vector2(GameObjectDimensions.ASTEROID_WIDTH, GameObjectDimensions.ASTEROID_HEIGHT)
+        ));
         Random random = new Random();
 
         int xBounds;

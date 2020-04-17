@@ -25,7 +25,10 @@ public class SpaceshipFactory {
         spaceship.add(new VelocityComponent());
         spaceship.add(new ScoreComponent());
         spaceship.add(new RotationComponent());
-        spaceship.add(new BoundingCircleComponent(new Circle(0, 0, GameObjectDimensions.SPACE_SHIP_HEIGHT/3f)));
+        spaceship.add(new BoundingCircleComponent(
+                new Circle(0, 0, GameObjectDimensions.SPACE_SHIP_HEIGHT/3f),
+                new Vector2(GameObjectDimensions.SPACE_SHIP_WIDTH, GameObjectDimensions.SPACE_SHIP_HEIGHT))
+        );
 
         spaceship.add(new NetworkPlayerComponent(playerConnection));
         spaceship.add(new PlayerComponent(playerConnection.getDeviceId(), name));

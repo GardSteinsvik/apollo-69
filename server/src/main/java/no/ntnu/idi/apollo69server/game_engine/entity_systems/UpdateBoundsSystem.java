@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
@@ -29,7 +30,9 @@ public class UpdateBoundsSystem extends EntitySystem {
             BoundingCircleComponent boundingCircleComponent = BoundingCircleComponent.MAPPER.get(entity);
             PositionComponent positionComponent = PositionComponent.MAPPER.get(entity);
 
-            boundingCircleComponent.circle.setPosition(positionComponent.position);
+            Vector2 newPosition = positionComponent.position.cpy().add(boundingCircleComponent.dimensions.scl(0.5f));
+
+            boundingCircleComponent.circle.setPosition(newPosition);
         }
     }
 }

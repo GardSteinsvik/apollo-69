@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
-import no.ntnu.idi.apollo69server.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.GemComponent;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
 import no.ntnu.idi.apollo69server.game_engine.components.PickupComponent;
@@ -21,25 +20,18 @@ import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomYCoo
 public class GemFactory {
 
     private Entity generalCreate() {
-
         Entity gem = new Entity();
 
-        float xBounds = getRandomXCoordinates();
-        float yBounds = getRandomYCoordinates();
+        float x = getRandomXCoordinates();
+        float y = getRandomYCoordinates();
 
         gem.add(new PositionComponent());
-        gem.add(new DimensionComponent());
         gem.add(new PickupComponent());
         gem.add(new GemComponent());
-        gem.add(new BoundingCircleComponent(new Circle(xBounds, yBounds, GEM_RADIUS)));
+        gem.add(new BoundingCircleComponent(new Circle(x, y, GEM_RADIUS), new Vector2(GEM_WIDTH, GEM_HEIGHT)));
 
         PositionComponent positionComponent = PositionComponent.MAPPER.get(gem);
-        DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(gem);
-
-        positionComponent.position = new Vector2(xBounds, yBounds);
-
-        dimensionComponent.width = GEM_WIDTH;
-        dimensionComponent.height = GEM_HEIGHT;
+        positionComponent.position = new Vector2(x, y);
 
         return gem;
     }
