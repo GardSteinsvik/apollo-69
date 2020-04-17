@@ -2,64 +2,46 @@ package no.ntnu.idi.apollo69server.game_engine.entity_factories;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.Random;
-
+import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.GemComponent;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
 import no.ntnu.idi.apollo69server.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
-import no.ntnu.idi.apollo69server.game_engine.components.RectangleBoundsComponent;
+
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_HEIGHT;
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_RADIUS;
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_WIDTH;
+import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomNumber;
+import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomXCoordinates;
+import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomYCoordinates;
 
 public class GemFactory {
 
-    // If using DesktopLauncher consider 400 as bounds instead of 1000
-    // TODO: change radius to constant value stored in some file for central modifiability
-    private static int radius = 2000;
-    private static Circle bounds = new Circle(0f, 0f, radius);
-
     private Entity generalCreate() {
+
         Entity gem = new Entity();
 
-        // copypaste from powerup, simulation of spawn algorithm
-        Random random = new Random();
-        // Start with impossible bounds, so that it is corrected to the GAME_RADIUS below.
-        int xBounds = Integer.MAX_VALUE;
-        int yBounds = Integer.MAX_VALUE;
-
-        float width = 20f;
-        float height = 20f;
+        float xBounds = getRandomXCoordinates();
+        float yBounds = getRandomYCoordinates();
 
         gem.add(new PositionComponent());
         gem.add(new DimensionComponent());
         gem.add(new PickupComponent());
         gem.add(new GemComponent());
-        gem.add(new RectangleBoundsComponent());
+        gem.add(new BoundingCircleComponent());
 
-        // copypaste from powerup, simulation of spawn algorithm
-        while (!bounds.contains(xBounds, yBounds)) {
-            if (random.nextInt(2) == 0) {
-                xBounds = random.nextInt(radius);
-            } else {
-                xBounds = -random.nextInt(radius);
-            }
-            if (random.nextInt(2) == 0) {
-                yBounds = random.nextInt(radius);
-            } else {
-                yBounds = -random.nextInt(radius);
-            }
-        }
         PositionComponent positionComponent = PositionComponent.MAPPER.get(gem);
         DimensionComponent dimensionComponent = DimensionComponent.MAPPER.get(gem);
-        RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
+        BoundingCircleComponent boundingCircleComponent = BoundingCircleComponent.MAPPER.get(gem);
 
         positionComponent.position = new Vector2(xBounds, yBounds);
-        dimensionComponent.height = height;
-        dimensionComponent.width = width;
-        rectangleBoundsComponent.rectangle = new Rectangle(xBounds, yBounds, width, height);
+        boundingCircleComponent.circle = new Circle(xBounds, yBounds, GEM_RADIUS);
+
+        dimensionComponent.width = GEM_WIDTH;
+        dimensionComponent.height = GEM_HEIGHT;
 
         return gem;
     }
@@ -109,8 +91,7 @@ public class GemFactory {
     }
 
     public Entity create() {
-        Random random = new Random();
-        int randomNum = random.nextInt(4);
+        int randomNum = getRandomNumber(3);
         switch(randomNum) {
             case 1:
                 return createMeteoriteGem();
