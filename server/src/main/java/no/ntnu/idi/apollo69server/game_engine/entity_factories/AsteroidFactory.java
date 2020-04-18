@@ -45,7 +45,6 @@ public class AsteroidFactory {
 
         PositionComponent positionComponent = PositionComponent.MAPPER.get(asteroid);
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(asteroid);
-        BoundingCircleComponent boundingCircleComponent = BoundingCircleComponent.MAPPER.get(asteroid);
 
         // Random spawn same as powerups
         // TODO: Optimize spawn method.

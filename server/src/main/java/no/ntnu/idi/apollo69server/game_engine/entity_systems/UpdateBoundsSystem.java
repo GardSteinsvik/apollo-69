@@ -30,7 +30,7 @@ public class UpdateBoundsSystem extends EntitySystem {
             BoundingCircleComponent boundingCircleComponent = BoundingCircleComponent.MAPPER.get(entity);
             PositionComponent positionComponent = PositionComponent.MAPPER.get(entity);
 
-            Vector2 newPosition = positionComponent.position.cpy().add(boundingCircleComponent.dimensions.scl(0.5f));
+            Vector2 newPosition = positionComponent.position.cpy().add(boundingCircleComponent.dimensions.cpy().scl(0.5f));
 
             boundingCircleComponent.circle.setPosition(newPosition);
         }

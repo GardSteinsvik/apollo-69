@@ -88,5 +88,4 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
             gameClient.sendMessage(playerInput);
         }
     }
-
 }
