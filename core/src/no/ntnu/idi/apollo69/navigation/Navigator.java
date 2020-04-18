@@ -42,7 +42,7 @@ public class Navigator implements Disposable {
                 break;
 
             case GAME:
-                GameModel gameModel = new GameModel();
+                GameModel gameModel = new GameModel(this);
                 GameController gameController = new GameController(gameModel);
                 GameView gameView = new GameView(gameModel, gameController);
                 this.setScreen(gameView);
@@ -50,7 +50,7 @@ public class Navigator implements Disposable {
             case LOBBY:
                 LobbyModel lobbyModel = new LobbyModel();
                 LobbyController lobbyController = new LobbyController(this, lobbyModel);
-                LobbyView lobbyView = new LobbyView(lobbyController,lobbyModel, new SpriteBatch());
+                LobbyView lobbyView = new LobbyView(lobbyController, lobbyModel, new SpriteBatch());
                 this.setScreen(lobbyView);
         }
     }

@@ -18,6 +18,7 @@ import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.entity_factories.SpaceshipFactory;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.AsteroidSystem;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.DamageSystem;
+import no.ntnu.idi.apollo69server.game_engine.entity_systems.DeathSystem;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.MovementSystem;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.PickupSystem;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.PowerupSystem;
@@ -64,6 +65,7 @@ public class GameEngineFactory {
         engine.addSystem(new DamageSystem(priority));
         engine.addSystem(new PickupSystem(priority));
         engine.addSystem(new PowerupSystem(priority));
+        engine.addSystem(new DeathSystem(priority));
 
         // Send updates
         engine.addSystem(new SendUpdateSystem(++priority, NETWORK_UPDATE_SECONDS));

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import no.ntnu.idi.apollo69framework.network_messages.DeviceInfo;
+import no.ntnu.idi.apollo69framework.network_messages.PlayerDead;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInQueue;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInputType;
@@ -35,6 +36,7 @@ public class Apollo69Framework {
                 PlayerInput.class,
                 PlayerInputType.class,
                 PlayerSpawn.class,
+                PlayerDead.class,
                 ServerMessage.class,
                 PlayerInQueue.class,
                 PlayerMatchmade.class,

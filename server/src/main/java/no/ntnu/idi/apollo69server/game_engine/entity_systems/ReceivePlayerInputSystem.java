@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.math.Vector2;
 
 import java.util.HashMap;
 import java.util.Queue;
@@ -14,7 +13,6 @@ import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.RotationComponent;
-import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 
 public class ReceivePlayerInputSystem extends EntitySystem {
 
@@ -54,7 +52,6 @@ public class ReceivePlayerInputSystem extends EntitySystem {
     private void processInput(PlayerInput playerInput, HashMap<String, Entity> playerMap) {
         Entity player = playerMap.get(playerInput.getPlayerId());
         if (player == null) {
-            System.err.println("Could not find player with ID: " + playerInput.getPlayerId());
             return;
         }
 

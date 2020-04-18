@@ -3,14 +3,12 @@ package no.ntnu.idi.apollo69.game_engine;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 
-import no.ntnu.idi.apollo69.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayableComponent;
 import no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem;
 
-public class GameEngine implements Runnable, Disposable {
+public class GameEngine implements Disposable {
 
     private Engine engine;
     private boolean gameOver = false;
@@ -19,28 +17,21 @@ public class GameEngine implements Runnable, Disposable {
         this.engine = engine;
     }
 
-    private boolean isGameOver() {
-        Entity player = engine.getEntitiesFor(Family.all(PlayableComponent.class).get()).first();
-        return HealthComponent.MAPPER.get(player).hp <= 0;
-    }
-
-    @Override
-    public void run() {
-        while (!gameOver) {
-            engine.update(Gdx.graphics.getDeltaTime());
-            gameOver = isGameOver();
-        }
-
-        dispose();
-    }
-
     @Override
     public void dispose() {
+        engine.removeAllEntities();
+    }
 
+    public void update(float deltaTime) {
+        if (!gameOver) {
+            engine.update(deltaTime);
+        } else {
+            dispose();
+        }
     }
 
     public Entity getPlayer() {
-        return engine.getEntitiesFor(Family.all(PlayableComponent.class).get()).first();
+        return !gameOver ? engine.getEntitiesFor(Family.all(PlayableComponent.class).get()).first() : null;
     }
 
     public PlayerControlSystem getPlayerControlSystem() {
@@ -51,4 +42,11 @@ public class GameEngine implements Runnable, Disposable {
         return engine;
     }
 
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
 }

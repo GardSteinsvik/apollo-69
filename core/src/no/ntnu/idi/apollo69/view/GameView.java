@@ -211,6 +211,11 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Set camera
         spriteBatch.setProjectionMatrix(model.getCamera().combined);
 
+        if (model.getGameEngine().isGameOver()) {
+            model.navigateToLobby();
+            return;
+        }
+
         // Render sprites
         spriteBatch.begin();
         model.renderBackground(spriteBatch);
@@ -238,7 +243,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.moveCameraToSpaceship();
 
         // Update game engine
-        model.getGameEngine().getEngine().update(delta);
+        model.getGameEngine().update(delta);
 
         //incrementScore();
     }

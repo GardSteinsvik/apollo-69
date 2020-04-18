@@ -38,6 +38,8 @@ import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.ScoreComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
+import no.ntnu.idi.apollo69.navigation.Navigator;
+import no.ntnu.idi.apollo69.navigation.ScreenType;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.GameObjectDimensions;
@@ -57,6 +59,8 @@ import static no.ntnu.idi.apollo69framework.GameObjectDimensions.POWERUP_WIDTH;
 
 public class GameModel {
 
+    private Navigator navigator;
+
     private Background background;
     private GameEngine gameEngine;
     private Sound shotSound;
@@ -74,7 +78,9 @@ public class GameModel {
 
     private HashMap<String, Integer> players = new HashMap<>();
 
-    public GameModel() {
+    public GameModel(Navigator navigator) {
+        this.navigator = navigator;
+
         background = new Background();
         Assets.load();
         gameEngine = new GameEngineFactory().create();
@@ -82,12 +88,16 @@ public class GameModel {
         shotSound = Assets.getLaserSound();
 
         this.gameClient = NetworkClientSingleton.getInstance().getGameClient();
-        gameUpdateListener = new ServerUpdateListener(gameEngine);
+        gameUpdateListener = new ServerUpdateListener(gameEngine, navigator);
         NetworkClientSingleton.getInstance().getClient().addListener(gameUpdateListener);
 
         players.put("VapeNaysh", 0);
         players.put("Harambe", 1000);
         players.put("playerOne", 5000);
+    }
+
+    public void navigateToLobby() {
+        navigator.changeScreen(ScreenType.LOBBY);
     }
 
     public void renderBackground(SpriteBatch batch) {
@@ -122,16 +132,16 @@ public class GameModel {
     }
 
     private void renderAsteroids(SpriteBatch spriteBatch, List<AsteroidDto> asteroidDtoList){
-
         for (AsteroidDto asteroidDto: asteroidDtoList) {
             PositionDto positionDto = asteroidDto.positionDto;
-            float hp = asteroidDto.hp;
-            // TODO: 240, 240 should be changed into variables. It's the size of the asteroid.
-            spriteBatch.draw(Assets.getAsteroidRegion(),
-                    positionDto.x, positionDto.y,
-                    GameObjectDimensions.ASTEROID_WIDTH /2, GameObjectDimensions.ASTEROID_HEIGHT/2,
-                    GameObjectDimensions.ASTEROID_WIDTH, GameObjectDimensions.ASTEROID_HEIGHT,
-                    1, 1, 0);
+            spriteBatch.draw(
+                Assets.getAsteroidRegion(),
+                positionDto.x, positionDto.y,
+                GameObjectDimensions.ASTEROID_WIDTH /2, GameObjectDimensions.ASTEROID_HEIGHT/2,
+                GameObjectDimensions.ASTEROID_WIDTH, GameObjectDimensions.ASTEROID_HEIGHT,
+                1, 1,
+                0
+            );
         }
     }
 
@@ -219,7 +229,8 @@ public class GameModel {
     };
 
     public void renderPlayerSpaceship(SpriteBatch batch) {
-        Entity player = gameEngine.getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
+        Entity player = gameEngine.getPlayer();
+        if (player == null) return;
 
         float spaceShipHeight = GameObjectDimensions.SPACE_SHIP_HEIGHT;
         float spaceShipWidth = GameObjectDimensions.SPACE_SHIP_WIDTH;

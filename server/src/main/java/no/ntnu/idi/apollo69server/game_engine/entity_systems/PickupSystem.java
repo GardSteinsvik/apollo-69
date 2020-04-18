@@ -17,7 +17,6 @@ import no.ntnu.idi.apollo69server.game_engine.entity_factories.GemFactory;
 
 public class PickupSystem extends EntitySystem {
 
-    private Engine engine;
     private ImmutableArray<Entity> pickups;
     private ImmutableArray<Entity> spaceships;
 
@@ -27,8 +26,6 @@ public class PickupSystem extends EntitySystem {
 
     @Override
     public void addedToEngine(Engine engine) {
-        // Is this a good idea? Or use getEngine() instead?
-        this.engine = engine;
         pickups = engine.getEntitiesFor(Family.all(PickupComponent.class).get());
         spaceships = engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
     }
@@ -62,7 +59,7 @@ public class PickupSystem extends EntitySystem {
     public void update(float deltaTime) {
         for (int p = pickups.size(); p < 21; p++) {
             Entity gem = new GemFactory().create();
-            engine.addEntity(gem);
+            getEngine().addEntity(gem);
         }
         for (Entity spaceship : spaceships) {
             BoundingCircleComponent spaceshipBoundingCircleComponent = BoundingCircleComponent.MAPPER.get(spaceship);
@@ -71,7 +68,7 @@ public class PickupSystem extends EntitySystem {
                 if (Intersector.overlaps(spaceshipBoundingCircleComponent.circle, pickupBounds.circle)) {
                     GemComponent gemComponent = GemComponent.MAPPER.get(pickup);
                     handleGemPickup(spaceship, gemComponent);
-                    engine.removeEntity(pickup);
+                    getEngine().removeEntity(pickup);
                 }
             }
         }
