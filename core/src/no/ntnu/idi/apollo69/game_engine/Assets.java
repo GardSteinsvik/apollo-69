@@ -134,10 +134,14 @@ public class Assets {
     }
 
     public static TextureAtlas.AtlasRegion getInvisibleSpaceshipRegion(int i) {
-        if (i == 1) {
-            return getRegion(GAME_ATLAS, "invisible1");
+        switch (i) {
+            case 1:
+                return getRegion(INVISIBLE_ATLAS, "invisible2");
+            case 2:
+                return getRegion(INVISIBLE_ATLAS, "invisible3");
+            default:
+                return getRegion(INVISIBLE_ATLAS, "invisible1");
         }
-        return getRegion(GAME_ATLAS, "invisible2");
     }
 
     public static TextureAtlas.AtlasRegion getBoostedSpaceshipRegion(int i, int j) {

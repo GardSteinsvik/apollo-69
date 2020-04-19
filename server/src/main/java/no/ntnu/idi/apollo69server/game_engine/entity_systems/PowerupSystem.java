@@ -74,7 +74,7 @@ public class PowerupSystem extends EntitySystem {
     public void update(float deltaTime) {
         // Spawn new powerups in the map
         // TO-DO: Need to check that the powerup does not spawn close to ship or other powerups.
-        for (int p = powerups.size(); p < 4; p++) {
+        for (int p = powerups.size(); p < 11; p++) {
             Entity powerup = new PowerupFactory().createRandomPowerup();
             engine.addEntity(powerup);
         }

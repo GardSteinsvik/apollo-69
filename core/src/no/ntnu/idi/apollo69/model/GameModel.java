@@ -125,7 +125,7 @@ public class GameModel {
             if (playerDto.isVisible) {
                 shipTexture = Assets.getSpaceshipRegion(3);
             } else {
-                shipTexture = Assets.getInvisibleSpaceshipRegion(0);
+                shipTexture = Assets.getInvisibleSpaceshipRegion(1);
             }
             spriteBatch.draw(
                     shipTexture,
@@ -173,9 +173,12 @@ public class GameModel {
                 x = positionComponent.position.x;
                 y = positionComponent.position.y;
             }
-            renderHealthBar(shapeRenderer, x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, y, playerDto.hp);
-            shapeRenderer.setColor(Color.BLUE);
-            renderShieldBar(shapeRenderer, x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, y - 10, playerDto.shieldHp);
+            if (playerDto.isVisible) {
+                shapeRenderer.setColor(Color.LIME);
+                renderHealthBar(shapeRenderer, x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, y, playerDto.hp);
+                shapeRenderer.setColor(Color.BLUE);
+                renderShieldBar(shapeRenderer, x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, y - 10, playerDto.shieldHp);
+            }
         }
         shapeRenderer.end();
     }
