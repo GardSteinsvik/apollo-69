@@ -1,0 +1,124 @@
+
+gameAtlas.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+big_bg
+  rotate: false
+  xy: 1, 259
+  size: 408, 240
+  orig: 408, 240
+  offset: 0, 0
+  index: -1
+bg
+  rotate: false
+  xy: 1, 97
+  size: 272, 160
+  orig: 272, 160
+  offset: 0, 0
+  index: -1
+bigplanet
+  rotate: false
+  xy: 411, 339
+  size: 272, 160
+  orig: 272, 160
+  offset: 0, 0
+  index: -1
+planets
+  rotate: false
+  xy: 685, 339
+  size: 272, 160
+  orig: 272, 160
+  offset: 0, 0
+  index: -1
+ringplanet
+  rotate: false
+  xy: 411, 177
+  size: 272, 160
+  orig: 272, 160
+  offset: 0, 0
+  index: -1
+stars
+  rotate: false
+  xy: 685, 177
+  size: 272, 160
+  orig: 272, 160
+  offset: 0, 0
+  index: -1
+asteroid-01
+  rotate: false
+  xy: 1, 32
+  size: 67, 63
+  orig: 67, 63
+  offset: 0, 0
+  index: -1
+invisible
+  rotate: false
+  xy: 959, 467
+  size: 49, 32
+  orig: 49, 32
+  offset: 0, 0
+  index: -1
+ammo
+  rotate: false
+  xy: 275, 228
+  size: 48, 29
+  orig: 48, 29
+  offset: 0, 0
+  index: -1
+energy
+  rotate: false
+  xy: 1, 1
+  size: 48, 29
+  orig: 48, 29
+  offset: 0, 0
+  index: -1
+health
+  rotate: false
+  xy: 70, 66
+  size: 48, 29
+  orig: 48, 29
+  offset: 0, 0
+  index: -1
+shield
+  rotate: false
+  xy: 959, 436
+  size: 48, 29
+  orig: 48, 29
+  offset: 0, 0
+  index: -1
+rocket
+  rotate: false
+  xy: 275, 197
+  size: 47, 29
+  orig: 47, 29
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 325, 236
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1
+coin
+  rotate: false
+  xy: 70, 44
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+ruby
+  rotate: false
+  xy: 51, 10
+  size: 16, 20
+  orig: 16, 20
+  offset: 0, 0
+  index: -1
+meteorite
+  rotate: false
+  xy: 120, 80
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: -1
