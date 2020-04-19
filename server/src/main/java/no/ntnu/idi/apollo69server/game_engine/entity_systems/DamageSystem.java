@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Intersector;
 import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.HealthComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent;
 
 public class DamageSystem extends EntitySystem {
     private ImmutableArray<Entity> objectsThatCanDealDamage;
@@ -36,12 +37,25 @@ public class DamageSystem extends EntitySystem {
                 HealthComponent damageReceiverHealthComponent = HealthComponent.MAPPER.get(damageReceiver);
                 Circle receiveDamageBounds = BoundingCircleComponent.MAPPER.get(damageReceiver).circle;
                 if (!damageGiverDamageComponent.owner.equals(damageReceiverHealthComponent.owner) && Intersector.overlaps(dealDamageBounds, receiveDamageBounds)) {
-                    damageReceiverHealthComponent.hp -= damageGiverDamageComponent.force;
-                    if (damageReceiverHealthComponent.hp < 0) {
-                        damageReceiverHealthComponent.hp = 0;
+                    try {
+                        ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(damageReceiver);
+                        shieldComponent.hp -= damageGiverDamageComponent.force;
+                        if (shieldComponent.hp < 0) {
+                            damageReceiverHealthComponent.hp -= shieldComponent.hp;
+                            shieldComponent.hp = 0;
+                        } else {
+                            getEngine().removeEntity(damageGiver);
+                            break;
+                        }
+                    } catch(Exception e) {
+                        // TODO: revise this solution, use BAF or distinguish? Putting render logic in components -> bad, but otherwise only BAF possible
+                        damageReceiverHealthComponent.hp -= damageGiverDamageComponent.force;
+                        if (damageReceiverHealthComponent.hp < 0) {
+                            damageReceiverHealthComponent.hp = 0;
+                        }
+                        getEngine().removeEntity(damageGiver);
+                        break;
                     }
-                    getEngine().removeEntity(damageGiver);
-                    break;
                 }
             }
         }

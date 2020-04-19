@@ -175,7 +175,7 @@ public class GameModel {
             }
             renderHealthBar(shapeRenderer, x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, y, playerDto.hp);
             shapeRenderer.setColor(Color.BLUE);
-            renderShieldBar(shapeRenderer, x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, y, playerDto.shieldHp);
+            renderShieldBar(shapeRenderer, x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, y - 10, playerDto.shieldHp);
         }
         shapeRenderer.end();
     }
@@ -185,7 +185,7 @@ public class GameModel {
     }
 
     private void renderShieldBar(ShapeRenderer shapeRenderer, float posX, float posY, float hp) {
-        shapeRenderer.rectLine(posX - hp/2f, posY-20, posX + hp/2f, posY-10, 3);
+        shapeRenderer.rectLine(posX - hp/2f, posY-10, posX + hp/2f, posY-10, 3);
     }
 
     public TextButton getTextButton(float width, float height, float x, float y, String text, BitmapFont font, int alignment) {
