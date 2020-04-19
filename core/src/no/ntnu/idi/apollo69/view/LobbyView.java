@@ -120,6 +120,12 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
                 lobbyController.joinButtonPressed(nickname.getText());
             }
         });
+        exit.addListener(new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                lobbyController.exitButtonPressed();
+            }
+        });
 
         stage.addActor(group);
         Gdx.input.setInputProcessor(stage);

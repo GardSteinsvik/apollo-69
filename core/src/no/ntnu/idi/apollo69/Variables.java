@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 
 public interface Variables {
     float sizeButton = 3f;
+    String textPlay = "Play";
+    String textExitGame = "Exit";
+    String textSettings = "Settings";
     String textJoin = "Join";
     String textExit = "Exit lobby";
     String textNickname = "";

@@ -30,6 +30,6 @@ public class LobbyController {
     }
 
     public void exitButtonPressed() {
-
+        navigator.changeScreen(ScreenType.MAIN_MENU);
     }
 }

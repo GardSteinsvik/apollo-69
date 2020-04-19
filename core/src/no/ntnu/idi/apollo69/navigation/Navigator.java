@@ -26,7 +26,7 @@ public class Navigator implements Disposable {
             default:
             case MAIN_MENU:
                 MainMenuModel mainMenuModel = new MainMenuModel();
-                MainMenuController mainMenuController = new MainMenuController();
+                MainMenuController mainMenuController = new MainMenuController(this);
                 MainMenuView mainMenuView = new MainMenuView(mainMenuController, mainMenuModel, new SpriteBatch());
                 this.setScreen(mainMenuView);
                 break;
