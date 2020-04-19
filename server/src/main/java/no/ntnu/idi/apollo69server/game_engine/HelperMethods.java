@@ -16,6 +16,6 @@ public class HelperMethods {
         return (float) y;
     };
     public static int getRandomNumber(int range) {
-        return (int) (Math.random() * range);
+        return (int) (Math.random() * (range + 1));
     };
 }

@@ -32,6 +32,7 @@ public class Assets {
     private static final String ASTEROID_ATLAS = "game/asteroids/asteroids.atlas";
     private static final String GEMS_ATLAS = "game/gems.atlas";
     private static final String GAME_ATLAS = "game/game.atlas";
+    private static final String INVISIBLE_ATLAS = "game/invisible.atlas";
     private static final String UI_SKIN = "skin/uiskin.json";
     private static final String THEME = "game/game.ogg";
     private static final String LASER = "game/laser.wav";
@@ -58,6 +59,7 @@ public class Assets {
         am.load(POWERUPS_ATLAS, TEXTURE_ATLAS);
         am.load(GEMS_ATLAS, TEXTURE_ATLAS);
         am.load(GAME_ATLAS, TEXTURE_ATLAS);
+        am.load(INVISIBLE_ATLAS, TEXTURE_ATLAS);
         am.load(ASTEROID_ATLAS, TEXTURE_ATLAS);
 
         am.load(UI_SKIN, SKIN);
@@ -129,6 +131,13 @@ public class Assets {
             default:
                 return getRegion(GAME_ATLAS, "ship4");
         }
+    }
+
+    public static TextureAtlas.AtlasRegion getInvisibleSpaceshipRegion(int i) {
+        if (i == 1) {
+            return getRegion(GAME_ATLAS, "invisible1");
+        }
+        return getRegion(GAME_ATLAS, "invisible2");
     }
 
     public static TextureAtlas.AtlasRegion getBoostedSpaceshipRegion(int i, int j) {

@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
@@ -117,19 +118,23 @@ public class GameModel {
     private void renderSpaceships(SpriteBatch spriteBatch, List<PlayerDto> playerDtoList) {
         float spaceShipHeight = GameObjectDimensions.SPACE_SHIP_HEIGHT;
         float spaceShipWidth = GameObjectDimensions.SPACE_SHIP_WIDTH;
+        TextureAtlas.AtlasRegion shipTexture;
         for (PlayerDto playerDto: playerDtoList) {
             if (playerDto.playerId.equals(Device.DEVICE_ID)) continue; // The current player is rendered from the ECS engine
             PositionDto positionDto = playerDto.positionDto;
             if (playerDto.isVisible) {
-                spriteBatch.draw(
-                        Assets.getSpaceshipRegion(3),
-                        positionDto.x, positionDto.y,
-                        spaceShipWidth/2f, spaceShipHeight/2f,
-                        spaceShipWidth, spaceShipHeight,
-                        1, 1,
-                        playerDto.rotationDto.degrees
-                );
+                shipTexture = Assets.getSpaceshipRegion(3);
+            } else {
+                shipTexture = Assets.getInvisibleSpaceshipRegion(0);
             }
+            spriteBatch.draw(
+                    shipTexture,
+                    positionDto.x, positionDto.y,
+                    spaceShipWidth/2f, spaceShipHeight/2f,
+                    spaceShipWidth, spaceShipHeight,
+                    1, 1,
+                    playerDto.rotationDto.degrees
+            );
         }
     }
 
