@@ -108,10 +108,14 @@ public class PowerupSystem extends EntitySystem {
         // Handle invisible powerups
         for (Entity entity : invisibles) {
             InvisibleComponent invisibleComponent = InvisibleComponent.MAPPER.get(entity);
+            PlayerComponent playerComponent = PlayerComponent.MAPPER.get(entity);
+            // TODO: This can be optimized with a lock in invisibleComponent or another proper solution, but it is not of utmost importance.
+            playerComponent.setVisible(false);
             Instant compareTime = Instant.now().minusSeconds(15);
             if (invisibleComponent.time.isBefore(compareTime)) {
                 System.out.println("Removed invisibility");
                 entity.remove(InvisibleComponent.class);
+                playerComponent.setVisible(true);
             }
         }
 

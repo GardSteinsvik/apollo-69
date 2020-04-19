@@ -9,10 +9,12 @@ public class PlayerComponent implements Component {
     private String id;
     private String name;
     private boolean alive;
+    private boolean visible;
 
-    public PlayerComponent(String id, String name) {
+    public PlayerComponent(String id, String name, boolean visible) {
         this.id = id;
         this.name = name;
+        this.visible = visible;
     }
 
     public String getId() {
@@ -38,4 +40,8 @@ public class PlayerComponent implements Component {
     public void setAlive(boolean alive) {
         this.alive = alive;
     }
+
+    public boolean isVisible() { return visible; }
+
+    public void setVisible(boolean visible) { this.visible = visible; }
 }

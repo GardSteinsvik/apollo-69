@@ -120,14 +120,16 @@ public class GameModel {
         for (PlayerDto playerDto: playerDtoList) {
             if (playerDto.playerId.equals(Device.DEVICE_ID)) continue; // The current player is rendered from the ECS engine
             PositionDto positionDto = playerDto.positionDto;
-            spriteBatch.draw(
-                    Assets.getSpaceshipRegion(3),
-                    positionDto.x, positionDto.y,
-                    spaceShipWidth/2f, spaceShipHeight/2f,
-                    spaceShipWidth, spaceShipHeight,
-                    1, 1,
-                    playerDto.rotationDto.degrees
-            );
+            if (playerDto.isVisible) {
+                spriteBatch.draw(
+                        Assets.getSpaceshipRegion(3),
+                        positionDto.x, positionDto.y,
+                        spaceShipWidth/2f, spaceShipHeight/2f,
+                        spaceShipWidth, spaceShipHeight,
+                        1, 1,
+                        playerDto.rotationDto.degrees
+                );
+            }
         }
     }
 
