@@ -27,6 +27,7 @@ import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.RotationComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69server.network.PlayerConnection;
 
@@ -89,11 +90,17 @@ public class SendUpdateSystem extends EntitySystem {
             RotationComponent rotationComponent = RotationComponent.MAPPER.get(playerEntity);
             VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(playerEntity);
             HealthComponent healthComponent = HealthComponent.MAPPER.get(playerEntity);
+            float shieldHp = 0;
+            if (playerComponent.hasShield()) {
+                ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(playerEntity);
+                shieldHp = shieldComponent.hp;
+            }
             playerDtoList.add(new PlayerDto(
                     playerComponent.getId(),
                     playerComponent.getName(),
                     playerComponent.isAlive(),
                     healthComponent.hp,
+                    shieldHp,
                     new PositionDto(positionComponent.position.x, positionComponent.position.y),
                     new RotationDto(rotationComponent.degrees, rotationComponent.x, rotationComponent.y),
                     new VelocityDto(velocityComponent.velocity.x, velocityComponent.velocity.y, velocityComponent.scalar),

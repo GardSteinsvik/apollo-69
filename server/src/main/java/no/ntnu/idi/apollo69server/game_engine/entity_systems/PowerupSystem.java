@@ -99,7 +99,7 @@ public class PowerupSystem extends EntitySystem {
         // Handle shield powerups
         for (Entity entity : shields) {
             ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(entity);
-            if (shieldComponent.hp == 0) {
+            if (shieldComponent.hp <= 0) {
                 System.out.println("Removed shield");
                 entity.remove(ShieldComponent.class);
             }

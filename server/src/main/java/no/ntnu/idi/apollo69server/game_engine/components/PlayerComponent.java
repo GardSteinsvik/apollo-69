@@ -10,11 +10,13 @@ public class PlayerComponent implements Component {
     private String name;
     private boolean alive;
     private boolean visible;
+    private boolean shield;
 
-    public PlayerComponent(String id, String name, boolean visible) {
+    public PlayerComponent(String id, String name, boolean visible, boolean shield) {
         this.id = id;
         this.name = name;
         this.visible = visible;
+        this.shield = false;
     }
 
     public String getId() {
@@ -44,4 +46,8 @@ public class PlayerComponent implements Component {
     public boolean isVisible() { return visible; }
 
     public void setVisible(boolean visible) { this.visible = visible; }
+
+    public boolean hasShield() { return shield; }
+
+    public void setShield(boolean shield) { this.shield = shield; }
 }
