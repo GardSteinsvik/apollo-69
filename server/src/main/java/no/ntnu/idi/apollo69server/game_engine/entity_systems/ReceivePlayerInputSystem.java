@@ -13,6 +13,7 @@ import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.RotationComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 
 public class ReceivePlayerInputSystem extends EntitySystem {
 
@@ -60,13 +61,13 @@ public class ReceivePlayerInputSystem extends EntitySystem {
                 PositionComponent positionComponent = PositionComponent.MAPPER.get(player);
                 positionComponent.position.set(playerInput.getPosX(), playerInput.getPosY());
                 break;
-
             case ROTATE:
                 RotationComponent rotationComponent = RotationComponent.MAPPER.get(player);
                 rotationComponent.degrees = playerInput.getRotationDegrees();
                 break;
             case BOOST:
-
+                VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(player);
+                velocityComponent.boosting = playerInput.isBoosting();
                 break;
             case SHOOT:
 

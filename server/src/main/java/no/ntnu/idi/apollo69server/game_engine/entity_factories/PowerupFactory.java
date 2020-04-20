@@ -4,34 +4,31 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
-import no.ntnu.idi.apollo69framework.GameObjectDimensions;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
 import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
 
 import static no.ntnu.idi.apollo69framework.GameObjectDimensions.POWERUP_HEIGHT;
 import static no.ntnu.idi.apollo69framework.GameObjectDimensions.POWERUP_RADIUS;
 import static no.ntnu.idi.apollo69framework.GameObjectDimensions.POWERUP_WIDTH;
 import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomNumber;
-import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomXCoordinates;
-import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomYCoordinates;
+import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomPosition;
 
 public class PowerupFactory {
 
     private Entity create() {
         Entity powerup = new Entity();
 
-        float x = getRandomXCoordinates();
-        float y = getRandomYCoordinates();
+        Vector2 spawnPosition = getRandomPosition();
 
         powerup.add(new PositionComponent());
         powerup.add(new PowerupComponent());
-        powerup.add(new BoundingCircleComponent(new Circle(x, y, POWERUP_RADIUS), new Vector2(POWERUP_WIDTH, POWERUP_HEIGHT)));
+        powerup.add(new BoundingCircleComponent(new Circle(spawnPosition, POWERUP_RADIUS), new Vector2(POWERUP_WIDTH, POWERUP_HEIGHT)));
 
         PositionComponent positionComponent = PositionComponent.MAPPER.get(powerup);
 
-        positionComponent.position = new Vector2(x, y);
+        positionComponent.position = new Vector2(spawnPosition);
 
         return powerup;
     }

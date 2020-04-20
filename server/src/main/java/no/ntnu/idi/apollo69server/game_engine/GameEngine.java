@@ -53,10 +53,6 @@ public class GameEngine implements Runnable, Disposable {
 
             engine.update((float) deltaTimeSeconds);
             lastUpdate = now;
-
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException ignored) { }
         }
 
         dispose();

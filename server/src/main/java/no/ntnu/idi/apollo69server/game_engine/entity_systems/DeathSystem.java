@@ -13,7 +13,7 @@ import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 
 public class DeathSystem extends EntitySystem {
 
-    ImmutableArray<Entity> entities;
+    private ImmutableArray<Entity> entities;
 
     public DeathSystem(int priority) {
         super(priority);
@@ -28,6 +28,7 @@ public class DeathSystem extends EntitySystem {
     public void update(float deltaTime) {
         for (Entity entity: entities) {
             HealthComponent healthComponent = HealthComponent.MAPPER.get(entity);
+            if (healthComponent == null) return;
 
             if (healthComponent.hp <= 0) {
                 NetworkPlayerComponent networkPlayerComponent = NetworkPlayerComponent.MAPPER.get(entity);

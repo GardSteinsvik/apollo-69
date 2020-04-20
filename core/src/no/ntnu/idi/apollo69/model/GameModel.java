@@ -33,7 +33,6 @@ import no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
-import no.ntnu.idi.apollo69.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.ScoreComponent;
@@ -105,36 +104,58 @@ public class GameModel {
         background.render(batch, camera);
     }
 
-    public void renderNetworkBatch(SpriteBatch spriteBatch) {
+    public void renderNetworkBatch(SpriteBatch spriteBatch, float deltaTime) {
         UpdateMessage updateMessage = gameClient.getGameState();
         if (updateMessage == null) return;
 
         renderAsteroids(spriteBatch, updateMessage.getAsteroidDtoList());
-        renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
+        renderSpaceships(spriteBatch, deltaTime, updateMessage.getPlayerDtoList());
         renderPickups(spriteBatch, updateMessage.getPickupDtoList());
         renderPowerups(spriteBatch, updateMessage.getPowerupDtoList());
     }
 
-    private void renderSpaceships(SpriteBatch spriteBatch, List<PlayerDto> playerDtoList) {
+    private void renderSpaceships(SpriteBatch spriteBatch, float deltaTime, List<PlayerDto> playerDtoList) {
         float spaceShipHeight = GameObjectDimensions.SPACE_SHIP_HEIGHT;
         float spaceShipWidth = GameObjectDimensions.SPACE_SHIP_WIDTH;
         TextureAtlas.AtlasRegion shipTexture;
         for (PlayerDto playerDto: playerDtoList) {
-            if (playerDto.playerId.equals(Device.DEVICE_ID)) continue; // The current player is rendered from the ECS engine
             PositionDto positionDto = playerDto.positionDto;
-            if (playerDto.isVisible) {
-                shipTexture = Assets.getSpaceshipRegion(3);
-            } else {
-                shipTexture = Assets.getInvisibleSpaceshipRegion(1);
+            float x = positionDto.x;
+            float y = positionDto.y;
+            float rotation = playerDto.rotationDto.degrees;
+
+            if (playerDto.playerId.equals(Device.DEVICE_ID)) {
+                Entity player = getGameEngine().getPlayer();
+                Vector2 position = PositionComponent.MAPPER.get(player).position;
+                RotationComponent rotationComponent = RotationComponent.MAPPER.get(player);
+                x = position.x;
+                y = position.y;
+                rotation = rotationComponent.degrees;
             }
+
+            shipTexture = Assets.getSpaceshipRegion(1);
+            if (playerDto.boosting) {
+                int frameNumber = System.currentTimeMillis() % 200 <= 100 ? 1 : 2;
+                shipTexture = Assets.getBoostedSpaceshipRegion(1, frameNumber);
+            }
+
+            Color color = spriteBatch.getColor();
+            if (!playerDto.visible) {
+                color.a = 0.2f;
+                spriteBatch.setColor(color);
+            }
+
             spriteBatch.draw(
                     shipTexture,
-                    positionDto.x, positionDto.y,
+                    x, y,
                     spaceShipWidth/2f, spaceShipHeight/2f,
                     spaceShipWidth, spaceShipHeight,
                     1, 1,
-                    playerDto.rotationDto.degrees
+                    rotation
             );
+
+            color.a = 1f;
+            spriteBatch.setColor(color);
         }
     }
 
@@ -173,7 +194,7 @@ public class GameModel {
                 x = positionComponent.position.x;
                 y = positionComponent.position.y;
             }
-            if (playerDto.isVisible) {
+            if (playerDto.visible || playerDto.playerId.equals(Device.DEVICE_ID)) {
                 shapeRenderer.setColor(Color.LIME);
                 renderHealthBar(shapeRenderer, x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, y, playerDto.hp);
                 shapeRenderer.setColor(Color.BLUE);
@@ -241,42 +262,7 @@ public class GameModel {
             float posY = pickupDto.positionDto.y;
             //RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
             batch.draw(Assets.getPickupRegion(gemType), posX, posY, GEM_WIDTH, GEM_HEIGHT);
-        };
-    };
-
-    public void renderPlayerSpaceship(SpriteBatch batch) {
-        Entity player = gameEngine.getPlayer();
-        if (player == null) return;
-
-        float spaceShipHeight = GameObjectDimensions.SPACE_SHIP_HEIGHT;
-        float spaceShipWidth = GameObjectDimensions.SPACE_SHIP_WIDTH;
-
-        AtlasRegionComponent atlasRegionComponent = AtlasRegionComponent.MAPPER.get(player);
-
-        float dT = System.currentTimeMillis() - atlasRegionComponent.lastUpdated;
-        float posX = PositionComponent.MAPPER.get(player).position.x;
-        float posY = PositionComponent.MAPPER.get(player).position.y;
-        float rotation = RotationComponent.MAPPER.get(player).degrees;
-        int type = SpaceshipComponent.MAPPER.get(player).type;
-
-        // Animate booster by alternating sprite every 100 ms
-        if (dT > 100 && atlasRegionComponent.region != Assets.getSpaceshipRegion(type)) {
-            if (atlasRegionComponent.region == Assets.getBoostedSpaceshipRegion(type, 1)) {
-                atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(type, 2);
-            } else {
-                atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(type, 1);
-            }
-            atlasRegionComponent.lastUpdated = System.currentTimeMillis();
         }
-
-        batch.draw(
-            atlasRegionComponent.region,
-            posX, posY,
-            spaceShipWidth/2f, spaceShipHeight/2f,
-            spaceShipWidth, spaceShipHeight,
-            1, 1,
-            rotation
-        );
     }
 
     public void renderShots(ShapeRenderer shapeRenderer) {

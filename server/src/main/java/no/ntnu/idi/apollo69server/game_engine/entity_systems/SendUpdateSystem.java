@@ -71,10 +71,6 @@ public class SendUpdateSystem extends EntitySystem {
 
             if (playerConnection.isConnected()) {
                 playerConnection.sendTCP(updateMessage);
-            } else {
-                // Player is not connected, remove from game
-                PlayerComponent playerComponent = PlayerComponent.MAPPER.get(player);
-                playerComponent.setAlive(false);
             }
         }
     }
@@ -98,7 +94,7 @@ public class SendUpdateSystem extends EntitySystem {
             playerDtoList.add(new PlayerDto(
                     playerComponent.getId(),
                     playerComponent.getName(),
-                    playerComponent.isAlive(),
+                    velocityComponent.boosting,
                     healthComponent.hp,
                     shieldHp,
                     new PositionDto(positionComponent.position.x, positionComponent.position.y),

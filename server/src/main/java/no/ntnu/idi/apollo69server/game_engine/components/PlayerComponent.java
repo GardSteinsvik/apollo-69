@@ -8,7 +8,6 @@ public class PlayerComponent implements Component {
 
     private String id;
     private String name;
-    private boolean alive;
     private boolean visible;
     private boolean shield;
 
@@ -33,14 +32,6 @@ public class PlayerComponent implements Component {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public boolean isAlive() {
-        return alive;
-    }
-
-    public void setAlive(boolean alive) {
-        this.alive = alive;
     }
 
     public boolean isVisible() { return visible; }

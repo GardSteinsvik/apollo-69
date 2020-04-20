@@ -10,4 +10,5 @@ public class VelocityComponent implements Component {
     public Vector2 velocity = new Vector2(0, 0);
     public float scalar = 1.0f;
     public final float idle = 20.0f;
+    public boolean boosting = false;
 }

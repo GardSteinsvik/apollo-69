@@ -4,9 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
 import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.GemComponent;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
 import no.ntnu.idi.apollo69server.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 
@@ -14,24 +14,22 @@ import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_HEIGHT;
 import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_RADIUS;
 import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_WIDTH;
 import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomNumber;
-import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomXCoordinates;
-import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomYCoordinates;
+import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomPosition;
 
 public class GemFactory {
 
     private Entity generalCreate() {
         Entity gem = new Entity();
 
-        float x = getRandomXCoordinates();
-        float y = getRandomYCoordinates();
+        Vector2 spawnPosition = getRandomPosition();
 
         gem.add(new PositionComponent());
         gem.add(new PickupComponent());
         gem.add(new GemComponent());
-        gem.add(new BoundingCircleComponent(new Circle(x, y, GEM_RADIUS), new Vector2(GEM_WIDTH, GEM_HEIGHT)));
+        gem.add(new BoundingCircleComponent(new Circle(spawnPosition, GEM_RADIUS), new Vector2(GEM_WIDTH, GEM_HEIGHT)));
 
         PositionComponent positionComponent = PositionComponent.MAPPER.get(gem);
-        positionComponent.position = new Vector2(x, y);
+        positionComponent.position = spawnPosition;
 
         return gem;
     }
@@ -84,13 +82,15 @@ public class GemFactory {
         int randomNum = getRandomNumber(10);
         switch(randomNum) {
             case 1:
-                return createMeteoriteGem();
-            case 2:
                 return createStarGem();
+            case 2:
             case 3:
                 return createRubyGem();
+            case 4:
+            case 5:
+            case 6:
+                return createMeteoriteGem();
             default:
-                // Will catch case 0 too, the highest probability is to get a coin.
                 return createCoinGem();
         }
     }

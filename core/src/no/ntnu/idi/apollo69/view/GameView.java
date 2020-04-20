@@ -202,7 +202,7 @@ public class GameView extends ApplicationAdapter implements Screen {
     }
 
     @Override
-    public void render(float delta) {
+    public void render(float deltaTime) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glLineWidth(10);
@@ -221,9 +221,8 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.renderBackground(spriteBatch);
 
         // Render data from server
-        model.renderNetworkBatch(spriteBatch);
+        model.renderNetworkBatch(spriteBatch, deltaTime);
 
-        model.renderPlayerSpaceship(spriteBatch);
         this.debug();
         spriteBatch.end();
 
@@ -243,7 +242,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.moveCameraToSpaceship();
 
         // Update game engine
-        model.getGameEngine().update(delta);
+        model.getGameEngine().update(deltaTime);
 
         //incrementScore();
     }
