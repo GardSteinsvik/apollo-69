@@ -28,6 +28,7 @@ public class Assets {
     private static Class<Sound> SOUND = Sound.class;
 
     // Internal file paths to be loaded
+    private static final String COMBINED_ATLAS = "game/gameAtlas.pack";
     private static final String POWERUPS_ATLAS = "game/powerups.atlas";
     private static final String ASTEROID_ATLAS = "game/asteroids/asteroids.atlas";
     private static final String GEMS_ATLAS = "game/gems.atlas";
@@ -56,11 +57,8 @@ public class Assets {
         am = new AssetManager();
 
         // Load atlas' to AssetManger
-        am.load(POWERUPS_ATLAS, TEXTURE_ATLAS);
-        am.load(GEMS_ATLAS, TEXTURE_ATLAS);
         am.load(GAME_ATLAS, TEXTURE_ATLAS);
-        am.load(INVISIBLE_ATLAS, TEXTURE_ATLAS);
-        am.load(ASTEROID_ATLAS, TEXTURE_ATLAS);
+        am.load(COMBINED_ATLAS, TEXTURE_ATLAS);
 
         am.load(UI_SKIN, SKIN);
         am.load(THEME, MUSIC);
@@ -97,26 +95,26 @@ public class Assets {
     public static TextureAtlas.AtlasRegion getPowerupRegion(PowerupType powerupType) {
         switch(powerupType) {
             case ENERGY:
-                return getRegion(POWERUPS_ATLAS, "energy");
+                return getRegion(COMBINED_ATLAS, "energy");
             case INVISIBLE:
-                return getRegion(POWERUPS_ATLAS, "invisible");
+                return getRegion(COMBINED_ATLAS, "invisible");
             default:
                 // Return shield texture by default, in order to not have duplicate switch statement, add additional ones above.
-                return getRegion(POWERUPS_ATLAS, "shield");
+                return getRegion(COMBINED_ATLAS, "shield");
         }
     }
 
     public static TextureAtlas.AtlasRegion getPickupRegion(GemType gemType) {
         switch(gemType) {
             case METEORITE:
-                return getRegion(GEMS_ATLAS, "meteorite");
+                return getRegion(COMBINED_ATLAS, "meteorite");
             case STAR:
-                return getRegion(GEMS_ATLAS, "star");
+                return getRegion(COMBINED_ATLAS, "star");
             case COIN:
-                return getRegion(GEMS_ATLAS, "coin");
+                return getRegion(COMBINED_ATLAS, "coin");
             default:
                 // Return ruby texture by default, in order to not have duplicate switch statement, add additional ones above.
-                return getRegion(GEMS_ATLAS, "ruby");
+                return getRegion(COMBINED_ATLAS, "ruby");
         }
     }
 
@@ -202,6 +200,6 @@ public class Assets {
     }
 
     public static TextureAtlas.AtlasRegion getAsteroidRegion() {
-        return getRegion(ASTEROID_ATLAS, "meteor-1");
+        return getRegion(COMBINED_ATLAS, "asteroid-01");
     }
 }

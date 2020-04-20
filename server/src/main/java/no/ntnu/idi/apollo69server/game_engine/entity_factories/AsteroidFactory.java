@@ -18,8 +18,8 @@ public class AsteroidFactory {
 
     private final float HP_OF_ASTEROID = 50f;
     private final float DAMAGE_OF_ASTEROID = 25f;
-    private final int MAXIMUM_SPEED_OF_ASTEROID = 400;
-    private final int MINIMUM_SPEED_OF_ASTEROID = 50;
+    private final int MAXIMUM_SPEED_OF_ASTEROID = 350;
+    private final int MINIMUM_SPEED_OF_ASTEROID = 75;
 
     // FIXME: Get real variable for radius (radius of map)
     private int mapSpawnDistanceRadius = 2000;
