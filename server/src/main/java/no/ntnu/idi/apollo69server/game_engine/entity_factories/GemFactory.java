@@ -81,17 +81,17 @@ public class GemFactory {
     }
 
     public Entity create() {
-        int randomNum = getRandomNumber(3);
+        int randomNum = getRandomNumber(10);
         switch(randomNum) {
             case 1:
                 return createMeteoriteGem();
             case 2:
                 return createStarGem();
             case 3:
-                return createCoinGem();
-            default:
-                // Will catch case 0 too, should not be possible to get above 5
                 return createRubyGem();
+            default:
+                // Will catch case 0 too, the highest probability is to get a coin.
+                return createCoinGem();
         }
     }
 }

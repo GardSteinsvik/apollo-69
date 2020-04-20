@@ -31,7 +31,7 @@ public class SpaceshipFactory {
         );
 
         spaceship.add(new NetworkPlayerComponent(playerConnection));
-        spaceship.add(new PlayerComponent(playerConnection.getDeviceId(), name));
+        spaceship.add(new PlayerComponent(playerConnection.getDeviceId(), name, true, false));
 
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(spaceship);
 

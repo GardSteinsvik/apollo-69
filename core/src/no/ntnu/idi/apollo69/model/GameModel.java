@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
@@ -117,11 +118,17 @@ public class GameModel {
     private void renderSpaceships(SpriteBatch spriteBatch, List<PlayerDto> playerDtoList) {
         float spaceShipHeight = GameObjectDimensions.SPACE_SHIP_HEIGHT;
         float spaceShipWidth = GameObjectDimensions.SPACE_SHIP_WIDTH;
+        TextureAtlas.AtlasRegion shipTexture;
         for (PlayerDto playerDto: playerDtoList) {
             if (playerDto.playerId.equals(Device.DEVICE_ID)) continue; // The current player is rendered from the ECS engine
             PositionDto positionDto = playerDto.positionDto;
+            if (playerDto.isVisible) {
+                shipTexture = Assets.getSpaceshipRegion(3);
+            } else {
+                shipTexture = Assets.getInvisibleSpaceshipRegion(1);
+            }
             spriteBatch.draw(
-                    Assets.getSpaceshipRegion(3),
+                    shipTexture,
                     positionDto.x, positionDto.y,
                     spaceShipWidth/2f, spaceShipHeight/2f,
                     spaceShipWidth, spaceShipHeight,
@@ -166,12 +173,21 @@ public class GameModel {
                 x = positionComponent.position.x;
                 y = positionComponent.position.y;
             }
-            renderHealthBar(shapeRenderer, x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, y, playerDto.hp);
+            if (playerDto.isVisible) {
+                shapeRenderer.setColor(Color.LIME);
+                renderHealthBar(shapeRenderer, x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, y, playerDto.hp);
+                shapeRenderer.setColor(Color.BLUE);
+                renderShieldBar(shapeRenderer, x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, y - 10, playerDto.shieldHp);
+            }
         }
         shapeRenderer.end();
     }
 
     private void renderHealthBar(ShapeRenderer shapeRenderer, float posX, float posY, float hp) {
+        shapeRenderer.rectLine(posX - hp/2f, posY-10, posX + hp/2f, posY-10, 3);
+    }
+
+    private void renderShieldBar(ShapeRenderer shapeRenderer, float posX, float posY, float hp) {
         shapeRenderer.rectLine(posX - hp/2f, posY-10, posX + hp/2f, posY-10, 3);
     }
 

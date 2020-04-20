@@ -51,13 +51,13 @@ public class PickupSystem extends EntitySystem {
                 System.out.println("Star pickup, current score: " + scoreComponent.score);
                 break;
             case DEFAULT:
-                // SHould not happen as defaul gem is not spawned
+                // Should not happen as defaul gem is not spawned
                 break;
         }
     }
 
     public void update(float deltaTime) {
-        for (int p = pickups.size(); p < 21; p++) {
+        for (int p = pickups.size(); p < 41; p++) {
             Entity gem = new GemFactory().create();
             getEngine().addEntity(gem);
         }

@@ -74,7 +74,7 @@ public class PowerupSystem extends EntitySystem {
     public void update(float deltaTime) {
         // Spawn new powerups in the map
         // TO-DO: Need to check that the powerup does not spawn close to ship or other powerups.
-        for (int p = powerups.size(); p < 4; p++) {
+        for (int p = powerups.size(); p < 11; p++) {
             Entity powerup = new PowerupFactory().createRandomPowerup();
             engine.addEntity(powerup);
         }
@@ -99,19 +99,27 @@ public class PowerupSystem extends EntitySystem {
         // Handle shield powerups
         for (Entity entity : shields) {
             ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(entity);
-            if (shieldComponent.hp == 0) {
+            PlayerComponent playerComponent = PlayerComponent.MAPPER.get(entity);
+            // TODO: This can be optimized with a lock in invisibleComponent or another proper solution, but it is not of utmost importance.
+            playerComponent.setShield(true);
+            if (shieldComponent.hp <= 0) {
                 System.out.println("Removed shield");
                 entity.remove(ShieldComponent.class);
+                playerComponent.setShield(false);
             }
         }
 
         // Handle invisible powerups
         for (Entity entity : invisibles) {
             InvisibleComponent invisibleComponent = InvisibleComponent.MAPPER.get(entity);
+            PlayerComponent playerComponent = PlayerComponent.MAPPER.get(entity);
+            // TODO: This can be optimized with a lock in invisibleComponent or another proper solution, but it is not of utmost importance.
+            playerComponent.setVisible(false);
             Instant compareTime = Instant.now().minusSeconds(15);
             if (invisibleComponent.time.isBefore(compareTime)) {
                 System.out.println("Removed invisibility");
                 entity.remove(InvisibleComponent.class);
+                playerComponent.setVisible(true);
             }
         }
 
