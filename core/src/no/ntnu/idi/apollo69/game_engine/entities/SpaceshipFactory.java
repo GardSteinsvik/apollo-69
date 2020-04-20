@@ -21,6 +21,7 @@ import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69framework.GameObjectDimensions;
+import no.ntnu.idi.apollo69framework.HelperMethods;
 
 public class SpaceshipFactory {
     public Entity create(int type) {
@@ -45,7 +46,7 @@ public class SpaceshipFactory {
         spaceshipDimension.height = GameObjectDimensions.SPACE_SHIP_HEIGHT;
 
         PositionComponent positionComponent = PositionComponent.MAPPER.get(spaceship);
-        positionComponent.position = new Vector2(0,0);
+        positionComponent.position = HelperMethods.getRandomPosition();
 
         BoundingCircleComponent boundComp = BoundingCircleComponent.MAPPER.get(spaceship);
         boundComp.circle = new Circle(new Vector2(

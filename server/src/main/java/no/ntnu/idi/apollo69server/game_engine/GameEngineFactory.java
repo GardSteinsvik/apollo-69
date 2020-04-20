@@ -2,9 +2,6 @@ package no.ntnu.idi.apollo69server.game_engine;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntityListener;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.UUID;
@@ -13,7 +10,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerSpawn;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
-import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.entity_factories.SpaceshipFactory;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.AsteroidSystem;
@@ -27,11 +23,10 @@ import no.ntnu.idi.apollo69server.game_engine.entity_systems.SendUpdateSystem;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.TtlValidationSystem;
 import no.ntnu.idi.apollo69server.game_engine.entity_systems.UpdateBoundsSystem;
 import no.ntnu.idi.apollo69server.network.MessageHandlerDelegator;
-import no.ntnu.idi.apollo69server.network.PlayerConnection;
 
 public class GameEngineFactory {
     private final float GAME_UPDATE_SECONDS = 1 / 120f;
-    private final float NETWORK_UPDATE_SECONDS = 1 / 30f;
+    private final float NETWORK_UPDATE_SECONDS = 1 / 60f;
 
     private MessageHandlerDelegator messageHandlerDelegator = new MessageHandlerDelegator();
 

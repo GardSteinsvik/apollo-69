@@ -59,13 +59,13 @@ public class MainMenuView extends ApplicationAdapter implements Screen, Variable
         table.center();
 
         TextButton play = new TextButton(textPlay, skin);
-        play.getLabel().setFontScale(sizeButton);
+        play.getLabel().setFontScale(fontScale);
 
         TextButton settings = new TextButton(textSettings, skin);
-        settings.getLabel().setFontScale(sizeButton);
+        settings.getLabel().setFontScale(fontScale);
 
         TextButton exit = new TextButton(textExitGame, skin);
-        exit.getLabel().setFontScale(sizeButton);
+        exit.getLabel().setFontScale(fontScale);
 
         table.add(play)
                 .prefWidth(buttonWidth)

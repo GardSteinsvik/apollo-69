@@ -15,11 +15,6 @@ import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 public class MovementSystem extends EntitySystem {
 
     private ImmutableArray<Entity> entities;
-    private GameClient gameClient;
-
-    public MovementSystem() {
-        gameClient = NetworkClientSingleton.getInstance().getGameClient();
-    }
 
     @Override
     public void addedToEngine(Engine engine) {

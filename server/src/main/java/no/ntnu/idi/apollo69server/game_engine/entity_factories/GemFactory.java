@@ -13,8 +13,8 @@ import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_HEIGHT;
 import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_RADIUS;
 import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_WIDTH;
-import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomNumber;
-import static no.ntnu.idi.apollo69server.game_engine.HelperMethods.getRandomPosition;
+import static no.ntnu.idi.apollo69framework.HelperMethods.getRandomNumber;
+import static no.ntnu.idi.apollo69framework.HelperMethods.getRandomPosition;
 
 public class GemFactory {
 

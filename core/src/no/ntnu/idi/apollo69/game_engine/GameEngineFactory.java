@@ -15,7 +15,7 @@ import no.ntnu.idi.apollo69.game_engine.entity_systems.UpdateGameStateSystem;
 
 public class GameEngineFactory {
     private final float GAME_UPDATE_SECONDS = 1 / 120f;
-    private final float NETWORK_UPDATE_SECONDS = 1 / 30f;
+    private final float NETWORK_UPDATE_SECONDS = 1 / 60f;
 
     public GameEngine create() {
         Engine engine = new Engine();

@@ -29,7 +29,7 @@ public class MovementSystem extends EntitySystem {
     public void update(float deltaTime) {
         timeAccumulator += deltaTime;
         if (timeAccumulator >= interval) {
-            move(deltaTime);
+            move(timeAccumulator);
             timeAccumulator = 0f;
         }
     }

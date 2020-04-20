@@ -31,6 +31,8 @@ import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.ScoreComponent;
 import no.ntnu.idi.apollo69.model.GameModel;
 
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GAME_RADIUS;
+
 public class GameView extends ApplicationAdapter implements Screen {
 
     private GameModel model;
@@ -231,7 +233,7 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         // Render shapes
         model.renderShots(shapeRenderer);
-        model.renderBoundary(shapeRenderer, Variables.GAMESPACE_RADIUS);
+        model.renderBoundary(shapeRenderer, GAME_RADIUS);
 
         //model.updateHighscoreList(model.getTopPlayers(), highScore1, highScore2, highScore3);
 

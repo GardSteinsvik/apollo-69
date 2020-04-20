@@ -14,6 +14,8 @@ import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GAME_RADIUS;
+
 public class BoundsSystem extends EntitySystem {
 
     private ImmutableArray<Entity> entities;
@@ -33,7 +35,7 @@ public class BoundsSystem extends EntitySystem {
             boundingCircle.y += velocity.y * deltaTime;
 
             // Check if bounding circle is inside the gamespace
-            Circle gameSpace = new Circle(new Vector2(0, 0), Variables.GAMESPACE_RADIUS);
+            Circle gameSpace = new Circle(new Vector2(0, 0), GAME_RADIUS);
             if (!gameSpace.contains(boundingCircle)) {
                 VelocityComponent.MAPPER.get(entity).velocity.x *= -1;
                 VelocityComponent.MAPPER.get(entity).velocity.y *= -1;

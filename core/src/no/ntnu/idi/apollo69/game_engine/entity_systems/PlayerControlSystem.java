@@ -20,6 +20,8 @@ import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInputType;
 
+import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GAME_RADIUS;
+
 public class PlayerControlSystem extends EntitySystem implements InputHandlerInterface {
 
     private Entity player;
@@ -34,7 +36,7 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
     @Override
     public void move(Vector2 direction) {
         float offset = DimensionComponent.MAPPER.get(player).height / 2;
-        Circle gameSpace = new Circle(new Vector2(0, 0), Variables.GAMESPACE_RADIUS - offset);
+        Circle gameSpace = new Circle(new Vector2(0, 0), GAME_RADIUS - offset);
         Circle spaceship = BoundingCircleComponent.MAPPER.get(player).circle;
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(player);
         RotationComponent rotationComponent = RotationComponent.MAPPER.get(player);

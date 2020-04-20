@@ -1,4 +1,4 @@
-package no.ntnu.idi.apollo69server.game_engine;
+package no.ntnu.idi.apollo69framework;
 
 import com.badlogic.gdx.math.Vector2;
 

@@ -22,7 +22,7 @@ public class SpaceshipFactory {
         Entity spaceship = new Entity();
 
         spaceship.add(new PositionComponent());
-        spaceship.add(new HealthComponent(playerConnection.getDeviceId(), 10));
+        spaceship.add(new HealthComponent(playerConnection.getDeviceId(), 100));
         spaceship.add(new VelocityComponent());
         spaceship.add(new ScoreComponent());
         spaceship.add(new RotationComponent());

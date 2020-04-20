@@ -73,10 +73,10 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
         TextField nickname = new TextField(textNickname, skin);
 
         TextButton join = new TextButton(textJoin, skin);
-        join.getLabel().setFontScale(sizeButton);
+        join.getLabel().setFontScale(fontScale);
 
         TextButton exit = new TextButton(textExit, skin);
-        exit.getLabel().setFontScale(sizeButton);
+        exit.getLabel().setFontScale(fontScale);
 
         tableLeft.setWidth(sizeWidth);
         tableLeft.setHeight(sizeHeight);
