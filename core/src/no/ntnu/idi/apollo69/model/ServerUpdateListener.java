@@ -10,6 +10,7 @@ import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerDead;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerSpawn;
 import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ExplosionDto;
 
 public class ServerUpdateListener extends Listener {
 

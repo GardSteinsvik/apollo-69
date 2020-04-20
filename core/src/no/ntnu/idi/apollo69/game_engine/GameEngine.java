@@ -3,6 +3,7 @@ package no.ntnu.idi.apollo69.game_engine;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.Disposable;
 
 import no.ntnu.idi.apollo69.game_engine.components.PlayableComponent;
@@ -12,6 +13,8 @@ public class GameEngine implements Disposable {
 
     private Engine engine;
     private boolean gameOver = false;
+    private float timeAccumulator = 0;
+    private boolean returningToLobby = false;
 
     public GameEngine(Engine engine) {
         this.engine = engine;
@@ -23,15 +26,22 @@ public class GameEngine implements Disposable {
     }
 
     public void update(float deltaTime) {
-        if (!gameOver) {
+        if (!returningToLobby) {
             engine.update(deltaTime);
-        } else {
-            dispose();
+
+            if (gameOver) {
+                timeAccumulator += deltaTime;
+                if (timeAccumulator > 3) {
+                    returningToLobby = true;
+                    dispose();
+                }
+            }
         }
     }
 
     public Entity getPlayer() {
-        return !gameOver ? engine.getEntitiesFor(Family.all(PlayableComponent.class).get()).first() : null;
+        ImmutableArray<Entity> players = engine.getEntitiesFor(Family.all(PlayableComponent.class).get());
+        return players.size() > 0 ? players.first() : null;
     }
 
     public PlayerControlSystem getPlayerControlSystem() {
@@ -47,6 +57,13 @@ public class GameEngine implements Disposable {
     }
 
     public void setGameOver(boolean gameOver) {
+        if (gameOver) {
+            engine.removeEntity(getPlayer());
+        }
         this.gameOver = gameOver;
+    }
+
+    public boolean isReturningToLobby() {
+        return returningToLobby;
     }
 }

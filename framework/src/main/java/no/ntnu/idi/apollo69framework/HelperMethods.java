@@ -13,7 +13,7 @@ public class HelperMethods {
         return new Vector2((float) (r * Math.cos(a)), (float) (r * Math.sin(a)));
     }
 
-    public static int getRandomNumber(int range) {
-        return (int) (Math.random() * (range + 1));
+    public static int getRandomNumber(int max) {
+        return (int) (Math.random() * (max + 1));
     }
 }

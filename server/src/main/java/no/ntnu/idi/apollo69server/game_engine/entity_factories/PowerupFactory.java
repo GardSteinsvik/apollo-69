@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
-import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent;
 
@@ -22,13 +22,9 @@ public class PowerupFactory {
 
         Vector2 spawnPosition = getRandomPosition();
 
-        powerup.add(new PositionComponent());
+        powerup.add(new PositionComponent(spawnPosition));
         powerup.add(new PowerupComponent());
-        powerup.add(new BoundingCircleComponent(new Circle(spawnPosition, POWERUP_RADIUS), new Vector2(POWERUP_WIDTH, POWERUP_HEIGHT)));
-
-        PositionComponent positionComponent = PositionComponent.MAPPER.get(powerup);
-
-        positionComponent.position = new Vector2(spawnPosition);
+        powerup.add(new BoundsComponent(new Circle(spawnPosition, POWERUP_RADIUS), new Vector2(POWERUP_WIDTH, POWERUP_HEIGHT)));
 
         return powerup;
     }

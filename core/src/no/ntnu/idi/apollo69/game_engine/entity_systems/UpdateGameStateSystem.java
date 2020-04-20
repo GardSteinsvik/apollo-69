@@ -44,6 +44,6 @@ public class UpdateGameStateSystem extends EntitySystem {
     private void parseGameState(UpdateMessage updateMessage) {
         if (updateMessage == null) return;
 
-        // DERSOM NOE MÅ OPPDATERES I DET LOKALE ENGINET VED NETTVERKSOPPDATERINGER MÅ DET GJØRES HER
+        // IF THE SERVER UPDATE MESSAGE SHOULD UPDATE ANYTHING IN THE LOCAL GAME ENGINE, DO IT HERE.
     }
 }

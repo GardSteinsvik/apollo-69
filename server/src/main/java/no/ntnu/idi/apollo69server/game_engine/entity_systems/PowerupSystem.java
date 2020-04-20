@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Intersector;
 import java.time.Instant;
 
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
-import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.EnergyComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.InvisibleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
@@ -82,10 +82,10 @@ public class PowerupSystem extends EntitySystem {
         for (int i = 0; i < spaceships.size(); i++) {
             // Should the logic for this only be for the client ship? (server-side frame optimization rendering)
             Entity spaceship = spaceships.get(i);
-            BoundingCircleComponent spaceshipboundingCircleComponent = BoundingCircleComponent.MAPPER.get(spaceship);
+            BoundsComponent spaceshipboundingCircleComponent = BoundsComponent.MAPPER.get(spaceship);
             for (int j = 0; j < powerups.size(); j++) {
                 Entity powerup = powerups.get(j);
-                BoundingCircleComponent powerupBounds = BoundingCircleComponent.MAPPER.get(powerup);
+                BoundsComponent powerupBounds = BoundsComponent.MAPPER.get(powerup);
                 if (Intersector.overlaps(spaceshipboundingCircleComponent.circle, powerupBounds.circle)) {
                     PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
                     handlePickup(spaceship, powerupComponent);

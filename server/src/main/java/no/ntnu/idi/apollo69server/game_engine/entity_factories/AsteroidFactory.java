@@ -9,7 +9,7 @@ import java.util.Random;
 import no.ntnu.idi.apollo69framework.GameObjectDimensions;
 import no.ntnu.idi.apollo69framework.HelperMethods;
 import no.ntnu.idi.apollo69server.game_engine.components.AsteroidComponent;
-import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
@@ -29,27 +29,25 @@ public class AsteroidFactory {
         Entity asteroid = new Entity();
 
         asteroid.add(new AsteroidComponent());
-        asteroid.add(new PositionComponent());
         asteroid.add(new VelocityComponent());
         asteroid.add(new DamageComponent("Asteroid", DAMAGE_OF_ASTEROID));
         asteroid.add(new HealthComponent("Asteroid", HP_OF_ASTEROID));
-        asteroid.add(new BoundingCircleComponent(
+        asteroid.add(new BoundsComponent(
                 new Circle(0, 0, GameObjectDimensions.ASTEROID_HEIGHT/2f),
                 new Vector2(GameObjectDimensions.ASTEROID_WIDTH, GameObjectDimensions.ASTEROID_HEIGHT)
         ));
 
-        PositionComponent positionComponent = PositionComponent.MAPPER.get(asteroid);
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(asteroid);
 
         // Random spawn position
-        Vector2 positionOfAsteroid = new Vector2(0, 0);
+        Vector2 position = new Vector2(0, 0);
         int spawnRadius = GAME_RADIUS + 100;
         int spawnDegree = HelperMethods.getRandomNumber(360);
         double spawnRadians = (spawnDegree * Math.PI) / 180;
-        positionOfAsteroid.x = (float) (spawnRadius * Math.cos(spawnRadians));
-        positionOfAsteroid.y = (float) (spawnRadius * Math.sin(spawnRadians));
+        position.x = (float) (spawnRadius * Math.cos(spawnRadians));
+        position.y = (float) (spawnRadius * Math.sin(spawnRadians));
 
-        positionComponent.position = positionOfAsteroid;
+        asteroid.add(new PositionComponent(position));
 
         // Random which direction the asteroid goes.
         Vector2 velocity = new Vector2(0, 0);

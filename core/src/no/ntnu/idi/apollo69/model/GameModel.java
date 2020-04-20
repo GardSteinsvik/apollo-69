@@ -45,6 +45,8 @@ import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
 import no.ntnu.idi.apollo69framework.GameObjectDimensions;
 import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.AsteroidDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.DimensionDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ExplosionDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
@@ -104,17 +106,17 @@ public class GameModel {
         background.render(batch, camera);
     }
 
-    public void renderNetworkBatch(SpriteBatch spriteBatch, float deltaTime) {
+    public void renderNetworkBatch(SpriteBatch spriteBatch) {
         UpdateMessage updateMessage = gameClient.getGameState();
         if (updateMessage == null) return;
-
+        renderExplosions(spriteBatch, updateMessage.getExplosionDtoList());
         renderAsteroids(spriteBatch, updateMessage.getAsteroidDtoList());
-        renderSpaceships(spriteBatch, deltaTime, updateMessage.getPlayerDtoList());
+        renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
         renderPickups(spriteBatch, updateMessage.getPickupDtoList());
         renderPowerups(spriteBatch, updateMessage.getPowerupDtoList());
     }
 
-    private void renderSpaceships(SpriteBatch spriteBatch, float deltaTime, List<PlayerDto> playerDtoList) {
+    private void renderSpaceships(SpriteBatch spriteBatch, List<PlayerDto> playerDtoList) {
         float spaceShipHeight = GameObjectDimensions.SPACE_SHIP_HEIGHT;
         float spaceShipWidth = GameObjectDimensions.SPACE_SHIP_WIDTH;
         TextureAtlas.AtlasRegion shipTexture;
@@ -126,6 +128,8 @@ public class GameModel {
 
             if (playerDto.playerId.equals(Device.DEVICE_ID)) {
                 Entity player = getGameEngine().getPlayer();
+                if (player == null) continue;
+
                 Vector2 position = PositionComponent.MAPPER.get(player).position;
                 RotationComponent rotationComponent = RotationComponent.MAPPER.get(player);
                 x = position.x;
@@ -165,10 +169,24 @@ public class GameModel {
             spriteBatch.draw(
                 Assets.getAsteroidRegion(),
                 positionDto.x, positionDto.y,
-                GameObjectDimensions.ASTEROID_WIDTH /2, GameObjectDimensions.ASTEROID_HEIGHT/2,
+                GameObjectDimensions.ASTEROID_WIDTH/2f, GameObjectDimensions.ASTEROID_HEIGHT/2f,
                 GameObjectDimensions.ASTEROID_WIDTH, GameObjectDimensions.ASTEROID_HEIGHT,
                 1, 1,
                 0
+            );
+        }
+    }
+
+    private void renderExplosions(SpriteBatch spriteBatch, List<ExplosionDto> explosionDtoList) {
+        for (ExplosionDto explosionDto: explosionDtoList) {
+            DimensionDto dimensionDto = explosionDto.dimensionDto;
+            spriteBatch.draw(
+                    Assets.getExplosionRegion(explosionDto.frameNumber),
+                    explosionDto.positionDto.x, explosionDto.positionDto.y,
+                    dimensionDto.width/2f, dimensionDto.height/2f,
+                    dimensionDto.width, dimensionDto.height,
+                    1, 1,
+                    0
             );
         }
     }
@@ -190,7 +208,10 @@ public class GameModel {
             float x = positionDto.x;
             float y = positionDto.y;
             if (playerDto.playerId.equals(Device.DEVICE_ID)) {
-                PositionComponent positionComponent = PositionComponent.MAPPER.get(gameEngine.getPlayer());
+                Entity player = gameEngine.getPlayer();
+                if (player == null) continue;
+
+                PositionComponent positionComponent = PositionComponent.MAPPER.get(player);
                 x = positionComponent.position.x;
                 y = positionComponent.position.y;
             }
@@ -306,8 +327,10 @@ public class GameModel {
     }
 
     public void moveCameraToSpaceship() {
-        Vector2 position = PositionComponent.MAPPER.get(gameEngine.getPlayer()).position;
-        DimensionComponent dimension = DimensionComponent.MAPPER.get(gameEngine.getPlayer());
+        Entity player = gameEngine.getPlayer();
+        if (player == null) return;
+        Vector2 position = PositionComponent.MAPPER.get(player).position;
+        DimensionComponent dimension = DimensionComponent.MAPPER.get(player);
         Vector2 cameraPosition = new Vector2(position.x + dimension.width / 2, position.y + dimension.height / 2);
         camera.position.set(cameraPosition, 0);
         camera.update();

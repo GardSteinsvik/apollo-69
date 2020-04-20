@@ -7,9 +7,11 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 import no.ntnu.idi.apollo69framework.network_messages.PlayerDead;
+import no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
+import no.ntnu.idi.apollo69server.game_engine.entity_factories.ExplosionFactory;
 
 public class DeathSystem extends EntitySystem {
 
@@ -37,8 +39,10 @@ public class DeathSystem extends EntitySystem {
                     networkPlayerComponent.getPlayerConnection().sendTCP(new PlayerDead());
                 }
 
-                PositionComponent positionComponent = PositionComponent.MAPPER.get(entity);
-                // TODO spawn explosion
+                BoundsComponent boundsComponent = BoundsComponent.MAPPER.get(entity);
+                if (boundsComponent != null) {
+                    getEngine().addEntity(ExplosionFactory.create(boundsComponent));
+                }
 
                 getEngine().removeEntity(entity);
             }

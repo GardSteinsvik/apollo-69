@@ -213,7 +213,7 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Set camera
         spriteBatch.setProjectionMatrix(model.getCamera().combined);
 
-        if (model.getGameEngine().isGameOver()) {
+        if (model.getGameEngine().isReturningToLobby()) {
             model.navigateToLobby();
             return;
         }
@@ -223,9 +223,8 @@ public class GameView extends ApplicationAdapter implements Screen {
         model.renderBackground(spriteBatch);
 
         // Render data from server
-        model.renderNetworkBatch(spriteBatch, deltaTime);
+        model.renderNetworkBatch(spriteBatch);
 
-        this.debug();
         spriteBatch.end();
 
         shapeRenderer.setProjectionMatrix(model.getCamera().combined);
@@ -254,15 +253,6 @@ public class GameView extends ApplicationAdapter implements Screen {
         highScore1.setText(String.valueOf(Integer.parseInt(highScore1.getText().toString()) + 1));
         highScore2.setText(String.valueOf(Integer.parseInt(highScore2.getText().toString()) + 30));
         highScore3.setText(String.valueOf(Integer.parseInt(highScore3.getText().toString()) + 80));
-    }
-
-    private void debug() {
-        // Debug written to font
-        PositionComponent positionComponent = PositionComponent.MAPPER.get(model.getGameEngine().getPlayer());
-        debugFont.draw(spriteBatch,"WIDTH: " + Math.round(Gdx.graphics.getWidth()) + "  X: " +
-                Math.round(positionComponent.position.x), positionComponent.position.x - 50, positionComponent.position.y - 130);
-        debugFont.draw(spriteBatch,"HEIGHT: " + Math.round(Gdx.graphics.getHeight()) + "  Y: " +
-                Math.round(positionComponent.position.y), positionComponent.position.x - 50, positionComponent.position.y - 160);
     }
 
     @Override

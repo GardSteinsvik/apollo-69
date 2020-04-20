@@ -14,6 +14,8 @@ import no.ntnu.idi.apollo69framework.network_messages.PlayerMatchmade;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerSpawn;
 import no.ntnu.idi.apollo69framework.network_messages.ServerMessage;
 import no.ntnu.idi.apollo69framework.network_messages.UpdateMessage;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.DimensionDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ExplosionDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.AsteroidDto;
@@ -45,6 +47,8 @@ public class Apollo69Framework {
                 PowerupDto.class,
                 PowerupType.class,
                 AsteroidDto.class,
+                ExplosionDto.class,
+                DimensionDto.class,
                 UpdateMessage.class
         ));
     }

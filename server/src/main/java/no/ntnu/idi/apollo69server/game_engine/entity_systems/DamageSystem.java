@@ -8,10 +8,11 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 
-import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent;
+import no.ntnu.idi.apollo69server.game_engine.entity_factories.ExplosionFactory;
 
 public class DamageSystem extends EntitySystem {
     private ImmutableArray<Entity> objectsThatCanDealDamage;
@@ -23,20 +24,20 @@ public class DamageSystem extends EntitySystem {
 
     @Override
     public void addedToEngine(Engine engine) {
-        objectsThatCanDealDamage = engine.getEntitiesFor(Family.all(DamageComponent.class, BoundingCircleComponent.class).get());
-        objectsThatCanReceiveDamage = engine.getEntitiesFor(Family.all(HealthComponent.class, BoundingCircleComponent.class).get());
+        objectsThatCanDealDamage = engine.getEntitiesFor(Family.all(DamageComponent.class, BoundsComponent.class).get());
+        objectsThatCanReceiveDamage = engine.getEntitiesFor(Family.all(HealthComponent.class, BoundsComponent.class).get());
     }
 
     @Override
     public void update(float deltaTime) {
         for (Entity damageGiver: objectsThatCanDealDamage) {
             DamageComponent damageGiverDamageComponent = DamageComponent.MAPPER.get(damageGiver);
-            Circle dealDamageBounds = BoundingCircleComponent.MAPPER.get(damageGiver).circle;
+            BoundsComponent dealDamageBounds = BoundsComponent.MAPPER.get(damageGiver);
 
             for (Entity damageReceiver: objectsThatCanReceiveDamage) {
                 HealthComponent damageReceiverHealthComponent = HealthComponent.MAPPER.get(damageReceiver);
-                Circle receiveDamageBounds = BoundingCircleComponent.MAPPER.get(damageReceiver).circle;
-                if (!damageGiverDamageComponent.owner.equals(damageReceiverHealthComponent.owner) && Intersector.overlaps(dealDamageBounds, receiveDamageBounds)) {
+                BoundsComponent receiveDamageBounds = BoundsComponent.MAPPER.get(damageReceiver);
+                if (!damageGiverDamageComponent.owner.equals(damageReceiverHealthComponent.owner) && Intersector.overlaps(dealDamageBounds.circle, receiveDamageBounds.circle)) {
                     ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(damageReceiver);
                     if (shieldComponent != null) {
                         shieldComponent.hp -= damageGiverDamageComponent.force;
@@ -51,6 +52,7 @@ public class DamageSystem extends EntitySystem {
                         }
                     }
 
+                    getEngine().addEntity(ExplosionFactory.create(dealDamageBounds));
                     getEngine().removeEntity(damageGiver);
                     break;
                 }

@@ -19,7 +19,7 @@ import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.Powe
 
 public class Assets {
 
-    private static AssetManager am;
+    private static AssetManager assetManager;
 
     // Classes to be loaded
     private static Class<TextureAtlas> TEXTURE_ATLAS = TextureAtlas.class;
@@ -32,6 +32,7 @@ public class Assets {
     private static final String POWERUPS_ATLAS = "game/powerups.atlas";
     private static final String ASTEROID_ATLAS = "game/asteroids/asteroids.atlas";
     private static final String GEMS_ATLAS = "game/gems.atlas";
+    private static final String EXPLOSIONS_ATLAS = "game/explosions/explosions.atlas";
     private static final String GAME_ATLAS = "game/game.atlas";
     private static final String INVISIBLE_ATLAS = "game/invisible.atlas";
     private static final String UI_SKIN = "skin/uiskin.json";
@@ -54,20 +55,21 @@ public class Assets {
 
     // To be called in another context to initialize the AssetManager
     public static void load() {
-        am = new AssetManager();
+        assetManager = new AssetManager();
 
         // Load atlas' to AssetManger
-        am.load(GAME_ATLAS, TEXTURE_ATLAS);
-        am.load(COMBINED_ATLAS, TEXTURE_ATLAS);
+        assetManager.load(GAME_ATLAS, TEXTURE_ATLAS);
+        assetManager.load(COMBINED_ATLAS, TEXTURE_ATLAS);
+        assetManager.load(EXPLOSIONS_ATLAS, TEXTURE_ATLAS);
 
-        am.load(UI_SKIN, SKIN);
-        am.load(THEME, MUSIC);
-        am.load(LASER, SOUND);
+        assetManager.load(UI_SKIN, SKIN);
+        assetManager.load(THEME, MUSIC);
+        assetManager.load(LASER, SOUND);
 
         // Make sure all Assets have finished loading before use (!)
         // Not doing this will cause the rendering system to attempt to render unloaded
         // TextureAtlas' and the game would most likely crash
-        am.finishLoading();
+        assetManager.finishLoading();
 
         // Font cannot be loaded directly into AssetManager due to the lack
         // of FileHandle.class support (might be another workaround)
@@ -86,7 +88,7 @@ public class Assets {
 
         // Cache all used Textures automatically
         if (!textureCache.containsKey(name)) {
-            textureCache.put(name, am.get(atlas, TEXTURE_ATLAS).findRegion((name)));
+            textureCache.put(name, assetManager.get(atlas, TEXTURE_ATLAS).findRegion((name)));
         }
         return textureCache.get(name);
     }
@@ -131,15 +133,10 @@ public class Assets {
         }
     }
 
-    public static TextureAtlas.AtlasRegion getInvisibleSpaceshipRegion(int i) {
-        switch (i) {
-            case 1:
-                return getRegion(INVISIBLE_ATLAS, "invisible2");
-            case 2:
-                return getRegion(INVISIBLE_ATLAS, "invisible3");
-            default:
-                return getRegion(INVISIBLE_ATLAS, "invisible1");
-        }
+    public static TextureAtlas.AtlasRegion getExplosionRegion(int i) {
+        i = Math.max(i, 0);
+        i = Math.min(i, 6);
+        return getRegion(EXPLOSIONS_ATLAS, "e-" + i);
     }
 
     public static TextureAtlas.AtlasRegion getBoostedSpaceshipRegion(int i, int j) {
@@ -172,19 +169,19 @@ public class Assets {
     }
 
     public static Skin getUiSkin() {
-        return am.get(UI_SKIN, SKIN);
+        return assetManager.get(UI_SKIN, SKIN);
     }
 
     public static TextureAtlas getGameAtlas() {
-        return am.get(GAME_ATLAS, TEXTURE_ATLAS);
+        return assetManager.get(GAME_ATLAS, TEXTURE_ATLAS);
     }
 
     public static Music getBackgroundMusic() {
-        return am.get(THEME, MUSIC);
+        return assetManager.get(THEME, MUSIC);
     }
 
     public static Sound getLaserSound() {
-        return am.get(LASER, SOUND);
+        return assetManager.get(LASER, SOUND);
     }
 
     public static BitmapFont getBigFont() {

@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.apollo69framework.GameObjectDimensions;
 import no.ntnu.idi.apollo69server.game_engine.components.AttackingComponent;
-import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
@@ -21,12 +21,12 @@ public class SpaceshipFactory {
     public Entity create(PlayerConnection playerConnection, String name) {
         Entity spaceship = new Entity();
 
-        spaceship.add(new PositionComponent());
+        spaceship.add(new PositionComponent(new Vector2(0, 0)));
         spaceship.add(new HealthComponent(playerConnection.getDeviceId(), 100));
         spaceship.add(new VelocityComponent());
         spaceship.add(new ScoreComponent());
         spaceship.add(new RotationComponent());
-        spaceship.add(new BoundingCircleComponent(
+        spaceship.add(new BoundsComponent(
                 new Circle(0, 0, GameObjectDimensions.SPACE_SHIP_HEIGHT/3f),
                 new Vector2(GameObjectDimensions.SPACE_SHIP_WIDTH, GameObjectDimensions.SPACE_SHIP_HEIGHT))
         );

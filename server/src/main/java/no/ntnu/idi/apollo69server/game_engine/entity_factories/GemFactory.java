@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType;
-import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.GemComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PickupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
@@ -23,13 +23,10 @@ public class GemFactory {
 
         Vector2 spawnPosition = getRandomPosition();
 
-        gem.add(new PositionComponent());
+        gem.add(new PositionComponent(spawnPosition));
         gem.add(new PickupComponent());
         gem.add(new GemComponent());
-        gem.add(new BoundingCircleComponent(new Circle(spawnPosition, GEM_RADIUS), new Vector2(GEM_WIDTH, GEM_HEIGHT)));
-
-        PositionComponent positionComponent = PositionComponent.MAPPER.get(gem);
-        positionComponent.position = spawnPosition;
+        gem.add(new BoundsComponent(new Circle(spawnPosition, GEM_RADIUS), new Vector2(GEM_WIDTH, GEM_HEIGHT)));
 
         return gem;
     }

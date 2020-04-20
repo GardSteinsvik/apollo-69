@@ -3,6 +3,7 @@ package no.ntnu.idi.apollo69framework.network_messages;
 import java.util.List;
 
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.AsteroidDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ExplosionDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto;
@@ -13,33 +14,49 @@ public class UpdateMessage {
     private List<AsteroidDto> asteroidDtoList;
     private List<PickupDto> pickupDtoList;
     private List<PowerupDto> powerupDtoList;
+    private List<ExplosionDto> explosionDtoList;
 
     public UpdateMessage() {
     }
-
-    public List<AsteroidDto> getAsteroidDtoList(){return asteroidDtoList;}
 
     public List<PlayerDto> getPlayerDtoList() {
         return playerDtoList;
     }
 
-    public List<PickupDto> getPickupDtoList() { return pickupDtoList; }
-
-    public List<PowerupDto> getPowerupDtoList() { return powerupDtoList; }
-
     public void setPlayerDtoList(List<PlayerDto> playerDtoList) {
         this.playerDtoList = playerDtoList;
+    }
+
+    public List<AsteroidDto> getAsteroidDtoList() {
+        return asteroidDtoList;
+    }
+
+    public void setAsteroidDtoList(List<AsteroidDto> asteroidDtoList) {
+        this.asteroidDtoList = asteroidDtoList;
+    }
+
+    public List<PickupDto> getPickupDtoList() {
+        return pickupDtoList;
     }
 
     public void setPickupDtoList(List<PickupDto> pickupDtoList) {
         this.pickupDtoList = pickupDtoList;
     }
 
+    public List<PowerupDto> getPowerupDtoList() {
+        return powerupDtoList;
+    }
+
     public void setPowerupDtoList(List<PowerupDto> powerupDtoList) {
         this.powerupDtoList = powerupDtoList;
     }
 
-    public void setAsteroidDtoList(List<AsteroidDto> asteroidDtoList) {
-        this.asteroidDtoList = asteroidDtoList;
+    public List<ExplosionDto> getExplosionDtoList() {
+        return explosionDtoList;
+    }
+
+    public void setExplosionDtoList(List<ExplosionDto> explosionDtoList) {
+        this.explosionDtoList = explosionDtoList;
     }
 }
+

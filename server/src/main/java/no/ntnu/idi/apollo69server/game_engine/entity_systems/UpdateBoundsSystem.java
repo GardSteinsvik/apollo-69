@@ -7,7 +7,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 
-import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 
@@ -21,18 +21,18 @@ public class UpdateBoundsSystem extends EntitySystem {
 
     @Override
     public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Family.all(PositionComponent.class, BoundingCircleComponent.class, VelocityComponent.class).get());
+        entities = engine.getEntitiesFor(Family.all(PositionComponent.class, BoundsComponent.class, VelocityComponent.class).get());
     }
 
     @Override
     public void update(float deltaTime) {
         for (Entity entity : entities) {
-            BoundingCircleComponent boundingCircleComponent = BoundingCircleComponent.MAPPER.get(entity);
+            BoundsComponent boundsComponent = BoundsComponent.MAPPER.get(entity);
             PositionComponent positionComponent = PositionComponent.MAPPER.get(entity);
 
-            Vector2 newPosition = positionComponent.position.cpy().add(boundingCircleComponent.dimensions.cpy().scl(0.5f));
+            Vector2 newPosition = positionComponent.position.cpy().add(boundsComponent.dimensions.cpy().scl(0.5f));
 
-            boundingCircleComponent.circle.setPosition(newPosition);
+            boundsComponent.circle.setPosition(newPosition);
         }
     }
 }
