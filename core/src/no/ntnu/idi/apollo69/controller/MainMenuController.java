@@ -12,6 +12,6 @@ public class MainMenuController {
     }
 
     public void playButtonPressed(){
-        navigator.changeScreen(ScreenType.LOBBY);
+        navigator.changeScreen(ScreenType.MATCHMAKING);
     }
 }
