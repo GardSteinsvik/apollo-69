@@ -37,25 +37,22 @@ public class DamageSystem extends EntitySystem {
                 HealthComponent damageReceiverHealthComponent = HealthComponent.MAPPER.get(damageReceiver);
                 Circle receiveDamageBounds = BoundingCircleComponent.MAPPER.get(damageReceiver).circle;
                 if (!damageGiverDamageComponent.owner.equals(damageReceiverHealthComponent.owner) && Intersector.overlaps(dealDamageBounds, receiveDamageBounds)) {
-                    try {
-                        ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(damageReceiver);
+                    ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(damageReceiver);
+                    if (shieldComponent != null) {
                         shieldComponent.hp -= damageGiverDamageComponent.force;
                         if (shieldComponent.hp < 0) {
-                            damageReceiverHealthComponent.hp -= shieldComponent.hp;
+                            damageReceiverHealthComponent.hp += shieldComponent.hp;
                             shieldComponent.hp = 0;
-                        } else {
-                            getEngine().removeEntity(damageGiver);
-                            break;
                         }
-                    } catch(Exception e) {
-                        // TODO: revise this solution, use BAF or distinguish? Putting render logic in components -> bad, but otherwise only BAF possible
+                    } else {
                         damageReceiverHealthComponent.hp -= damageGiverDamageComponent.force;
                         if (damageReceiverHealthComponent.hp < 0) {
                             damageReceiverHealthComponent.hp = 0;
                         }
-                        getEngine().removeEntity(damageGiver);
-                        break;
                     }
+
+                    getEngine().removeEntity(damageGiver);
+                    break;
                 }
             }
         }
