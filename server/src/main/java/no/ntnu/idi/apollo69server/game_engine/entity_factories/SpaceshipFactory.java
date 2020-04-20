@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.apollo69framework.GameObjectDimensions;
+import no.ntnu.idi.apollo69server.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.HealthComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
@@ -32,6 +33,9 @@ public class SpaceshipFactory {
 
         spaceship.add(new NetworkPlayerComponent(playerConnection));
         spaceship.add(new PlayerComponent(playerConnection.getDeviceId(), name));
+
+        // TODO: Set shotRadius to spaceship.width/20 once dimensioncomponent is added
+        spaceship.add(new AttackingComponent(/*temporary*/30, 10));
 
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(spaceship);
 
