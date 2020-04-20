@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.Random;
 
 import no.ntnu.idi.apollo69framework.GameObjectDimensions;
-import no.ntnu.idi.apollo69server.game_engine.HelperMethods;
+import no.ntnu.idi.apollo69framework.HelperMethods;
 import no.ntnu.idi.apollo69server.game_engine.components.AsteroidComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.DamageComponent;
