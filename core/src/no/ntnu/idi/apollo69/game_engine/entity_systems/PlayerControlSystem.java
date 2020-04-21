@@ -13,7 +13,7 @@ import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
-import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
+//import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
@@ -69,19 +69,19 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
     public void boost(boolean on) {
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(player);
         BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(player);
-        SpaceshipComponent spaceshipComponent = SpaceshipComponent.MAPPER.get(player);
-        AtlasRegionComponent atlasRegionComponent = AtlasRegionComponent.MAPPER.get(player);
+        //SpaceshipComponent spaceshipComponent = SpaceshipComponent.MAPPER.get(player);
+        //AtlasRegionComponent atlasRegionComponent = AtlasRegionComponent.MAPPER.get(player);
 
         if (on) {
             velocityComponent.scalar *= boosterComponent.boost;
             velocityComponent.velocity.x *= boosterComponent.boost;
             velocityComponent.velocity.y *= boosterComponent.boost;
-            atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(spaceshipComponent.type, 1);
+            //atlasRegionComponent.region = Assets.getBoostedSpaceshipRegion(spaceshipComponent.type, 1);
         } else {
             velocityComponent.scalar /= boosterComponent.boost;
             velocityComponent.velocity.x /= boosterComponent.boost;
             velocityComponent.velocity.y /= boosterComponent.boost;
-            atlasRegionComponent.region = Assets.getSpaceshipRegion(spaceshipComponent.type);
+            //atlasRegionComponent.region = Assets.getSpaceshipRegion(spaceshipComponent.type);
         }
 
         if (gameClient.isConnected()) {

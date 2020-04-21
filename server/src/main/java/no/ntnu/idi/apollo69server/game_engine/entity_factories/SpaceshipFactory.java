@@ -23,7 +23,6 @@ public class SpaceshipFactory {
 
         spaceship.add(new PositionComponent(new Vector2(0, 0)));
         spaceship.add(new HealthComponent(playerConnection.getDeviceId(), 100));
-        spaceship.add(new VelocityComponent());
         spaceship.add(new ScoreComponent());
         spaceship.add(new RotationComponent());
         spaceship.add(new BoundsComponent(
@@ -34,13 +33,13 @@ public class SpaceshipFactory {
         spaceship.add(new NetworkPlayerComponent(playerConnection));
         spaceship.add(new PlayerComponent(playerConnection.getDeviceId(), name, true, false));
 
-        // TODO: Set shotRadius to spaceship.width/20 once dimensioncomponent is added
-        spaceship.add(new AttackingComponent(/*temporary*/30, 10));
+        spaceship.add(new AttackingComponent(30, 10));
 
+        // Litt iffy opplegg, men la gå..
+        spaceship.add(new VelocityComponent(new Vector2()));
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(spaceship);
-
-        velocityComponent.scalar = velocityComponent.idle;
-        velocityComponent.velocity = new Vector2(0,1).scl(velocityComponent.scalar);
+        velocityComponent.setScalar(velocityComponent.idle);
+        velocityComponent.setVelocity(new Vector2(0,1).scl(velocityComponent.scalar));
 
         return spaceship;
     }

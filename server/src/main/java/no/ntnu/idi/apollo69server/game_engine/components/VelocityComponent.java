@@ -11,4 +11,17 @@ public class VelocityComponent implements Component {
     public float scalar = 1.0f;
     public final float idle = 20.0f;
     public boolean boosting = false;
+
+    public VelocityComponent(Vector2 velocity) {
+        this.velocity = velocity;
+    }
+
+    public void setScalar(float scalar) {
+        this.scalar = scalar;
+    }
+
+    public void setVelocity(Vector2 velocity) {
+        this.velocity = velocity;
+    }
+
 }
