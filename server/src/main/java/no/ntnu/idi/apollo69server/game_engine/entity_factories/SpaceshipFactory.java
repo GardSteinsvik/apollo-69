@@ -1,7 +1,6 @@
 package no.ntnu.idi.apollo69server.game_engine.entity_factories;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.apollo69framework.GameObjectDimensions;
@@ -31,16 +30,18 @@ public class SpaceshipFactory {
         );
 
         spaceship.add(new NetworkPlayerComponent(playerConnection));
-        spaceship.add(new PlayerComponent(playerConnection.getDeviceId(), name, true, false));
+        spaceship.add(new PlayerComponent(playerConnection.getDeviceId(), name, getSpaceShipId(playerConnection), false, true));
 
         spaceship.add(new AttackingComponent(30, 10));
 
-        // Litt iffy opplegg, men la gå..
-        spaceship.add(new VelocityComponent(new Vector2()));
-        VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(spaceship);
-        velocityComponent.setScalar(velocityComponent.idle);
-        velocityComponent.setVelocity(new Vector2(0,1).scl(velocityComponent.scalar));
+        spaceship.add(new VelocityComponent(new Vector2(0, 0)));
 
         return spaceship;
+    }
+
+
+    /* Uses the players connection number which to determine which spacecraft to be used. */
+    private int getSpaceShipId(PlayerConnection playerConnection) {
+        return 1 + (playerConnection.getID() % 4);
     }
 }

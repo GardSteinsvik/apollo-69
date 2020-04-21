@@ -19,7 +19,6 @@ import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.Posi
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ShotDto;
-import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
 import no.ntnu.idi.apollo69server.game_engine.components.AsteroidComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.ExplosionComponent;
@@ -35,7 +34,6 @@ import no.ntnu.idi.apollo69server.game_engine.components.ScoreComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.ShotComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
-import no.ntnu.idi.apollo69server.game_engine.entity_factories.ExplosionFactory;
 import no.ntnu.idi.apollo69server.network.PlayerConnection;
 
 public class SendUpdateSystem extends EntitySystem {
@@ -106,12 +104,12 @@ public class SendUpdateSystem extends EntitySystem {
             playerDtoList.add(new PlayerDto(
                     playerComponent.getId(),
                     playerComponent.getName(),
+                    playerComponent.getSpaceshipType(),
                     velocityComponent.boosting,
                     healthComponent.hp,
                     shieldHp,
                     new PositionDto(positionComponent.position.x, positionComponent.position.y),
                     new RotationDto(rotationComponent.degrees, rotationComponent.x, rotationComponent.y),
-                    new VelocityDto(velocityComponent.velocity.x, velocityComponent.velocity.y, velocityComponent.scalar),
                     playerComponent.isVisible(),
                     scoreComponent.score
             ));
