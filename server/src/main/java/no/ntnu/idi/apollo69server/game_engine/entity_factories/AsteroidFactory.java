@@ -29,15 +29,13 @@ public class AsteroidFactory {
         Entity asteroid = new Entity();
 
         asteroid.add(new AsteroidComponent());
-        asteroid.add(new VelocityComponent());
+        asteroid.add(new VelocityComponent( new Vector2(0, 0)));
         asteroid.add(new DamageComponent("Asteroid", DAMAGE_OF_ASTEROID));
         asteroid.add(new HealthComponent("Asteroid", HP_OF_ASTEROID));
         asteroid.add(new BoundsComponent(
                 new Circle(0, 0, GameObjectDimensions.ASTEROID_HEIGHT/2f),
                 new Vector2(GameObjectDimensions.ASTEROID_WIDTH, GameObjectDimensions.ASTEROID_HEIGHT)
         ));
-
-        VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(asteroid);
 
         // Random spawn position
         Vector2 position = new Vector2(0, 0);
@@ -50,13 +48,13 @@ public class AsteroidFactory {
         asteroid.add(new PositionComponent(position));
 
         // Random which direction the asteroid goes.
-        Vector2 velocity = new Vector2(0, 0);
+        VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(asteroid);
         Random random = new Random();
         int directionX = random.nextBoolean() ? -1 : 1;
         int directionY = random.nextBoolean() ? -1 : 1;
-        velocity.x = directionX * (BASE_SPEED + HelperMethods.getRandomNumber(MAX_EXTRA_SPEED));
-        velocity.y = directionY * (BASE_SPEED + HelperMethods.getRandomNumber(MAX_EXTRA_SPEED));
-        velocityComponent.velocity = velocity;
+        velocityComponent.velocity.x = directionX * (BASE_SPEED + HelperMethods.getRandomNumber(MAX_EXTRA_SPEED));
+        velocityComponent.velocity.y = directionY * (BASE_SPEED + HelperMethods.getRandomNumber(MAX_EXTRA_SPEED));
+        //velocityComponent.velocity = velocity;
 
         return asteroid;
     }

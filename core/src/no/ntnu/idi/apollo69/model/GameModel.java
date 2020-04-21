@@ -22,21 +22,23 @@ import com.esotericsoftware.kryonet.Listener;
 
 import no.ntnu.idi.apollo69.game_engine.Assets;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.game_engine.Background;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
-import no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
-import no.ntnu.idi.apollo69.game_engine.components.ScoreComponent;
-import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69.navigation.Navigator;
 import no.ntnu.idi.apollo69.navigation.ScreenType;
@@ -80,6 +82,8 @@ public class GameModel {
 
     private HashMap<String, Integer> players = new HashMap<>();
 
+    private HashMap<String, TextButton> scoreButtons = new HashMap<>();
+
     public GameModel(Navigator navigator) {
         this.navigator = navigator;
 
@@ -92,10 +96,6 @@ public class GameModel {
         this.gameClient = NetworkClientSingleton.getInstance().getGameClient();
         gameUpdateListener = new ServerUpdateListener(gameEngine, navigator);
         NetworkClientSingleton.getInstance().getClient().addListener(gameUpdateListener);
-
-        players.put("VapeNaysh", 0);
-        players.put("Harambe", 1000);
-        players.put("playerOne", 5000);
     }
 
     public void navigateToLobby() {
@@ -114,6 +114,7 @@ public class GameModel {
         renderSpaceships(spriteBatch, updateMessage.getPlayerDtoList());
         renderPickups(spriteBatch, updateMessage.getPickupDtoList());
         renderPowerups(spriteBatch, updateMessage.getPowerupDtoList());
+        updatePlayerScores(updateMessage.getPlayerDtoList());
     }
 
     private void renderSpaceships(SpriteBatch spriteBatch, List<PlayerDto> playerDtoList) {
@@ -247,15 +248,8 @@ public class GameModel {
         return button;
     }
 
-    // FIXME: Change this to TextButton with transparent background to avoid stuttering
-    public void renderScores(BitmapFont font, SpriteBatch spriteBatch) {
-        PositionComponent positionComponent = PositionComponent.MAPPER.get(gameEngine.getPlayer());
-        String score = String.valueOf(ScoreComponent.MAPPER.get(gameEngine.getPlayer()).score);
-
-        float scoreX = positionComponent.position.x - 50;//Gdx.graphics.getWidth() / 2f + 50;//(Math.round(Gdx.graphics.getWidth()) / 20f) * 19;
-        float scoreY = positionComponent.position.y + 50;//Gdx.graphics.getHeight() / 2f;// - 50;//(Math.round(Gdx.graphics.getHeight()) / 10f) * 9;
-
-        font.draw(spriteBatch, score, scoreX, scoreY);
+    public void putScoreButton(String key, TextButton value) {
+        scoreButtons.put(key, value);
     }
 
     public void renderPowerups(SpriteBatch batch, List<PowerupDto> powerupDtoList) {
@@ -286,6 +280,58 @@ public class GameModel {
         }
     }
 
+    private void updatePlayerScores(List<PlayerDto> playerDtoList) {
+        HashMap<String, Integer> scores = new HashMap<>();
+        int playerScore = 0;
+
+        for (PlayerDto playerDto : playerDtoList) {
+            scores.put(playerDto.name, playerDto.score);
+            if (playerDto.playerId.equals(Device.DEVICE_ID)) {
+                playerScore = playerDto.score;
+            }
+        }
+
+        LinkedHashMap<String, Integer> scoresSorted = sortByValue(scores);
+
+        ArrayList<String> sortedPlayers = new ArrayList<>(scoresSorted.keySet());
+        Collections.reverse(sortedPlayers);
+
+        ArrayList<Integer> sortedScores = new ArrayList<>(scoresSorted.values());
+        Collections.reverse(sortedScores);
+
+        // Player score
+        scoreButtons.get("playerScore").setText(String.valueOf(playerScore));
+
+        // Current #1 player
+        scoreButtons.get("highscore1").setText((scoresSorted.size() > 0) ?
+                "(1) " + sortedPlayers.get(0) + " : " + sortedScores.get(0) : "");
+
+        // Current #2 player
+        scoreButtons.get("highscore2").setText((scoresSorted.size() > 0) ?
+                "(2) " + sortedPlayers.get(1) + " : " + sortedScores.get(1) : "");
+
+        // Current #3 player
+        scoreButtons.get("highscore3").setText((scoresSorted.size() > 0) ?
+                "(3) " + sortedPlayers.get(2) + " : " + sortedScores.get(2) : "");
+
+    }
+
+    private static LinkedHashMap<String, Integer> sortByValue(HashMap<String, Integer> unsorted) {
+        // Create list
+        List<Map.Entry<String, Integer>> list = new LinkedList<>(unsorted.entrySet());
+
+        // Sort the list
+        Collections.sort(list, (o1, o2) -> (o1.getValue()).compareTo(o2.getValue()));
+
+        // Put data from sorted list to new hashmap
+        LinkedHashMap<String, Integer> sorted = new LinkedHashMap<>();
+        for (Map.Entry<String, Integer> aa : list) {
+            sorted.put(aa.getKey(), aa.getValue());
+        }
+
+        return sorted;
+    }
+
     public void renderShots(ShapeRenderer shapeRenderer) {
         Family shotFamily = Family.all(PositionComponent.class, VelocityComponent.class, DamageComponent.class).get();
         ImmutableArray<Entity> shots = gameEngine.getEngine().getEntitiesFor(shotFamily);
@@ -302,6 +348,7 @@ public class GameModel {
         }
         shapeRenderer.end();
     }
+
 
     public void renderBoundary(ShapeRenderer shapeRenderer, float radius) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
