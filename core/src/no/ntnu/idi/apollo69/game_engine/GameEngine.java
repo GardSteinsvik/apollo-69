@@ -58,7 +58,10 @@ public class GameEngine implements Disposable {
 
     public void setGameOver(boolean gameOver) {
         if (gameOver) {
-            engine.removeEntity(getPlayer());
+            Entity player = getPlayer();
+            if (player != null) {
+                engine.removeEntity(player);
+            }
         }
         this.gameOver = gameOver;
     }
