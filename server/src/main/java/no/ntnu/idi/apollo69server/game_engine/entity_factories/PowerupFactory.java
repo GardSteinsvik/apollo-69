@@ -71,13 +71,11 @@ public class PowerupFactory {
         return powerup;
     }
     public Entity createRandomPowerup() {
-        int powerupNumber = getRandomNumber(3);
+        int powerupNumber = getRandomNumber(2);
         switch(powerupNumber) {
             case 1:
-                return createEnergyPowerup();
-            case 2:
                 return createInvisiblePowerup();
-            case 3:
+            case 2:
                 return createHealthPowerup();
             default:
                 // Will catch case 0 too, should not be possible to get above 5

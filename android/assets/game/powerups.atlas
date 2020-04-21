@@ -10,7 +10,7 @@ ammo
   orig: 48, 29
   offset: 0, 0
   index: -1
-energy
+invisible
   rotate: false
   xy: 0, 29
   size: 48, 29
@@ -24,7 +24,7 @@ health
   orig: 48, 29
   offset: 0, 0
   index: -1
-invisible
+energy
   rotate: false
   xy: 0, 87
   size: 49, 32
