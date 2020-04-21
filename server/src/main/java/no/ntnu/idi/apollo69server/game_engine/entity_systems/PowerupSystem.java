@@ -65,7 +65,12 @@ public class PowerupSystem extends EntitySystem {
                 break;
             case HEALTH:
                 HealthComponent healthComponent = HealthComponent.MAPPER.get(spaceShip);
-                spaceShip.add(new HealthPowerupComponent(healthComponent.hp));
+                if (healthComponent.hp > 100) {
+                    HealthPowerupComponent healthPowerupComponent = HealthPowerupComponent.MAPPER.get(spaceShip);
+                    spaceShip.add(new HealthPowerupComponent(healthPowerupComponent.previousHealth));
+                } else {
+                    spaceShip.add(new HealthPowerupComponent(healthComponent.hp));
+                }
                 System.out.println("Health powerup");
                 break;
             case INVISIBLE:
