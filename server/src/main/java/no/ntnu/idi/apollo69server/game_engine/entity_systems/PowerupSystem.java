@@ -12,6 +12,8 @@ import java.time.Instant;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
 import no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.EnergyComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.HealthComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.HealthPowerupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.InvisibleComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent;
@@ -26,6 +28,7 @@ public class PowerupSystem extends EntitySystem {
     private ImmutableArray<Entity> shields;
     private ImmutableArray<Entity> invisibles;
     private ImmutableArray<Entity> energys;
+    private ImmutableArray<Entity> healths;
 
 
     public PowerupSystem(int priority) {
@@ -43,6 +46,7 @@ public class PowerupSystem extends EntitySystem {
         shields = engine.getEntitiesFor(Family.all(ShieldComponent.class).get());
         invisibles = engine.getEntitiesFor(Family.all(InvisibleComponent.class).get());
         energys = engine.getEntitiesFor(Family.all(EnergyComponent.class).get());
+        healths = engine.getEntitiesFor(Family.all(HealthPowerupComponent.class).get());
     }
 
     private void handlePickup(Entity spaceShip, PowerupComponent powerupComponent) {
@@ -58,6 +62,16 @@ public class PowerupSystem extends EntitySystem {
             case SHIELD:
                 spaceShip.add(new ShieldComponent());
                 System.out.println("Shield powerup");
+                break;
+            case HEALTH:
+                HealthComponent healthComponent = HealthComponent.MAPPER.get(spaceShip);
+                if (healthComponent.hp > 100) {
+                    HealthPowerupComponent healthPowerupComponent = HealthPowerupComponent.MAPPER.get(spaceShip);
+                    spaceShip.add(new HealthPowerupComponent(healthPowerupComponent.previousHealth));
+                } else {
+                    spaceShip.add(new HealthPowerupComponent(healthComponent.hp));
+                }
+                System.out.println("Health powerup");
                 break;
             case INVISIBLE:
                 spaceShip.add(new InvisibleComponent());
@@ -120,6 +134,22 @@ public class PowerupSystem extends EntitySystem {
                 System.out.println("Removed invisibility");
                 entity.remove(InvisibleComponent.class);
                 playerComponent.setVisible(true);
+            }
+        }
+
+        // Handle health powerups
+        for (Entity entity : healths) {
+            HealthPowerupComponent healthPowerupComponent = HealthPowerupComponent.MAPPER.get(entity);
+            //PlayerComponent playerComponent = PlayerComponent.MAPPER.get(entity);
+            HealthComponent healthComponent = HealthComponent.MAPPER.get(entity);
+            Instant compareTime = Instant.now().minusSeconds(5);
+            if (healthPowerupComponent.time.isBefore(compareTime)) {
+                System.out.println("Removed health powerup");
+                healthComponent.hp = healthPowerupComponent.previousHealth;
+                entity.remove(HealthPowerupComponent.class);
+            } else {
+                // Make the hp bar become godly
+                healthComponent.hp = 500;
             }
         }
 

@@ -60,13 +60,23 @@ public class PowerupFactory {
 
         return powerup;
     }
+    private Entity createHealthPowerup() {
+        Entity powerup = create();
+
+        PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
+
+        // Set the type of the powerup
+        powerupComponent.type = PowerupType.HEALTH;
+
+        return powerup;
+    }
     public Entity createRandomPowerup() {
         int powerupNumber = getRandomNumber(2);
         switch(powerupNumber) {
             case 1:
-                return createEnergyPowerup();
-            case 2:
                 return createInvisiblePowerup();
+            case 2:
+                return createHealthPowerup();
             default:
                 // Will catch case 0 too, should not be possible to get above 5
                 return createShieldPowerup();
