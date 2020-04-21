@@ -6,11 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
-import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PlayableComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
-import no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69framework.GameObjectDimensions;
 import no.ntnu.idi.apollo69framework.HelperMethods;
@@ -22,10 +20,7 @@ public class SpaceshipFactory {
         spaceship.add(new BoundingCircleComponent());
         spaceship.add(new VelocityComponent());
         spaceship.add(new RotationComponent());
-
-        spaceship.add(new DimensionComponent());
         spaceship.add(new BoosterComponent());
-        spaceship.add(new SpaceshipComponent());
 
         PositionComponent positionComponent = PositionComponent.MAPPER.get(spaceship);
         positionComponent.position = HelperMethods.getRandomPosition();
@@ -42,9 +37,6 @@ public class SpaceshipFactory {
 
         BoosterComponent boosterComponent = BoosterComponent.MAPPER.get(spaceship);
         boosterComponent.boost = boosterComponent.defaultValue;
-
-        SpaceshipComponent spaceshipComponent = SpaceshipComponent.MAPPER.get(spaceship);
-        spaceshipComponent.type = type;
 
         return spaceship;
     }

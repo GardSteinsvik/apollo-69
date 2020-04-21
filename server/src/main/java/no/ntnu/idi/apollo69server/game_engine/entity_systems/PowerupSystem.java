@@ -22,13 +22,12 @@ import no.ntnu.idi.apollo69server.game_engine.entity_factories.PowerupFactory;
 
 public class PowerupSystem extends EntitySystem {
 
-    private Engine engine;
     private ImmutableArray<Entity> powerups;
     private ImmutableArray<Entity> spaceships;
-    private ImmutableArray<Entity> shields;
-    private ImmutableArray<Entity> invisibles;
-    private ImmutableArray<Entity> energys;
-    private ImmutableArray<Entity> healths;
+    private ImmutableArray<Entity> shieldPowerups;
+    private ImmutableArray<Entity> invisiblePowerups;
+    private ImmutableArray<Entity> energyPowerups;
+    private ImmutableArray<Entity> healthPowerups;
 
 
     public PowerupSystem(int priority) {
@@ -37,16 +36,12 @@ public class PowerupSystem extends EntitySystem {
 
     @Override
     public void addedToEngine(Engine engine) {
-        // Is this a good idea? Or use getEngine() instead?
-        // This is done in AsteroidSystem too. If changed here, change there too
-        this.engine = engine;
-
         powerups = engine.getEntitiesFor(Family.all(PowerupComponent.class).get());
         spaceships = engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
-        shields = engine.getEntitiesFor(Family.all(ShieldComponent.class).get());
-        invisibles = engine.getEntitiesFor(Family.all(InvisibleComponent.class).get());
-        energys = engine.getEntitiesFor(Family.all(EnergyComponent.class).get());
-        healths = engine.getEntitiesFor(Family.all(HealthPowerupComponent.class).get());
+        shieldPowerups = engine.getEntitiesFor(Family.all(ShieldComponent.class).get());
+        invisiblePowerups = engine.getEntitiesFor(Family.all(InvisibleComponent.class).get());
+        energyPowerups = engine.getEntitiesFor(Family.all(EnergyComponent.class).get());
+        healthPowerups = engine.getEntitiesFor(Family.all(HealthPowerupComponent.class).get());
     }
 
     private void handlePickup(Entity spaceShip, PowerupComponent powerupComponent) {
@@ -87,31 +82,27 @@ public class PowerupSystem extends EntitySystem {
     @Override
     public void update(float deltaTime) {
         // Spawn new powerups in the map
-        // TO-DO: Need to check that the powerup does not spawn close to ship or other powerups.
+        // TODO: Need to check that the powerup does not spawn close to ship or other powerups.
         for (int p = powerups.size(); p < 11; p++) {
             Entity powerup = new PowerupFactory().createRandomPowerup();
-            engine.addEntity(powerup);
+            getEngine().addEntity(powerup);
         }
         // Check if a spaceship has hit a powerup
-        for (int i = 0; i < spaceships.size(); i++) {
-            // Should the logic for this only be for the client ship? (server-side frame optimization rendering)
-            Entity spaceship = spaceships.get(i);
+        for (Entity spaceship: spaceships) {
             BoundsComponent spaceshipboundingCircleComponent = BoundsComponent.MAPPER.get(spaceship);
-            for (int j = 0; j < powerups.size(); j++) {
-                Entity powerup = powerups.get(j);
+            for (Entity powerup: powerups) {
                 BoundsComponent powerupBounds = BoundsComponent.MAPPER.get(powerup);
                 if (Intersector.overlaps(spaceshipboundingCircleComponent.circle, powerupBounds.circle)) {
                     PowerupComponent powerupComponent = PowerupComponent.MAPPER.get(powerup);
                     handlePickup(spaceship, powerupComponent);
-                    //pickupSound.play();
-                    engine.removeEntity(powerup);
+                    getEngine().removeEntity(powerup);
                 }
-
             }
         }
+
         // Unused Components collector (do we need this here??)
         // Handle shield powerups
-        for (Entity entity : shields) {
+        for (Entity entity : shieldPowerups) {
             ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(entity);
             PlayerComponent playerComponent = PlayerComponent.MAPPER.get(entity);
             // TODO: This can be optimized with a lock in invisibleComponent or another proper solution, but it is not of utmost importance.
@@ -124,7 +115,7 @@ public class PowerupSystem extends EntitySystem {
         }
 
         // Handle invisible powerups
-        for (Entity entity : invisibles) {
+        for (Entity entity : invisiblePowerups) {
             InvisibleComponent invisibleComponent = InvisibleComponent.MAPPER.get(entity);
             PlayerComponent playerComponent = PlayerComponent.MAPPER.get(entity);
             // TODO: This can be optimized with a lock in invisibleComponent or another proper solution, but it is not of utmost importance.
@@ -138,7 +129,7 @@ public class PowerupSystem extends EntitySystem {
         }
 
         // Handle health powerups
-        for (Entity entity : healths) {
+        for (Entity entity : healthPowerups) {
             HealthPowerupComponent healthPowerupComponent = HealthPowerupComponent.MAPPER.get(entity);
             //PlayerComponent playerComponent = PlayerComponent.MAPPER.get(entity);
             HealthComponent healthComponent = HealthComponent.MAPPER.get(entity);
@@ -154,13 +145,12 @@ public class PowerupSystem extends EntitySystem {
         }
 
         // Handle energy powerups
-        for (Entity entity : energys) {
+        for (Entity entity : energyPowerups) {
             EnergyComponent energyComponent = EnergyComponent.MAPPER.get(entity);
             if (energyComponent.energy == 0) {
                 System.out.println("Removed energy");
                 entity.remove(EnergyComponent.class);
             }
         }
-
     }
 }

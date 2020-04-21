@@ -7,5 +7,9 @@ import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.Powe
 public class PowerupComponent implements Component {
     public static final ComponentMapper<PowerupComponent> MAPPER = ComponentMapper.getFor(PowerupComponent.class);
 
-    public PowerupType type = PowerupType.DEFAULT;
+    public PowerupType type;
+
+    public PowerupComponent(PowerupType type) {
+        this.type = type;
+    }
 }

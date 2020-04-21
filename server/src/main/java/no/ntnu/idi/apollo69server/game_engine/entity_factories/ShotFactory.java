@@ -21,7 +21,7 @@ public class ShotFactory {
         Entity shot = new Entity();
         shot.add(new ShotComponent());
         shot.add(new DamageComponent(PlayerComponent.MAPPER.get(player).getId(), AttackingComponent.MAPPER.get(player).shotDamage));
-        shot.add(new TimeToLiveComponent(3000));
+        shot.add(new TimeToLiveComponent(1000));
 
         shot.add(new PositionComponent(new Vector2(0, GameObjectDimensions.SPACE_SHIP_HEIGHT/2f)));
         PositionComponent shotPosition = PositionComponent.MAPPER.get(shot);

@@ -102,8 +102,8 @@ public class Assets {
                 return getRegion(COMBINED_ATLAS, "invisible");
             case HEALTH:
                 return getRegion(COMBINED_ATLAS, "health");
+            case SHIELD:
             default:
-                // Return shield texture by default, in order to not have duplicate switch statement, add additional ones above.
                 return getRegion(COMBINED_ATLAS, "shield");
         }
     }
@@ -116,23 +116,16 @@ public class Assets {
                 return getRegion(COMBINED_ATLAS, "star");
             case COIN:
                 return getRegion(COMBINED_ATLAS, "coin");
+            case RUBY:
             default:
-                // Return ruby texture by default, in order to not have duplicate switch statement, add additional ones above.
                 return getRegion(COMBINED_ATLAS, "ruby");
         }
     }
 
     public static TextureAtlas.AtlasRegion getSpaceshipRegion(int i) {
-        switch (i) {
-            case 1:
-                return getRegion(GAME_ATLAS, "ship1");
-            case 2:
-                return getRegion(GAME_ATLAS, "ship2");
-            case 3:
-                return getRegion(GAME_ATLAS, "ship3");
-            default:
-                return getRegion(GAME_ATLAS, "ship4");
-        }
+        i = Math.max(i, 1);
+        i = Math.min(i, 4);
+        return getRegion(GAME_ATLAS, "ship" + i);
     }
 
     public static TextureAtlas.AtlasRegion getExplosionRegion(int i) {
@@ -142,32 +135,11 @@ public class Assets {
     }
 
     public static TextureAtlas.AtlasRegion getBoostedSpaceshipRegion(int i, int j) {
-        switch (i) {
-            case 1:
-                if (j == 1) {
-                    return getRegion(GAME_ATLAS, "ship1_boost1");
-                } else {
-                    return getRegion(GAME_ATLAS, "ship1_boost2");
-                }
-            case 2:
-                if (j == 1) {
-                    return getRegion(GAME_ATLAS, "ship2_boost1");
-                } else {
-                    return getRegion(GAME_ATLAS, "ship2_boost2");
-                }
-            case 3:
-                if (j == 1) {
-                    return getRegion(GAME_ATLAS, "ship3_boost1");
-                } else {
-                    return getRegion(GAME_ATLAS, "ship3_boost2");
-                }
-            default:
-                if (j == 1) {
-                    return getRegion(GAME_ATLAS, "ship4_boost1");
-                } else {
-                    return getRegion(GAME_ATLAS, "ship4_boost2");
-                }
-        }
+        i = Math.max(i, 1);
+        i = Math.min(i, 4);
+        j = Math.max(j, 1);
+        j = Math.min(j, 2);
+        return getRegion(GAME_ATLAS, "ship" + i + "_boost" + j);
     }
 
     public static Skin getUiSkin() {
