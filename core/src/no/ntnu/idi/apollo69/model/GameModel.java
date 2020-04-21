@@ -152,7 +152,6 @@ public class GameModel {
             );
 
             color.a = 1f;
-            color.g = 0.5f;
             spriteBatch.setColor(color);
         }
     }
