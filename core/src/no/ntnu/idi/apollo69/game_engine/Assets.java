@@ -100,6 +100,8 @@ public class Assets {
                 return getRegion(COMBINED_ATLAS, "energy");
             case INVISIBLE:
                 return getRegion(COMBINED_ATLAS, "invisible");
+            case HEALTH:
+                return getRegion(COMBINED_ATLAS, "health");
             default:
                 // Return shield texture by default, in order to not have duplicate switch statement, add additional ones above.
                 return getRegion(COMBINED_ATLAS, "shield");
