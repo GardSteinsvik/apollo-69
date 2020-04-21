@@ -24,6 +24,7 @@ public class LobbyController {
 
     public void joinButtonPressed(String nickname) {
         if (nickname != null && !nickname.trim().equals("")) {
+            Device.NAME = nickname;
             gameClient.sendMessage(new PlayerSpawn(Device.DEVICE_ID, nickname, new Vector2(0, 0)));
             navigator.changeScreen(ScreenType.GAME);
         }

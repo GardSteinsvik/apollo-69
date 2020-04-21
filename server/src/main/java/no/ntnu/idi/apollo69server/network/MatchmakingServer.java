@@ -37,7 +37,7 @@ public class MatchmakingServer implements Runnable {
         this.tcpPort = tcpPort;
         this.udpPort = udpPort;
 
-        this.server = new Server(16384 * 2, 2048 * 2) {
+        this.server = new Server() {
             @Override
             protected Connection newConnection() {
                 return new PlayerConnection();
