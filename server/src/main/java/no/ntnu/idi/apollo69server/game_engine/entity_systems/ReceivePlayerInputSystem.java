@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Queue;
 
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
+import no.ntnu.idi.apollo69server.game_engine.components.AttackingComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.RotationComponent;
@@ -70,7 +71,8 @@ public class ReceivePlayerInputSystem extends EntitySystem {
                 velocityComponent.boosting = playerInput.isBoosting();
                 break;
             case SHOOT:
-
+                AttackingComponent attackingComponent = AttackingComponent.MAPPER.get(player);
+                attackingComponent.shooting = playerInput.isShooting();
                 break;
             default:
                 break;

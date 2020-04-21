@@ -18,4 +18,7 @@ public class GameObjectDimensions {
     public static final float ASTEROID_HEIGHT = 80;
     public static final float ASTEROID_WIDTH = 80;
 
+    public static final float SHOT_WIDTH = SPACE_SHIP_WIDTH/5f;
+    public static final float SHOT_HEIGHT = SPACE_SHIP_HEIGHT/5f;
+
 }

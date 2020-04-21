@@ -5,12 +5,14 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 
 import no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.DamageComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.HealthComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.ScoreComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent;
 import no.ntnu.idi.apollo69server.game_engine.entity_factories.ExplosionFactory;
 
@@ -40,15 +42,25 @@ public class DamageSystem extends EntitySystem {
                 if (!damageGiverDamageComponent.owner.equals(damageReceiverHealthComponent.owner) && Intersector.overlaps(dealDamageBounds.circle, receiveDamageBounds.circle)) {
                     ShieldComponent shieldComponent = ShieldComponent.MAPPER.get(damageReceiver);
                     if (shieldComponent != null) {
-                        shieldComponent.hp -= damageGiverDamageComponent.force;
+                        shieldComponent.hp -= damageGiverDamageComponent.damage;
                         if (shieldComponent.hp < 0) {
                             damageReceiverHealthComponent.hp += shieldComponent.hp;
                             shieldComponent.hp = 0;
                         }
                     } else {
-                        damageReceiverHealthComponent.hp -= damageGiverDamageComponent.force;
-                        if (damageReceiverHealthComponent.hp < 0) {
+                        damageReceiverHealthComponent.hp -= damageGiverDamageComponent.damage;
+                        if (damageReceiverHealthComponent.hp <= 0) {
                             damageReceiverHealthComponent.hp = 0;
+
+                            // Adds score to killer. Should ideally be in its own system
+                            ImmutableArray<Entity> players = getEngine().getEntitiesFor(Family.all(NetworkPlayerComponent.class).get());
+                            for (Entity player: players) {
+                                if (NetworkPlayerComponent.MAPPER.get(player).getPlayerConnection().getDeviceId().equals(damageGiverDamageComponent.owner)) {
+                                    ScoreComponent receiverScoreComponent = ScoreComponent.MAPPER.get(damageReceiver);
+                                    ScoreComponent giverScoreComponent = ScoreComponent.MAPPER.get(player);
+                                    giverScoreComponent.score += receiverScoreComponent.score/2f;
+                                }
+                            }
                         }
                     }
 

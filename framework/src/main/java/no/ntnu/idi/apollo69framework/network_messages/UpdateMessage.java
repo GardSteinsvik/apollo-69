@@ -7,10 +7,12 @@ import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.Expl
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ShotDto;
 
 public class UpdateMessage {
 
     private List<PlayerDto> playerDtoList;
+    private List<ShotDto> shotDtoList;
     private List<AsteroidDto> asteroidDtoList;
     private List<PickupDto> pickupDtoList;
     private List<PowerupDto> powerupDtoList;
@@ -25,6 +27,14 @@ public class UpdateMessage {
 
     public void setPlayerDtoList(List<PlayerDto> playerDtoList) {
         this.playerDtoList = playerDtoList;
+    }
+
+    public List<ShotDto> getShotDtoList() {
+        return shotDtoList;
+    }
+
+    public void setShotDtoList(List<ShotDto> shotDtoList) {
+        this.shotDtoList = shotDtoList;
     }
 
     public List<AsteroidDto> getAsteroidDtoList() {

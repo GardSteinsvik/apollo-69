@@ -18,6 +18,7 @@ import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.Play
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ShotDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
 import no.ntnu.idi.apollo69server.game_engine.components.AsteroidComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent;
@@ -32,6 +33,7 @@ import no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.ScoreComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent;
+import no.ntnu.idi.apollo69server.game_engine.components.ShotComponent;
 import no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69server.game_engine.entity_factories.ExplosionFactory;
 import no.ntnu.idi.apollo69server.network.PlayerConnection;
@@ -39,6 +41,7 @@ import no.ntnu.idi.apollo69server.network.PlayerConnection;
 public class SendUpdateSystem extends EntitySystem {
 
     private ImmutableArray<Entity> players;
+    private ImmutableArray<Entity> shots;
     private ImmutableArray<Entity> pickups;
     private ImmutableArray<Entity> powerups;
     private ImmutableArray<Entity> asteroids;
@@ -54,6 +57,7 @@ public class SendUpdateSystem extends EntitySystem {
     @Override
     public void addedToEngine(Engine engine) {
         players = engine.getEntitiesFor(Family.all(NetworkPlayerComponent.class).get());
+        shots = engine.getEntitiesFor(Family.all(ShotComponent.class).get());
         asteroids = engine.getEntitiesFor(Family.all(AsteroidComponent.class).get());
         pickups = engine.getEntitiesFor(Family.all(PickupComponent.class).get());
         powerups = engine.getEntitiesFor(Family.all(PowerupComponent.class).get());
@@ -113,6 +117,18 @@ public class SendUpdateSystem extends EntitySystem {
             ));
         }
         updateMessage.setPlayerDtoList(playerDtoList);
+
+        List<ShotDto> shotDtoList = new ArrayList<>();
+        for (Entity shotEntity: shots) {
+            PositionComponent positionComponent = PositionComponent.MAPPER.get(shotEntity);
+            BoundsComponent boundsComponent = BoundsComponent.MAPPER.get(shotEntity);
+
+            shotDtoList.add(new ShotDto(
+                    new PositionDto(positionComponent.position),
+                    boundsComponent.circle.radius
+            ));
+        }
+        updateMessage.setShotDtoList(shotDtoList);
 
         List<AsteroidDto> asteroidDtoList = new ArrayList<>();
         for (Entity asteroidEntity : asteroids){

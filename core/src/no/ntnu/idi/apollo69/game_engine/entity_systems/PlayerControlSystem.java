@@ -5,10 +5,6 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
-import no.ntnu.idi.apollo69.Variables;
-import no.ntnu.idi.apollo69.game_engine.components.AttackingComponent;
-import no.ntnu.idi.apollo69.game_engine.Assets;
-import no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoosterComponent;
 import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
 import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
@@ -17,6 +13,7 @@ import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
 import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69.network.GameClient;
 import no.ntnu.idi.apollo69.network.NetworkClientSingleton;
+import no.ntnu.idi.apollo69framework.GameObjectDimensions;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInput;
 import no.ntnu.idi.apollo69framework.network_messages.PlayerInputType;
 
@@ -32,10 +29,9 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
         gameClient = NetworkClientSingleton.getInstance().getGameClient();
     }
 
-    // IMPORTANT - THIS IS ONLY CALLED WHEN CHANGES TO TOUCHPAD IS REGISTERED
     @Override
     public void move(Vector2 direction) {
-        float offset = DimensionComponent.MAPPER.get(player).height / 2;
+        float offset = GameObjectDimensions.SHOT_HEIGHT/2f;
         Circle gameSpace = new Circle(new Vector2(0, 0), GAME_RADIUS - offset);
         Circle spaceship = BoundingCircleComponent.MAPPER.get(player).circle;
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(player);
@@ -56,8 +52,6 @@ public class PlayerControlSystem extends EntitySystem implements InputHandlerInt
 
     @Override
     public void shoot(boolean on) {
-        player.getComponent(AttackingComponent.class).shooting = on;
-
         if (gameClient.isConnected()) {
             PlayerInput playerInput = new PlayerInput(PlayerInputType.SHOOT);
             playerInput.setShooting(on);

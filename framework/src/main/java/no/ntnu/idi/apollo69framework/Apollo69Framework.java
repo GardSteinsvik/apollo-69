@@ -24,6 +24,7 @@ import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.Posi
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ShotDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto;
 
 public class Apollo69Framework {
@@ -31,6 +32,7 @@ public class Apollo69Framework {
         private static final List<Class> CLASSES_SINGLETON = Collections.unmodifiableList(Arrays.asList(
                 ArrayList.class,
                 PlayerDto.class,
+                ShotDto.class,
                 PositionDto.class,
                 RotationDto.class,
                 VelocityDto.class,

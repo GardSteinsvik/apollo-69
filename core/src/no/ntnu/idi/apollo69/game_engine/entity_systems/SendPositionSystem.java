@@ -28,7 +28,6 @@ public class SendPositionSystem extends EntitySystem {
     @Override
     public void addedToEngine(Engine engine) {
         player = getEngine().getEntitiesFor(Family.all(PlayableComponent.class).get()).first();
-
     }
 
     @Override

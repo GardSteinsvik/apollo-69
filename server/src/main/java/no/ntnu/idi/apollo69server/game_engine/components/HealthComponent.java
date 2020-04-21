@@ -7,7 +7,7 @@ public class HealthComponent implements Component {
     public static final ComponentMapper<HealthComponent> MAPPER = ComponentMapper.getFor(HealthComponent.class);
 
     public String owner;
-    public float hp = 0;
+    public float hp;
 
     public HealthComponent(String owner, float hp) {
         this.owner = owner;

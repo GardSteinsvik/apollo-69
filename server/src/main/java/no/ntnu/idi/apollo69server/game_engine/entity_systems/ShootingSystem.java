@@ -31,7 +31,7 @@ public class ShootingSystem extends EntitySystem {
         timeAccumulator += deltaTime;
         if (timeAccumulator >= interval) {
             for (Entity player : playerEntities) {
-                if (player.getComponent(AttackingComponent.class).shooting) {
+                if (AttackingComponent.MAPPER.get(player).shooting) {
                     Entity shot = shotFactory.create(player);
                     getEngine().addEntity(shot);
                 }

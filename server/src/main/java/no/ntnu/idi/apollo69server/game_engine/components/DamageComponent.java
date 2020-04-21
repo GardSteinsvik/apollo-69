@@ -7,10 +7,10 @@ public class DamageComponent implements Component {
     public static final ComponentMapper<DamageComponent> MAPPER = ComponentMapper.getFor(DamageComponent.class);
 
     public String owner;
-    public float force;
+    public float damage;
 
-    public DamageComponent(String owner, float force) {
+    public DamageComponent(String owner, float damage) {
         this.owner = owner;
-        this.force = force;
+        this.damage = damage;
     }
 }

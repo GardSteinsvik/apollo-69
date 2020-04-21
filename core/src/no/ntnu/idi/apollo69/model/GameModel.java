@@ -1,12 +1,9 @@
 package no.ntnu.idi.apollo69.model;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,13 +11,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.esotericsoftware.kryonet.Listener;
-
-import no.ntnu.idi.apollo69.game_engine.Assets;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,15 +25,12 @@ import java.util.List;
 import java.util.Map;
 
 import no.ntnu.idi.apollo69.Device;
+import no.ntnu.idi.apollo69.game_engine.Assets;
 import no.ntnu.idi.apollo69.game_engine.Background;
 import no.ntnu.idi.apollo69.game_engine.GameEngine;
 import no.ntnu.idi.apollo69.game_engine.GameEngineFactory;
-import no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent;
-import no.ntnu.idi.apollo69.game_engine.components.DamageComponent;
-import no.ntnu.idi.apollo69.game_engine.components.DimensionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.RotationComponent;
-import no.ntnu.idi.apollo69.game_engine.components.VelocityComponent;
 import no.ntnu.idi.apollo69.navigation.Navigator;
 import no.ntnu.idi.apollo69.navigation.ScreenType;
 import no.ntnu.idi.apollo69.network.GameClient;
@@ -55,6 +46,7 @@ import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.Play
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto;
 import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType;
+import no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ShotDto;
 
 import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_HEIGHT;
 import static no.ntnu.idi.apollo69framework.GameObjectDimensions.GEM_WIDTH;
@@ -151,12 +143,12 @@ public class GameModel {
             }
 
             spriteBatch.draw(
-                    shipTexture,
-                    x, y,
-                    spaceShipWidth/2f, spaceShipHeight/2f,
-                    spaceShipWidth, spaceShipHeight,
-                    1, 1,
-                    rotation
+                shipTexture,
+                x, y,
+                spaceShipWidth/2f, spaceShipHeight/2f,
+                spaceShipWidth, spaceShipHeight,
+                1, 1,
+                rotation
             );
 
             color.a = 1f;
@@ -196,9 +188,16 @@ public class GameModel {
         UpdateMessage gameState = gameClient.getGameState();
         if (gameState == null) return;
 
-        shapeRenderer.setColor(Color.LIME);
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
+        shapeRenderer.setColor(Color.YELLOW);
+        for (ShotDto shotDto: gameState.getShotDtoList()) {
+            PositionDto positionDto = shotDto.positionDto;
+            shapeRenderer.circle(positionDto.x, positionDto.y, shotDto.radius);
+        }
+
+        shapeRenderer.setColor(Color.LIME);
         for (AsteroidDto asteroidDto: gameState.getAsteroidDtoList()) {
             PositionDto positionDto = asteroidDto.positionDto;
             renderHealthBar(shapeRenderer, positionDto.x + GameObjectDimensions.ASTEROID_WIDTH /2f, positionDto.y, asteroidDto.hp);
@@ -259,12 +258,6 @@ public class GameModel {
             PowerupType powerupType = powerupDto.powerupType;
             float posX = powerupDto.positionDto.x;
             float posY = powerupDto.positionDto.y;
-
-            // Density adjustements would ruin bounds, not appropriate application (!)
-            // float density = Gdx.graphics.getDensity();
-
-            //batch.draw(powerup, posX, posY, width * density, height * density);
-            //batch.draw(powerup, posX, posY, width, height);
             batch.draw(Assets.getPowerupRegion(powerupType), posX, posY, POWERUP_WIDTH, POWERUP_HEIGHT);
         }
     }
@@ -275,7 +268,6 @@ public class GameModel {
             GemType gemType = pickupDto.gemType;
             float posX = pickupDto.positionDto.x;
             float posY = pickupDto.positionDto.y;
-            //RectangleBoundsComponent rectangleBoundsComponent = RectangleBoundsComponent.MAPPER.get(gem);
             batch.draw(Assets.getPickupRegion(gemType), posX, posY, GEM_WIDTH, GEM_HEIGHT);
         }
     }
@@ -307,11 +299,11 @@ public class GameModel {
                 "(1) " + sortedPlayers.get(0) + " : " + sortedScores.get(0) : "");
 
         // Current #2 player
-        scoreButtons.get("highscore2").setText((scoresSorted.size() > 0) ?
+        scoreButtons.get("highscore2").setText((scoresSorted.size() > 1) ?
                 "(2) " + sortedPlayers.get(1) + " : " + sortedScores.get(1) : "");
 
         // Current #3 player
-        scoreButtons.get("highscore3").setText((scoresSorted.size() > 0) ?
+        scoreButtons.get("highscore3").setText((scoresSorted.size() > 2) ?
                 "(3) " + sortedPlayers.get(2) + " : " + sortedScores.get(2) : "");
 
     }
@@ -332,53 +324,18 @@ public class GameModel {
         return sorted;
     }
 
-    public void renderShots(ShapeRenderer shapeRenderer) {
-        Family shotFamily = Family.all(PositionComponent.class, VelocityComponent.class, DamageComponent.class).get();
-        ImmutableArray<Entity> shots = gameEngine.getEngine().getEntitiesFor(shotFamily);
-
-        shapeRenderer.setColor(Color.YELLOW);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
-        for (Entity shot : shots) {
-            float posX = PositionComponent.MAPPER.get(shot).position.x;
-            float posY = PositionComponent.MAPPER.get(shot).position.y;
-            float radius = DimensionComponent.MAPPER.get(shot).radius;
-
-            shapeRenderer.circle(posX, posY, radius);
-        }
-        shapeRenderer.end();
-    }
-
-
     public void renderBoundary(ShapeRenderer shapeRenderer, float radius) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.RED);
         shapeRenderer.circle(0, 0, radius);
         shapeRenderer.end();
-
-        //renderSpaceshipBoundingCircle(shapeRenderer);
-    }
-
-    private void renderSpaceshipBoundingCircle(ShapeRenderer shapeRenderer) {
-        Circle boundsCircle = BoundingCircleComponent.MAPPER.get(gameEngine.getPlayer()).circle;
-
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(new Color(0, 1, 0, 0.25f));
-        shapeRenderer.circle(boundsCircle.x, boundsCircle.y, boundsCircle.radius);
-        shapeRenderer.end();
-
-        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     public void moveCameraToSpaceship() {
         Entity player = gameEngine.getPlayer();
         if (player == null) return;
         Vector2 position = PositionComponent.MAPPER.get(player).position;
-        DimensionComponent dimension = DimensionComponent.MAPPER.get(player);
-        Vector2 cameraPosition = new Vector2(position.x + dimension.width / 2, position.y + dimension.height / 2);
+        Vector2 cameraPosition = new Vector2(position.x + GameObjectDimensions.SPACE_SHIP_WIDTH/2f, position.y + GameObjectDimensions.SPACE_SHIP_HEIGHT/2f);
         camera.position.set(cameraPosition, 0);
         camera.update();
     }

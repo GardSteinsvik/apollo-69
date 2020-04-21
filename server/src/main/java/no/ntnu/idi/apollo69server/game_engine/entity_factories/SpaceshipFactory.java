@@ -26,7 +26,7 @@ public class SpaceshipFactory {
         spaceship.add(new ScoreComponent());
         spaceship.add(new RotationComponent());
         spaceship.add(new BoundsComponent(
-                new Circle(0, 0, GameObjectDimensions.SPACE_SHIP_HEIGHT/3f),
+                GameObjectDimensions.SPACE_SHIP_HEIGHT/3f,
                 new Vector2(GameObjectDimensions.SPACE_SHIP_WIDTH, GameObjectDimensions.SPACE_SHIP_HEIGHT))
         );
 
