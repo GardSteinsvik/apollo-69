@@ -80,7 +80,7 @@ public class GameClient {
         return gameState;
     }
 
-    public void setGameState(UpdateMessage updateMessage) {
+    public void  setGameState(UpdateMessage updateMessage) {
         gameState = updateMessage;
     }
 }

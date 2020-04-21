@@ -6,9 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -19,15 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
-import no.ntnu.idi.apollo69.Variables;
 import no.ntnu.idi.apollo69.controller.GameController;
 import no.ntnu.idi.apollo69.game_engine.Assets;
-import no.ntnu.idi.apollo69.game_engine.components.PositionComponent;
 import no.ntnu.idi.apollo69.game_engine.components.ScoreComponent;
 import no.ntnu.idi.apollo69.model.GameModel;
 
@@ -46,12 +41,14 @@ public class GameView extends ApplicationAdapter implements Screen {
 
     //TextButton playerScore;
     private TextButton playerScore, header, highScore1, highScore2, highScore3;
+    private ArrayList<TextButton> scores;
 
     public GameView(GameModel model, GameController controller) {
         this.model = model;
         this.controller = controller;
         this.spriteBatch = new SpriteBatch();
         this.shapeRenderer = new ShapeRenderer();
+        scores = new ArrayList<>();
     }
 
     @Override
@@ -170,6 +167,7 @@ public class GameView extends ApplicationAdapter implements Screen {
                 Gdx.graphics.getWidth() / 25f, Gdx.graphics.getHeight() / 20f * 17,
                 String.valueOf(ScoreComponent.MAPPER.get(model.getGameEngine().getPlayer()).score + 2800),
                 Assets.getBigFont(), Align.left);
+        model.putScoreButton("playerScore", playerScore);
         stage.addActor(playerScore);
 
         float highscoreWidth = Gdx.graphics.getWidth() / 7f;
@@ -186,6 +184,7 @@ public class GameView extends ApplicationAdapter implements Screen {
                 highscoreWidth, hightscoreHeight,
                 highscoreX, Gdx.graphics.getHeight() / 20f * 17,
                 "(1) VapeNaysh : 69696", Assets.getSmallFont(), Align.left);
+        model.putScoreButton("highscore1", highScore1);
         stage.addActor(highScore1);
 
 
@@ -193,14 +192,15 @@ public class GameView extends ApplicationAdapter implements Screen {
                 highscoreWidth, hightscoreHeight,
                 highscoreX, Gdx.graphics.getHeight() / 20f * 16,
                 "(2) Harambe : 8350", Assets.getSmallFont(), Align.left);
+        model.putScoreButton("highscore2", highScore2);
         stage.addActor(highScore2);
 
         highScore3 = model.getTextButton(
                 highscoreWidth, hightscoreHeight,
                 highscoreX, Gdx.graphics.getHeight() / 20f * 15,
                 "(3) playerOne : 5200", Assets.getSmallFont(), Align.left);
+        model.putScoreButton("highscore3", highScore3);
         stage.addActor(highScore3);
-
     }
 
     @Override
@@ -233,8 +233,6 @@ public class GameView extends ApplicationAdapter implements Screen {
         // Render shapes
         model.renderShots(shapeRenderer);
         model.renderBoundary(shapeRenderer, GAME_RADIUS);
-
-        //model.updateHighscoreList(model.getTopPlayers(), highScore1, highScore2, highScore3);
 
         // Render UI
         stage.draw();
