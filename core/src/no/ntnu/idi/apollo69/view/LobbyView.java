@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import no.ntnu.idi.apollo69.Device;
 import no.ntnu.idi.apollo69.Variables;
 import no.ntnu.idi.apollo69.controller.LobbyController;
 import no.ntnu.idi.apollo69.model.LobbyModel;
@@ -39,8 +40,6 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
         this.spriteBatch = spriteBatch;
 
         stage = new Stage(new ScreenViewport());
-
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -70,18 +69,18 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
         highScoreList.setFillParent(true);
         highScoreList.setItems(getFakeHighScoreList());
 
-        TextField nickname = new TextField(textNickname, skin);
+        TextField nicknameTextField = new TextField(Device.NAME, skin);
 
-        TextButton join = new TextButton(textJoin, skin);
-        join.getLabel().setFontScale(fontScale);
+        TextButton joinButton = new TextButton(textJoin, skin);
+        joinButton.getLabel().setFontScale(fontScale);
 
-        TextButton exit = new TextButton(textExit, skin);
-        exit.getLabel().setFontScale(fontScale);
+        TextButton exitButton = new TextButton(textExit, skin);
+        exitButton.getLabel().setFontScale(fontScale);
 
         tableLeft.setWidth(sizeWidth);
         tableLeft.setHeight(sizeHeight);
 
-        tableLeft.add(nickname)
+        tableLeft.add(nicknameTextField)
                 .prefHeight(nicknameHeight)
                 .prefWidth(buttonWidth)
                 .padBottom(spacing)
@@ -90,13 +89,13 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
         tableLeft.row();
 //        tableLeft.add(highScoreList).align(Align.right);
         tableLeft.row();
-        tableLeft.add(join)
+        tableLeft.add(joinButton)
                 .prefWidth(buttonWidth)
                 .prefHeight(buttonHeight)
                 .padBottom(spacing)
                 .padLeft(spacing);
         tableLeft.row();
-        tableLeft.add(exit)
+        tableLeft.add(exitButton)
                 .padBottom(spacing)
                 .prefHeight(buttonHeight)
                 .prefWidth(buttonWidth)
@@ -114,13 +113,13 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
         group.addActor(tableLeft);
         group.addActor(tableRight);
 
-        join.addListener(new ChangeListener() {
+        joinButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                lobbyController.joinButtonPressed(nickname.getText());
+                lobbyController.joinButtonPressed(nicknameTextField.getText());
             }
         });
-        exit.addListener(new ChangeListener() {
+        exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 lobbyController.exitButtonPressed();
