@@ -64,7 +64,8 @@ public class PowerupSystem extends EntitySystem {
                 System.out.println("Shield powerup");
                 break;
             case HEALTH:
-                spaceShip.add(new HealthPowerupComponent());
+                HealthComponent healthComponent = HealthComponent.MAPPER.get(spaceShip);
+                spaceShip.add(new HealthPowerupComponent(healthComponent.hp));
                 System.out.println("Health powerup");
                 break;
             case INVISIBLE:
@@ -139,7 +140,7 @@ public class PowerupSystem extends EntitySystem {
             Instant compareTime = Instant.now().minusSeconds(5);
             if (healthPowerupComponent.time.isBefore(compareTime)) {
                 System.out.println("Removed health powerup");
-                healthComponent.hp = 100;
+                healthComponent.hp = healthPowerupComponent.previousHealth;
                 entity.remove(HealthPowerupComponent.class);
             } else {
                 // Make the hp bar become godly

@@ -9,4 +9,9 @@ public class HealthPowerupComponent implements Component {
     public static final ComponentMapper<HealthPowerupComponent> MAPPER = ComponentMapper.getFor(HealthPowerupComponent.class);
 
     public Instant time = Instant.now();
+    public float previousHealth;
+
+    public HealthPowerupComponent(float previousHealth) {
+        this.previousHealth = previousHealth;
+    }
 }
