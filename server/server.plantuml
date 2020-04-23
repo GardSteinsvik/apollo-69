@@ -1,0 +1,510 @@
+@startuml
+
+title __SERVER's Class Diagram__\n
+
+  namespace no.ntnu.idi.apollo69server {
+    class no.ntnu.idi.apollo69server.Apollo69Server {
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      class no.ntnu.idi.apollo69server.game_engine.GameEngine {
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      class no.ntnu.idi.apollo69server.game_engine.GameEngineFactory {
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.AsteroidComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.AttackingComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.DamageComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.EnergyComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.ExplosionComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.GemComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.HealthComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.InvisibleComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.PickupComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.PositionComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.RotationComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.ScoreComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.SpaceshipComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.TimeToLiveComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_factories {
+        class no.ntnu.idi.apollo69server.game_engine.entity_factories.AsteroidFactory {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_factories {
+        class no.ntnu.idi.apollo69server.game_engine.entity_factories.ExplosionFactory {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_factories {
+        class no.ntnu.idi.apollo69server.game_engine.entity_factories.GemFactory {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_factories {
+        class no.ntnu.idi.apollo69server.game_engine.entity_factories.PowerupFactory {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_factories {
+        class no.ntnu.idi.apollo69server.game_engine.entity_factories.ShotFactory {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_factories {
+        class no.ntnu.idi.apollo69server.game_engine.entity_factories.SpaceshipFactory {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_systems {
+        class no.ntnu.idi.apollo69server.game_engine.entity_systems.AsteroidSystem {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_systems {
+        class no.ntnu.idi.apollo69server.game_engine.entity_systems.DamageSystem {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_systems {
+        class no.ntnu.idi.apollo69server.game_engine.entity_systems.DeathSystem {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_systems {
+        class no.ntnu.idi.apollo69server.game_engine.entity_systems.MovementSystem {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_systems {
+        class no.ntnu.idi.apollo69server.game_engine.entity_systems.PickupSystem {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_systems {
+        class no.ntnu.idi.apollo69server.game_engine.entity_systems.PowerupSystem {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_systems {
+        class no.ntnu.idi.apollo69server.game_engine.entity_systems.ReceivePlayerInputSystem {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_systems {
+        class no.ntnu.idi.apollo69server.game_engine.entity_systems.SendUpdateSystem {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_systems {
+        class no.ntnu.idi.apollo69server.game_engine.entity_systems.ShootingSystem {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_systems {
+        class no.ntnu.idi.apollo69server.game_engine.entity_systems.SpawnSystem {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_systems {
+        class no.ntnu.idi.apollo69server.game_engine.entity_systems.TimeToLiveSystem {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace entity_systems {
+        class no.ntnu.idi.apollo69server.game_engine.entity_systems.UpdateBoundsSystem {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace network {
+      class no.ntnu.idi.apollo69server.network.BasePlayerConnectionListener {
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace network {
+      class no.ntnu.idi.apollo69server.network.MatchmakingServer {
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace network {
+      interface no.ntnu.idi.apollo69server.network.MessageHandler {
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace network {
+      class no.ntnu.idi.apollo69server.network.MessageHandlerDelegator {
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace network {
+      class no.ntnu.idi.apollo69server.network.PlayerConnection {
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace network {
+      class no.ntnu.idi.apollo69server.network.PlayerConnectionListener {
+      }
+    }
+  }
+  
+
+  no.ntnu.idi.apollo69server.game_engine.GameEngine .up.|> com.badlogic.gdx.utils.Disposable
+  no.ntnu.idi.apollo69server.game_engine.GameEngine .up.|> java.lang.Runnable
+  no.ntnu.idi.apollo69server.game_engine.GameEngineFactory o-- no.ntnu.idi.apollo69server.network.MessageHandlerDelegator : messageHandlerDelegator
+  no.ntnu.idi.apollo69server.game_engine.components.AsteroidComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.AttackingComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.DamageComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.EnergyComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.ExplosionComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.GemComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.GemComponent o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType : type
+  no.ntnu.idi.apollo69server.game_engine.components.HealthComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.InvisibleComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent o-- no.ntnu.idi.apollo69server.network.PlayerConnection : playerConnection
+  no.ntnu.idi.apollo69server.game_engine.components.PickupComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.PositionComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType : type
+  no.ntnu.idi.apollo69server.game_engine.components.RotationComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.ScoreComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.SpaceshipComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.TimeToLiveComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.entity_systems.AsteroidSystem -up-|> com.badlogic.ashley.core.EntitySystem
+  no.ntnu.idi.apollo69server.game_engine.entity_systems.DamageSystem -up-|> com.badlogic.ashley.core.EntitySystem
+  no.ntnu.idi.apollo69server.game_engine.entity_systems.DeathSystem -up-|> com.badlogic.ashley.core.EntitySystem
+  no.ntnu.idi.apollo69server.game_engine.entity_systems.MovementSystem -up-|> com.badlogic.ashley.core.EntitySystem
+  no.ntnu.idi.apollo69server.game_engine.entity_systems.PickupSystem -up-|> com.badlogic.ashley.core.EntitySystem
+  no.ntnu.idi.apollo69server.game_engine.entity_systems.PowerupSystem -up-|> com.badlogic.ashley.core.EntitySystem
+  no.ntnu.idi.apollo69server.game_engine.entity_systems.ReceivePlayerInputSystem -up-|> com.badlogic.ashley.core.EntitySystem
+  no.ntnu.idi.apollo69server.game_engine.entity_systems.SendUpdateSystem -up-|> com.badlogic.ashley.core.EntitySystem
+  no.ntnu.idi.apollo69server.game_engine.entity_systems.ShootingSystem -up-|> com.badlogic.ashley.core.EntitySystem
+  no.ntnu.idi.apollo69server.game_engine.entity_systems.ShootingSystem o-- no.ntnu.idi.apollo69server.game_engine.entity_factories.ShotFactory : shotFactory
+  no.ntnu.idi.apollo69server.game_engine.entity_systems.SpawnSystem -up-|> com.badlogic.ashley.core.EntitySystem
+  no.ntnu.idi.apollo69server.game_engine.entity_systems.TimeToLiveSystem -up-|> com.badlogic.ashley.core.EntitySystem
+  no.ntnu.idi.apollo69server.game_engine.entity_systems.UpdateBoundsSystem -up-|> com.badlogic.ashley.core.EntitySystem
+  no.ntnu.idi.apollo69server.network.BasePlayerConnectionListener -up-|> com.esotericsoftware.kryonet.Listener
+  no.ntnu.idi.apollo69server.network.MatchmakingServer .up.|> java.lang.Runnable
+  no.ntnu.idi.apollo69server.network.MatchmakingServer o-- no.ntnu.idi.apollo69server.network.MessageHandlerDelegator : messageHandlerDelegator
+  no.ntnu.idi.apollo69server.network.PlayerConnection -up-|> com.esotericsoftware.kryonet.Connection
+  no.ntnu.idi.apollo69server.network.PlayerConnectionListener -up-|> no.ntnu.idi.apollo69server.network.BasePlayerConnectionListener
+  no.ntnu.idi.apollo69server.network.PlayerConnectionListener o-- no.ntnu.idi.apollo69server.network.MessageHandlerDelegator : handlerDelegator
+  no.ntnu.idi.apollo69server.network.PlayerConnectionListener o-- no.ntnu.idi.apollo69server.network.MatchmakingServer : matchmakingServer
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

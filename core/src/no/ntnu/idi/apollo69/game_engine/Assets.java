@@ -29,26 +29,24 @@ public class Assets {
 
     // Internal file paths to be loaded
     private static final String COMBINED_ATLAS = "game/gameAtlas.pack";
-    private static final String POWERUPS_ATLAS = "game/powerups.atlas";
-    private static final String ASTEROID_ATLAS = "game/asteroids/asteroids.atlas";
-    private static final String GEMS_ATLAS = "game/gems.atlas";
     private static final String EXPLOSIONS_ATLAS = "game/explosions/explosions.atlas";
     private static final String GAME_ATLAS = "game/game.atlas";
-    private static final String INVISIBLE_ATLAS = "game/invisible.atlas";
     private static final String UI_SKIN = "skin/uiskin.json";
     private static final String THEME = "game/game.ogg";
     private static final String LASER = "game/laser.wav";
+    private static final String FONT = "font/baloo.ttf";
 
-    // Font
-    private static BitmapFont bigFont = new BitmapFont();
-    private static BitmapFont smallFont = new BitmapFont();
-    private static BitmapFont yellowFont = new BitmapFont();
-    private static FreeTypeFontGenerator bigGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/baloo.ttf"));
-    private static FreeTypeFontGenerator smallGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/baloo.ttf"));
-    private static FreeTypeFontGenerator yellowGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/baloo.ttf"));
-    private static FreeTypeFontParameter bigParameter = new FreeTypeFontParameter();
-    private static FreeTypeFontParameter smallParameter = new FreeTypeFontParameter();
-    private static FreeTypeFontParameter yellowParameter = new FreeTypeFontParameter();
+    private static final int WIDTH = Gdx.graphics.getWidth();
+
+    // Fonts for mobile Android launcher
+    private static BitmapFont mobileLargeFont = new BitmapFont();
+    private static BitmapFont mobileSmallFont = new BitmapFont();
+    private static BitmapFont mobileYellowFont = new BitmapFont();
+
+    // Fonts for desktop launcher
+    private static BitmapFont desktopLargeFont = new BitmapFont();
+    private static BitmapFont desktopSmallFont = new BitmapFont();
+    private static BitmapFont desktopYellowFont = new BitmapFont();
 
     // Cache for quick access
     private static ObjectMap<String, TextureAtlas.AtlasRegion> textureCache = new ObjectMap<>();
@@ -71,17 +69,43 @@ public class Assets {
         // TextureAtlas' and the game would most likely crash
         assetManager.finishLoading();
 
-        // Font cannot be loaded directly into AssetManager due to the lack
-        // of FileHandle.class support (might be another workaround)
-        bigParameter.size = 75;
-        bigFont = bigGenerator.generateFont(bigParameter);
+        // Large font for mobile Android launcher
+        FreeTypeFontGenerator mobileLargeFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(FONT));
+        FreeTypeFontParameter mobileLargeFontParameter = new FreeTypeFontParameter();
+        mobileLargeFontParameter.size = 75;
+        mobileLargeFont = mobileLargeFontGenerator.generateFont(mobileLargeFontParameter);
 
-        smallParameter.size = 25;
-        smallFont = smallGenerator.generateFont(smallParameter);
+        // Small font for mobile Android launcher
+        FreeTypeFontGenerator mobileSmallFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(FONT));
+        FreeTypeFontParameter mobileSmallFontParameter = new FreeTypeFontParameter();
+        mobileSmallFontParameter.size = 30;
+        mobileSmallFont = mobileSmallFontGenerator.generateFont(mobileSmallFontParameter);
 
-        yellowParameter.size = 30;
-        yellowParameter.color = Color.YELLOW;
-        yellowFont = yellowGenerator.generateFont(yellowParameter);
+        // Yellow font for mobile Android launcher
+        FreeTypeFontGenerator mobileYellowFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(FONT));
+        FreeTypeFontParameter mobileYellowFontParameter = new FreeTypeFontParameter();
+        mobileYellowFontParameter.size = 35;
+        mobileYellowFontParameter.color = Color.YELLOW;
+        mobileYellowFont = mobileYellowFontGenerator.generateFont(mobileYellowFontParameter);
+
+        // Large font for desktop launcher
+        FreeTypeFontGenerator desktopLargeFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(FONT));
+        FreeTypeFontParameter desktopLargeFontParameter = new FreeTypeFontParameter();
+        desktopLargeFontParameter.size = 35;
+        desktopLargeFont = desktopLargeFontGenerator.generateFont(desktopLargeFontParameter);
+
+        // Small font for desktop launcher
+        FreeTypeFontGenerator desktopSmallFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(FONT));
+        FreeTypeFontParameter desktopSmallFontParameter = new FreeTypeFontParameter();
+        desktopSmallFontParameter.size = 15;
+        desktopSmallFont = desktopSmallFontGenerator.generateFont(desktopSmallFontParameter);
+
+        // Yellow font for desktop launcher
+        FreeTypeFontGenerator desktopYellowFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(FONT));
+        FreeTypeFontParameter desktopYellowFontParameter = new FreeTypeFontParameter();
+        desktopYellowFontParameter.size = 20;
+        desktopYellowFontParameter.color = Color.YELLOW;
+        desktopYellowFont = desktopYellowFontGenerator.generateFont(desktopYellowFontParameter);
     }
 
     private static TextureAtlas.AtlasRegion getRegion(String atlas, String name) {
@@ -158,16 +182,16 @@ public class Assets {
         return assetManager.get(LASER, SOUND);
     }
 
-    public static BitmapFont getBigFont() {
-        return bigFont;
+    public static BitmapFont getLargeFont() {
+        return WIDTH > 1000 ? mobileLargeFont : desktopLargeFont;
     }
 
     public static BitmapFont getSmallFont() {
-        return smallFont;
+        return WIDTH > 1000 ? mobileSmallFont : desktopSmallFont;
     }
 
     public static BitmapFont getYellowFont() {
-        return yellowFont;
+        return WIDTH > 1000 ? mobileYellowFont : desktopYellowFont;
     }
 
     public static TextureAtlas.AtlasRegion getAsteroidRegion() {

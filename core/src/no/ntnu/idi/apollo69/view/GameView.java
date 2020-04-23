@@ -19,8 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-import java.util.ArrayList;
-
 import no.ntnu.idi.apollo69.controller.GameController;
 import no.ntnu.idi.apollo69.game_engine.Assets;
 import no.ntnu.idi.apollo69.model.GameModel;
@@ -35,19 +33,11 @@ public class GameView extends ApplicationAdapter implements Screen {
     private ShapeRenderer shapeRenderer;
     private Stage stage;
 
-    // Debug written to font
-    private static BitmapFont debugFont = new BitmapFont();
-
-    //TextButton playerScore;
-    private TextButton playerScore, header, highScore1, highScore2, highScore3;
-    private ArrayList<TextButton> scores;
-
     public GameView(GameModel model, GameController controller) {
         this.model = model;
         this.controller = controller;
         this.spriteBatch = new SpriteBatch();
         this.shapeRenderer = new ShapeRenderer();
-        scores = new ArrayList<>();
     }
 
     @Override
@@ -122,16 +112,60 @@ public class GameView extends ApplicationAdapter implements Screen {
             }
         });
 
+        // For displaying scores we opted for buttons, as drawing text relative to the spaceship
+        // resulted in a lot of stuttering. Buttons have fixed positions on the screen, whereas
+        // text needs coordinates in the gamespace, which updates constantly.
+
+        // Transparent button for displaying current player score
+        TextButton playerScore = model.getTextButton(
+                Gdx.graphics.getWidth() / 15f, Gdx.graphics.getHeight() / 10f,
+                Gdx.graphics.getWidth() / 25f, Gdx.graphics.getHeight() / 20f * 17,
+                "0",
+                Assets.getLargeFont(), Align.left);
+        model.addTextButton("playerScore", playerScore);
+
+        float highscoreWidth = Gdx.graphics.getWidth() / 7f;
+        float hightscoreHeight = Gdx.graphics.getHeight() / 10f;
+        float highscoreX = Gdx.graphics.getWidth() / 25f * 21;
+
+        // Transparent button for displaying current #1 player
+        TextButton highscore1 = model.getTextButton(
+                highscoreWidth, hightscoreHeight,
+                highscoreX, Gdx.graphics.getHeight() / 20f * 17,
+                "", Assets.getSmallFont(), Align.left);
+        model.addTextButton("highscore1", highscore1);
+
+        // Transparent button for displaying current #2 player
+        TextButton highscore2 = model.getTextButton(
+                highscoreWidth, hightscoreHeight,
+                highscoreX, Gdx.graphics.getHeight() / 20f * 16,
+                "", Assets.getSmallFont(), Align.left);
+        model.addTextButton("highscore2", highscore2);
+
+        // Transparent button for displaying current #3 player
+        TextButton highscore3 = model.getTextButton(
+                highscoreWidth, hightscoreHeight,
+                highscoreX, Gdx.graphics.getHeight() / 20f * 15,
+                "", Assets.getSmallFont(), Align.left);
+        model.addTextButton("highscore3", highscore3);
+
+        // Transparent button for displaying leaderboard header text
+        TextButton highscoreHeader = model.getTextButton(
+                highscoreWidth, hightscoreHeight,
+                highscoreX,  Gdx.graphics.getHeight() / 20f * 18,
+                "Leaderboard", Assets.getYellowFont(), Align.left);
+
         // Create stage and add actors
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         stage.addActor(touchpad);
         stage.addActor(shootBtn);
         stage.addActor(boostBtn);
-
-        // Debug written to font
-        btnFont.setColor(Color.MAROON);
-        btnFont.getData().setScale(1.2f);
+        stage.addActor(playerScore);
+        stage.addActor(highscore1);
+        stage.addActor(highscore2);
+        stage.addActor(highscore3);
+        stage.addActor(highscoreHeader);
 
         // Initialize camera position
         model.moveCameraToSpaceship();
@@ -141,46 +175,6 @@ public class GameView extends ApplicationAdapter implements Screen {
         gameMusic.setLooping(true);
         gameMusic.setVolume(0.5f);
         //gameMusic.play();
-
-        playerScore = model.getTextButton(
-                Gdx.graphics.getWidth() / 15f, Gdx.graphics.getHeight() / 10f,
-                Gdx.graphics.getWidth() / 25f, Gdx.graphics.getHeight() / 20f * 17,
-                "0",
-                Assets.getBigFont(), Align.left);
-        model.putScoreButton("playerScore", playerScore);
-        stage.addActor(playerScore);
-
-        float highscoreWidth = Gdx.graphics.getWidth() / 7f;
-        float hightscoreHeight = Gdx.graphics.getHeight() / 10f;
-        float highscoreX = Gdx.graphics.getWidth() / 25f * 21;
-
-        header = model.getTextButton(
-                highscoreWidth, hightscoreHeight,
-                highscoreX,  Gdx.graphics.getHeight() / 20f * 18,
-                "Leaderboard", Assets.getYellowFont(), Align.left);
-        stage.addActor(header);
-
-        highScore1 = model.getTextButton(
-                highscoreWidth, hightscoreHeight,
-                highscoreX, Gdx.graphics.getHeight() / 20f * 17,
-                "", Assets.getSmallFont(), Align.left);
-        model.putScoreButton("highscore1", highScore1);
-        stage.addActor(highScore1);
-
-
-        highScore2 = model.getTextButton(
-                highscoreWidth, hightscoreHeight,
-                highscoreX, Gdx.graphics.getHeight() / 20f * 16,
-                "", Assets.getSmallFont(), Align.left);
-        model.putScoreButton("highscore2", highScore2);
-        stage.addActor(highScore2);
-
-        highScore3 = model.getTextButton(
-                highscoreWidth, hightscoreHeight,
-                highscoreX, Gdx.graphics.getHeight() / 20f * 15,
-                "", Assets.getSmallFont(), Align.left);
-        model.putScoreButton("highscore3", highScore3);
-        stage.addActor(highScore3);
     }
 
     @Override
@@ -220,15 +214,6 @@ public class GameView extends ApplicationAdapter implements Screen {
 
         // Update game engine
         model.getGameEngine().update(deltaTime);
-
-        //incrementScore();
-    }
-
-    private void incrementScore() {
-        playerScore.setText(String.valueOf(Integer.parseInt(playerScore.getText().toString()) + 1));
-        highScore1.setText(String.valueOf(Integer.parseInt(highScore1.getText().toString()) + 1));
-        highScore2.setText(String.valueOf(Integer.parseInt(highScore2.getText().toString()) + 30));
-        highScore3.setText(String.valueOf(Integer.parseInt(highScore3.getText().toString()) + 80));
     }
 
     @Override
