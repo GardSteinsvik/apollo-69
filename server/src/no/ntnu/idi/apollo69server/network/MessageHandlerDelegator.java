@@ -1,7 +1,5 @@
 package no.ntnu.idi.apollo69server.network;
 
-import com.esotericsoftware.kryonet.FrameworkMessage;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,10 +28,6 @@ public class MessageHandlerDelegator {
         final MessageHandler messageHandler = handlers.get(message.getClass());
         if (messageHandler != null) {
             messageHandler.handle(connection, message);
-        } else {
-            if (!(message instanceof FrameworkMessage.KeepAlive)) {
-//                System.out.println("Unhandled message: " + message);
-            }
         }
     }
 }

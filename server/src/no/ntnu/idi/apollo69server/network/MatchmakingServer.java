@@ -2,6 +2,7 @@ package no.ntnu.idi.apollo69server.network;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.minlog.Log;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -46,15 +47,13 @@ public class MatchmakingServer implements Runnable {
 
         /* NEW CONNECTION HANDLER */
         messageHandlerDelegator.registerHandler((connection, deviceInfo) -> {
-            System.out.println("Player " + deviceInfo.getDeviceId() + " wants to join a game!");
+            Log.info("Player " + deviceInfo.getDeviceId() + " wants to join a game!");
             connection.setDeviceId(deviceInfo.getDeviceId());
             ServerMessage serverMessage = new ServerMessage("Welcome, " + deviceInfo.getDeviceId());
             connection.sendTCP(serverMessage);
         }, DeviceInfo.class);
 
         Apollo69Framework.getMessageClasses().forEach(server.getKryo()::register);
-
-        addGameServer();
     }
 
     @Override
@@ -68,7 +67,7 @@ public class MatchmakingServer implements Runnable {
         try {
             server.bind(tcpPort, udpPort);
         } catch (IOException ex) {
-            System.err.println("Failed to start matchmaking server. Perhaps another server is already running?");
+            Log.error("Failed to start matchmaking server. Perhaps another server is already running?");
             System.exit(69);
         }
         server.run();
@@ -77,7 +76,7 @@ public class MatchmakingServer implements Runnable {
     void addGameServer() {
         if (gameEngineList.size() < MAX_GAME_SERVERS) {
             UUID id = UUID.randomUUID();
-            System.out.println("Starting GameEngine " + id);
+            Log.info("Starting GameEngine " + id);
             GameEngine gameEngine = new GameEngineFactory().create(id);
             gameEngineList.add(gameEngine);
 
@@ -91,7 +90,7 @@ public class MatchmakingServer implements Runnable {
         for (Iterator<GameEngine> iterator = gameEngineList.iterator(); iterator.hasNext(); ) {
             GameEngine gameEngine = iterator.next();
             if (gameEngine.getPlayerConnectionList().isEmpty()) {
-                System.out.println("Stopping GameEngine " + gameEngine.getId());
+                Log.info("Stopping GameEngine " + gameEngine.getId());
                 iterator.remove();
                 gameEngine.stop();
             }

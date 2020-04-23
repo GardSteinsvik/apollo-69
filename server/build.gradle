@@ -1,10 +1,38 @@
-apply plugin: 'java-library'
+apply plugin: "java"
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation group: 'org.jetbrains', name: 'annotations', version: '16.0.1'
-    api project(':framework')
+    implementation project(path: ':framework')
 }
 
-sourceCompatibility = "8"
-targetCompatibility = "8"
+sourceCompatibility = 1.8
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+project.ext.mainClassName = "no.ntnu.idi.apollo69server.Apollo69Server"
+
+task run(dependsOn: classes, type: JavaExec) {
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    ignoreExitValue = true
+}
+
+task debug(dependsOn: classes, type: JavaExec) {
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    ignoreExitValue = true
+    debug = true
+}
+
+task dist(type: Jar) {
+    manifest {
+        attributes 'Main-Class': project.mainClassName
+    }
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+}
+
+dist.dependsOn classes

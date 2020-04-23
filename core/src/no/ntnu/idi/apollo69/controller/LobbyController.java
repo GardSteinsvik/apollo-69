@@ -31,6 +31,7 @@ public class LobbyController {
     }
 
     public void exitButtonPressed() {
+        gameClient.disconnectClient();
         navigator.changeScreen(ScreenType.MAIN_MENU);
     }
 }

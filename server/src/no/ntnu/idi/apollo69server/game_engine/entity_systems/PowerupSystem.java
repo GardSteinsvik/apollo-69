@@ -104,7 +104,6 @@ public class PowerupSystem extends EntitySystem {
             // TODO: This can be optimized with a lock in invisibleComponent or another proper solution, but it is not of utmost importance.
             playerComponent.setShield(true);
             if (shieldComponent.hp <= 0) {
-                System.out.println("Removed shield");
                 entity.remove(ShieldComponent.class);
                 playerComponent.setShield(false);
             }
