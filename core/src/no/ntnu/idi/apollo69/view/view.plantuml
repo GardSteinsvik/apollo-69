@@ -5,13 +5,6 @@ title __VIEW's Class Diagram__\n
   namespace no.ntnu.idi.apollo69 {
     namespace view {
       class no.ntnu.idi.apollo69.view.GameView {
-          {static} - debugFont : BitmapFont
-          - header : TextButton
-          - highScore1 : TextButton
-          - highScore2 : TextButton
-          - highScore3 : TextButton
-          - playerScore : TextButton
-          - scores : ArrayList<TextButton>
           - shapeRenderer : ShapeRenderer
           - spriteBatch : SpriteBatch
           - stage : Stage
@@ -19,7 +12,6 @@ title __VIEW's Class Diagram__\n
           + hide()
           + render()
           + show()
-          - incrementScore()
       }
     }
   }

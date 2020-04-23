@@ -107,6 +107,16 @@ title __SERVER's Class Diagram__\n
   namespace no.ntnu.idi.apollo69server {
     namespace game_engine {
       namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.HealthPowerupComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
         class no.ntnu.idi.apollo69server.game_engine.components.InvisibleComponent {
         }
       }
@@ -188,6 +198,16 @@ title __SERVER's Class Diagram__\n
     namespace game_engine {
       namespace components {
         class no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent {
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.ShotComponent {
         }
       }
     }
@@ -452,52 +472,31 @@ title __SERVER's Class Diagram__\n
   }
   
 
-  no.ntnu.idi.apollo69server.game_engine.GameEngine .up.|> com.badlogic.gdx.utils.Disposable
-  no.ntnu.idi.apollo69server.game_engine.GameEngine .up.|> java.lang.Runnable
-  no.ntnu.idi.apollo69server.game_engine.GameEngineFactory o-- no.ntnu.idi.apollo69server.network.MessageHandlerDelegator : messageHandlerDelegator
-  no.ntnu.idi.apollo69server.game_engine.components.AsteroidComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.AttackingComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.DamageComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.EnergyComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.ExplosionComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.GemComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.GemComponent o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType : type
-  no.ntnu.idi.apollo69server.game_engine.components.HealthComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.InvisibleComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent o-- no.ntnu.idi.apollo69server.network.PlayerConnection : playerConnection
-  no.ntnu.idi.apollo69server.game_engine.components.PickupComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.PositionComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType : type
-  no.ntnu.idi.apollo69server.game_engine.components.RotationComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.ScoreComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.SpaceshipComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.TimeToLiveComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69server.game_engine.entity_systems.AsteroidSystem -up-|> com.badlogic.ashley.core.EntitySystem
-  no.ntnu.idi.apollo69server.game_engine.entity_systems.DamageSystem -up-|> com.badlogic.ashley.core.EntitySystem
-  no.ntnu.idi.apollo69server.game_engine.entity_systems.DeathSystem -up-|> com.badlogic.ashley.core.EntitySystem
-  no.ntnu.idi.apollo69server.game_engine.entity_systems.MovementSystem -up-|> com.badlogic.ashley.core.EntitySystem
-  no.ntnu.idi.apollo69server.game_engine.entity_systems.PickupSystem -up-|> com.badlogic.ashley.core.EntitySystem
-  no.ntnu.idi.apollo69server.game_engine.entity_systems.PowerupSystem -up-|> com.badlogic.ashley.core.EntitySystem
-  no.ntnu.idi.apollo69server.game_engine.entity_systems.ReceivePlayerInputSystem -up-|> com.badlogic.ashley.core.EntitySystem
-  no.ntnu.idi.apollo69server.game_engine.entity_systems.SendUpdateSystem -up-|> com.badlogic.ashley.core.EntitySystem
-  no.ntnu.idi.apollo69server.game_engine.entity_systems.ShootingSystem -up-|> com.badlogic.ashley.core.EntitySystem
-  no.ntnu.idi.apollo69server.game_engine.entity_systems.ShootingSystem o-- no.ntnu.idi.apollo69server.game_engine.entity_factories.ShotFactory : shotFactory
-  no.ntnu.idi.apollo69server.game_engine.entity_systems.SpawnSystem -up-|> com.badlogic.ashley.core.EntitySystem
-  no.ntnu.idi.apollo69server.game_engine.entity_systems.TimeToLiveSystem -up-|> com.badlogic.ashley.core.EntitySystem
-  no.ntnu.idi.apollo69server.game_engine.entity_systems.UpdateBoundsSystem -up-|> com.badlogic.ashley.core.EntitySystem
-  no.ntnu.idi.apollo69server.network.BasePlayerConnectionListener -up-|> com.esotericsoftware.kryonet.Listener
-  no.ntnu.idi.apollo69server.network.MatchmakingServer .up.|> java.lang.Runnable
-  no.ntnu.idi.apollo69server.network.MatchmakingServer o-- no.ntnu.idi.apollo69server.network.MessageHandlerDelegator : messageHandlerDelegator
-  no.ntnu.idi.apollo69server.network.PlayerConnection -up-|> com.esotericsoftware.kryonet.Connection
-  no.ntnu.idi.apollo69server.network.PlayerConnectionListener -up-|> no.ntnu.idi.apollo69server.network.BasePlayerConnectionListener
-  no.ntnu.idi.apollo69server.network.PlayerConnectionListener o-- no.ntnu.idi.apollo69server.network.MessageHandlerDelegator : handlerDelegator
-  no.ntnu.idi.apollo69server.network.PlayerConnectionListener o-- no.ntnu.idi.apollo69server.network.MatchmakingServer : matchmakingServer
+  no.ntnu.idi.apollo69server.game_engine.GameEngine .up.|> Disposable
+  no.ntnu.idi.apollo69server.game_engine.GameEngine .up.|> Runnable
+  no.ntnu.idi.apollo69server.game_engine.components.AsteroidComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.AttackingComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.DamageComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.EnergyComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.ExplosionComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.GemComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.HealthComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.HealthPowerupComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.InvisibleComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.PickupComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.PositionComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.RotationComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.ScoreComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.ShotComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.SpaceshipComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.TimeToLiveComponent .up.|> Component
+  no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent .up.|> Component
+  no.ntnu.idi.apollo69server.network.MatchmakingServer .up.|> Runnable
 
 
 right footer

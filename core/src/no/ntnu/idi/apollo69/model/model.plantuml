@@ -5,37 +5,32 @@ title __MODEL's Class Diagram__\n
   namespace no.ntnu.idi.apollo69 {
     namespace model {
       class no.ntnu.idi.apollo69.model.GameModel {
-          - ASPECT_RATIO : float
           - HEIGHT : float
           - SCREEN_HEIGHT : float
           - SCREEN_WIDTH : float
           - WIDTH : float
           - camera : OrthographicCamera
-          - gameUpdateListener : Listener
-          - players : HashMap<String, Integer>
-          - scoreButtons : HashMap<String, TextButton>
-          - shotSound : Sound
+          - textButtons : HashMap<String, TextButton>
           + GameModel()
+          + addTextButton()
           + getCamera()
           + getGameEngine()
           + getTextButton()
           + moveCameraToSpaceship()
           + navigateToLobby()
-          + putScoreButton()
           + renderBackground()
           + renderBoundary()
           + renderNetworkBatch()
           + renderNetworkShapes()
-          + renderPickups()
-          + renderPowerups()
-          + renderShots()
           - renderAsteroids()
           - renderExplosions()
           - renderHealthBar()
+          - renderPickups()
+          - renderPowerups()
           - renderShieldBar()
-          - renderSpaceshipBoundingCircle()
           - renderSpaceships()
           {static} - sortByValue()
+          - trim()
           - updatePlayerScores()
       }
     }

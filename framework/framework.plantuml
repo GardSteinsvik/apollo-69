@@ -202,16 +202,6 @@ title __FRAMEWORK's Class Diagram__\n
   }
   
 
-  namespace no.ntnu.idi.apollo69framework {
-    namespace network_messages {
-      namespace data_transfer_objects {
-        class no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto {
-        }
-      }
-    }
-  }
-  
-
   no.ntnu.idi.apollo69framework.network_messages.PlayerInput o-- no.ntnu.idi.apollo69framework.network_messages.PlayerInputType : type
   no.ntnu.idi.apollo69framework.network_messages.PlayerSpawn o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
   no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.AsteroidDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
@@ -221,9 +211,9 @@ title __FRAMEWORK's Class Diagram__\n
   no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
   no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
   no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto : rotationDto
-  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto : velocityDto
   no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
   no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType : powerupType
+  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ShotDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
 
 
 right footer

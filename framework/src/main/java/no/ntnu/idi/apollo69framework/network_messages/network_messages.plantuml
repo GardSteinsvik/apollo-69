@@ -135,17 +135,20 @@ title __NETWORK_MESSAGES's Class Diagram__\n
           - pickupDtoList : List<PickupDto>
           - playerDtoList : List<PlayerDto>
           - powerupDtoList : List<PowerupDto>
+          - shotDtoList : List<ShotDto>
           + UpdateMessage()
           + getAsteroidDtoList()
           + getExplosionDtoList()
           + getPickupDtoList()
           + getPlayerDtoList()
           + getPowerupDtoList()
+          + getShotDtoList()
           + setAsteroidDtoList()
           + setExplosionDtoList()
           + setPickupDtoList()
           + setPlayerDtoList()
           + setPowerupDtoList()
+          + setShotDtoList()
       }
     }
   }

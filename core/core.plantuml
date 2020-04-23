@@ -87,26 +87,6 @@ title __CORE's Class Diagram__\n
   namespace no.ntnu.idi.apollo69 {
     namespace game_engine {
       namespace components {
-        class no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace components {
-        class no.ntnu.idi.apollo69.game_engine.components.AttackingComponent {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace components {
         class no.ntnu.idi.apollo69.game_engine.components.BoosterComponent {
         }
       }
@@ -127,67 +107,7 @@ title __CORE's Class Diagram__\n
   namespace no.ntnu.idi.apollo69 {
     namespace game_engine {
       namespace components {
-        class no.ntnu.idi.apollo69.game_engine.components.CircleBoundsComponent {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace components {
-        class no.ntnu.idi.apollo69.game_engine.components.DamageComponent {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace components {
-        class no.ntnu.idi.apollo69.game_engine.components.DimensionComponent {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace components {
-        class no.ntnu.idi.apollo69.game_engine.components.HealthComponent {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace components {
-        class no.ntnu.idi.apollo69.game_engine.components.PickupComponent {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace components {
         class no.ntnu.idi.apollo69.game_engine.components.PlayableComponent {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace components {
-        class no.ntnu.idi.apollo69.game_engine.components.PlayerComponent {
         }
       }
     }
@@ -217,57 +137,7 @@ title __CORE's Class Diagram__\n
   namespace no.ntnu.idi.apollo69 {
     namespace game_engine {
       namespace components {
-        class no.ntnu.idi.apollo69.game_engine.components.ScoreComponent {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace components {
-        class no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace components {
-        class no.ntnu.idi.apollo69.game_engine.components.SpriteComponent {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace components {
-        class no.ntnu.idi.apollo69.game_engine.components.TtlComponent {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace components {
         class no.ntnu.idi.apollo69.game_engine.components.VelocityComponent {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace entities {
-        class no.ntnu.idi.apollo69.game_engine.entities.ShotFactory {
         }
       }
     }
@@ -328,26 +198,6 @@ title __CORE's Class Diagram__\n
     namespace game_engine {
       namespace entity_systems {
         class no.ntnu.idi.apollo69.game_engine.entity_systems.SendPositionSystem {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace entity_systems {
-        class no.ntnu.idi.apollo69.game_engine.entity_systems.ShootingSystem {
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace entity_systems {
-        class no.ntnu.idi.apollo69.game_engine.entity_systems.TtlValidationSystem {
         }
       }
     }
@@ -479,34 +329,20 @@ title __CORE's Class Diagram__\n
   no.ntnu.idi.apollo69.controller.MatchmakingController o-- no.ntnu.idi.apollo69.model.MatchmakingModel : model
   no.ntnu.idi.apollo69.controller.MatchmakingController o-- no.ntnu.idi.apollo69.navigation.Navigator : navigator
   no.ntnu.idi.apollo69.game_engine.GameEngine .up.|> com.badlogic.gdx.utils.Disposable
-  no.ntnu.idi.apollo69.game_engine.components.AtlasRegionComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69.game_engine.components.AttackingComponent .up.|> com.badlogic.ashley.core.Component
   no.ntnu.idi.apollo69.game_engine.components.BoosterComponent .up.|> com.badlogic.ashley.core.Component
   no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69.game_engine.components.CircleBoundsComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69.game_engine.components.DamageComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69.game_engine.components.DimensionComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69.game_engine.components.HealthComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69.game_engine.components.PickupComponent .up.|> com.badlogic.ashley.core.Component
   no.ntnu.idi.apollo69.game_engine.components.PlayableComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69.game_engine.components.PlayerComponent .up.|> com.badlogic.ashley.core.Component
   no.ntnu.idi.apollo69.game_engine.components.PositionComponent .up.|> com.badlogic.ashley.core.Component
   no.ntnu.idi.apollo69.game_engine.components.RotationComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69.game_engine.components.ScoreComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69.game_engine.components.SpaceshipComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69.game_engine.components.SpriteComponent .up.|> com.badlogic.ashley.core.Component
-  no.ntnu.idi.apollo69.game_engine.components.TtlComponent .up.|> com.badlogic.ashley.core.Component
   no.ntnu.idi.apollo69.game_engine.components.VelocityComponent .up.|> com.badlogic.ashley.core.Component
   no.ntnu.idi.apollo69.game_engine.entity_systems.BoundsSystem -up-|> com.badlogic.ashley.core.EntitySystem
+  no.ntnu.idi.apollo69.game_engine.entity_systems.BoundsSystem o-- no.ntnu.idi.apollo69.network.GameClient : gameClient
   no.ntnu.idi.apollo69.game_engine.entity_systems.MovementSystem -up-|> com.badlogic.ashley.core.EntitySystem
   no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem .up.|> no.ntnu.idi.apollo69.game_engine.entity_systems.InputHandlerInterface
   no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem -up-|> com.badlogic.ashley.core.EntitySystem
   no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem o-- no.ntnu.idi.apollo69.network.GameClient : gameClient
   no.ntnu.idi.apollo69.game_engine.entity_systems.SendPositionSystem -up-|> com.badlogic.ashley.core.EntitySystem
   no.ntnu.idi.apollo69.game_engine.entity_systems.SendPositionSystem o-- no.ntnu.idi.apollo69.network.GameClient : gameClient
-  no.ntnu.idi.apollo69.game_engine.entity_systems.ShootingSystem -up-|> com.badlogic.ashley.core.EntitySystem
-  no.ntnu.idi.apollo69.game_engine.entity_systems.ShootingSystem o-- no.ntnu.idi.apollo69.game_engine.entities.ShotFactory : shotFactory
-  no.ntnu.idi.apollo69.game_engine.entity_systems.TtlValidationSystem -up-|> com.badlogic.ashley.core.EntitySystem
   no.ntnu.idi.apollo69.game_engine.entity_systems.UpdateGameStateSystem -up-|> com.badlogic.ashley.core.EntitySystem
   no.ntnu.idi.apollo69.game_engine.entity_systems.UpdateGameStateSystem o-- no.ntnu.idi.apollo69.network.GameClient : gameClient
   no.ntnu.idi.apollo69.model.GameModel o-- no.ntnu.idi.apollo69.game_engine.Background : background

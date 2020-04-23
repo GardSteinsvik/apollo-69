@@ -80,6 +80,7 @@ title __DATA_TRANSFER_OBJECTS's Class Diagram__\n
             + playerId : String
             + score : int
             + shieldHp : float
+            + spaceshipType : int
             + visible : boolean
             + PlayerDto()
             + PlayerDto()
@@ -120,8 +121,8 @@ title __DATA_TRANSFER_OBJECTS's Class Diagram__\n
     namespace network_messages {
       namespace data_transfer_objects {
         enum PowerupType {
-          DEFAULT
           ENERGY
+          HEALTH
           INVISIBLE
           SHIELD
         }
@@ -149,22 +150,9 @@ title __DATA_TRANSFER_OBJECTS's Class Diagram__\n
     namespace network_messages {
       namespace data_transfer_objects {
         class no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ShotDto {
+            + radius : float
             + ShotDto()
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69framework {
-    namespace network_messages {
-      namespace data_transfer_objects {
-        class no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto {
-            + scalar : float
-            + x : float
-            + y : float
-            + VelocityDto()
-            + VelocityDto()
+            + ShotDto()
         }
       }
     }
@@ -178,9 +166,9 @@ title __DATA_TRANSFER_OBJECTS's Class Diagram__\n
   no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
   no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
   no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto : rotationDto
-  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto : velocityDto
   no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
   no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType : powerupType
+  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ShotDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
 
 
 right footer

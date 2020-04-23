@@ -28,6 +28,8 @@ title __APOLLO69FRAMEWORK's Class Diagram__\n
         {static} + POWERUP_HEIGHT : float
         {static} + POWERUP_RADIUS : float
         {static} + POWERUP_WIDTH : float
+        {static} + SHOT_HEIGHT : float
+        {static} + SHOT_WIDTH : float
         {static} + SPACE_SHIP_HEIGHT : float
         {static} + SPACE_SHIP_WIDTH : float
     }

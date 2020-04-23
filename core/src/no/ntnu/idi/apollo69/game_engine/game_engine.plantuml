@@ -5,37 +5,32 @@ title __GAME_ENGINE's Class Diagram__\n
   namespace no.ntnu.idi.apollo69 {
     namespace game_engine {
       class no.ntnu.idi.apollo69.game_engine.Assets {
-          {static} - ASTEROID_ATLAS : String
           {static} - COMBINED_ATLAS : String
           {static} - EXPLOSIONS_ATLAS : String
+          {static} - FONT : String
           {static} - GAME_ATLAS : String
-          {static} - GEMS_ATLAS : String
-          {static} - INVISIBLE_ATLAS : String
           {static} - LASER : String
           {static} - MUSIC : Class<Music>
-          {static} - POWERUPS_ATLAS : String
           {static} - SKIN : Class<Skin>
           {static} - SOUND : Class<Sound>
           {static} - TEXTURE_ATLAS : Class<TextureAtlas>
           {static} - THEME : String
           {static} - UI_SKIN : String
+          {static} - WIDTH : int
           {static} - assetManager : AssetManager
-          {static} - bigFont : BitmapFont
-          {static} - bigGenerator : FreeTypeFontGenerator
-          {static} - bigParameter : FreeTypeFontParameter
-          {static} - smallFont : BitmapFont
-          {static} - smallGenerator : FreeTypeFontGenerator
-          {static} - smallParameter : FreeTypeFontParameter
+          {static} - desktopLargeFont : BitmapFont
+          {static} - desktopSmallFont : BitmapFont
+          {static} - desktopYellowFont : BitmapFont
+          {static} - mobileLargeFont : BitmapFont
+          {static} - mobileSmallFont : BitmapFont
+          {static} - mobileYellowFont : BitmapFont
           {static} - textureCache : ObjectMap<String, AtlasRegion>
-          {static} - yellowFont : BitmapFont
-          {static} - yellowGenerator : FreeTypeFontGenerator
-          {static} - yellowParameter : FreeTypeFontParameter
           {static} + getAsteroidRegion()
           {static} + getBackgroundMusic()
-          {static} + getBigFont()
           {static} + getBoostedSpaceshipRegion()
           {static} + getExplosionRegion()
           {static} + getGameAtlas()
+          {static} + getLargeFont()
           {static} + getLaserSound()
           {static} + getPickupRegion()
           {static} + getPowerupRegion()

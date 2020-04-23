@@ -5,17 +5,6 @@ title __ENTITIES's Class Diagram__\n
   namespace no.ntnu.idi.apollo69 {
     namespace game_engine {
       namespace entities {
-        class no.ntnu.idi.apollo69.game_engine.entities.ShotFactory {
-            + create()
-        }
-      }
-    }
-  }
-  
-
-  namespace no.ntnu.idi.apollo69 {
-    namespace game_engine {
-      namespace entities {
         class no.ntnu.idi.apollo69.game_engine.entities.SpaceshipFactory {
             + create()
             + createPlayableSpaceship()
