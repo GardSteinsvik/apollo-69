@@ -1,0 +1,193 @@
+@startuml
+
+title __DATA_TRANSFER_OBJECTS's Class Diagram__\n
+
+  namespace no.ntnu.idi.apollo69framework {
+    namespace network_messages {
+      namespace data_transfer_objects {
+        class no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.AsteroidDto {
+            + hp : float
+            + AsteroidDto()
+            + AsteroidDto()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69framework {
+    namespace network_messages {
+      namespace data_transfer_objects {
+        class no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.DimensionDto {
+            + height : float
+            + width : float
+            + DimensionDto()
+            + DimensionDto()
+            + DimensionDto()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69framework {
+    namespace network_messages {
+      namespace data_transfer_objects {
+        class no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ExplosionDto {
+            + frameNumber : int
+            + ExplosionDto()
+            + ExplosionDto()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69framework {
+    namespace network_messages {
+      namespace data_transfer_objects {
+        enum GemType {
+          COIN
+          DEFAULT
+          METEORITE
+          RUBY
+          STAR
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69framework {
+    namespace network_messages {
+      namespace data_transfer_objects {
+        class no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto {
+            + PickupDto()
+            + PickupDto()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69framework {
+    namespace network_messages {
+      namespace data_transfer_objects {
+        class no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto {
+            + boosting : boolean
+            + hp : float
+            + name : String
+            + playerId : String
+            + score : int
+            + shieldHp : float
+            + visible : boolean
+            + PlayerDto()
+            + PlayerDto()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69framework {
+    namespace network_messages {
+      namespace data_transfer_objects {
+        class no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto {
+            + x : float
+            + y : float
+            + PositionDto()
+            + PositionDto()
+            + PositionDto()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69framework {
+    namespace network_messages {
+      namespace data_transfer_objects {
+        class no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto {
+            + PowerupDto()
+            + PowerupDto()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69framework {
+    namespace network_messages {
+      namespace data_transfer_objects {
+        enum PowerupType {
+          DEFAULT
+          ENERGY
+          INVISIBLE
+          SHIELD
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69framework {
+    namespace network_messages {
+      namespace data_transfer_objects {
+        class no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto {
+            + degrees : float
+            + x : float
+            + y : float
+            + RotationDto()
+            + RotationDto()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69framework {
+    namespace network_messages {
+      namespace data_transfer_objects {
+        class no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ShotDto {
+            + ShotDto()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69framework {
+    namespace network_messages {
+      namespace data_transfer_objects {
+        class no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto {
+            + scalar : float
+            + x : float
+            + y : float
+            + VelocityDto()
+            + VelocityDto()
+        }
+      }
+    }
+  }
+  
+
+  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.AsteroidDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
+  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ExplosionDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.DimensionDto : dimensionDto
+  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ExplosionDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
+  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType : gemType
+  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
+  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
+  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto : rotationDto
+  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.VelocityDto : velocityDto
+  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto : positionDto
+  no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType : powerupType
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

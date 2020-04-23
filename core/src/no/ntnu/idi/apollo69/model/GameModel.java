@@ -2,7 +2,6 @@ package no.ntnu.idi.apollo69.model;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -56,37 +55,26 @@ import static no.ntnu.idi.apollo69framework.GameObjectDimensions.POWERUP_WIDTH;
 public class GameModel {
 
     private Navigator navigator;
-
     private Background background;
     private GameEngine gameEngine;
-    private Sound shotSound;
-
     private GameClient gameClient;
-    private Listener gameUpdateListener;
 
     // Constants for the screen orthographic camera
     private final float SCREEN_WIDTH = Gdx.graphics.getWidth();
     private final float SCREEN_HEIGHT = Gdx.graphics.getHeight();
-    private final float ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
     private final float HEIGHT = SCREEN_HEIGHT;
     private final float WIDTH = SCREEN_WIDTH;
     private final OrthographicCamera camera = new OrthographicCamera(480 * (WIDTH/HEIGHT), 480);
 
-    private HashMap<String, Integer> players = new HashMap<>();
-
-    private HashMap<String, TextButton> scoreButtons = new HashMap<>();
+    private HashMap<String, TextButton> textButtons = new HashMap<>();
 
     public GameModel(Navigator navigator) {
         this.navigator = navigator;
-
         background = new Background();
         Assets.load();
         gameEngine = new GameEngineFactory().create();
-        //shotSound = Gdx.audio.newSound(Gdx.files.internal("game/laser.wav"));
-        shotSound = Assets.getLaserSound();
-
         this.gameClient = NetworkClientSingleton.getInstance().getGameClient();
-        gameUpdateListener = new ServerUpdateListener(gameEngine, navigator);
+        Listener gameUpdateListener = new ServerUpdateListener(gameEngine, navigator);
         NetworkClientSingleton.getInstance().getClient().addListener(gameUpdateListener);
     }
 
@@ -247,13 +235,12 @@ public class GameModel {
         return button;
     }
 
-    public void putScoreButton(String key, TextButton value) {
-        scoreButtons.put(key, value);
+    public void addTextButton(String key, TextButton value) {
+        textButtons.put(key, value);
     }
 
-    public void renderPowerups(SpriteBatch batch, List<PowerupDto> powerupDtoList) {
+    private void renderPowerups(SpriteBatch batch, List<PowerupDto> powerupDtoList) {
         // Render Powerup(s), first so that it renders under the spaceship, change this after logic is in place on touch anyway?
-
         for (PowerupDto powerupDto : powerupDtoList) {
             PowerupType powerupType = powerupDto.powerupType;
             float posX = powerupDto.positionDto.x;
@@ -262,8 +249,7 @@ public class GameModel {
         }
     }
 
-    public void renderPickups(SpriteBatch batch, List<PickupDto> pickupDtoList) {
-
+    private void renderPickups(SpriteBatch batch, List<PickupDto> pickupDtoList) {
         for (PickupDto pickupDto: pickupDtoList) {
             GemType gemType = pickupDto.gemType;
             float posX = pickupDto.positionDto.x;
@@ -291,37 +277,48 @@ public class GameModel {
         ArrayList<Integer> sortedScores = new ArrayList<>(scoresSorted.values());
         Collections.reverse(sortedScores);
 
+        trim(sortedPlayers, sortedScores);
+
         // Player score
-        scoreButtons.get("playerScore").setText(String.valueOf(playerScore));
+        textButtons.get("playerScore").setText(String.valueOf(playerScore));
 
         // Current #1 player
-        scoreButtons.get("highscore1").setText((scoresSorted.size() > 0) ?
-                "(1) " + sortedPlayers.get(0) + " : " + sortedScores.get(0) : "");
+        textButtons.get("highscore1").setText((scoresSorted.size() > 0) ?
+                "#1 - " + sortedPlayers.get(0) + " - " + sortedScores.get(0) : "");
 
         // Current #2 player
-        scoreButtons.get("highscore2").setText((scoresSorted.size() > 1) ?
-                "(2) " + sortedPlayers.get(1) + " : " + sortedScores.get(1) : "");
+        textButtons.get("highscore2").setText((scoresSorted.size() > 1) ?
+                "#2 - " + sortedPlayers.get(1) + " - " + sortedScores.get(1) : "");
 
         // Current #3 player
-        scoreButtons.get("highscore3").setText((scoresSorted.size() > 2) ?
-                "(3) " + sortedPlayers.get(2) + " : " + sortedScores.get(2) : "");
-
+        textButtons.get("highscore3").setText((scoresSorted.size() > 2) ?
+                "#3 - " + sortedPlayers.get(2) + " - " + sortedScores.get(2) : "");
     }
 
     private static LinkedHashMap<String, Integer> sortByValue(HashMap<String, Integer> unsorted) {
-        // Create list
+        // Create list and sort list
         List<Map.Entry<String, Integer>> list = new LinkedList<>(unsorted.entrySet());
-
-        // Sort the list
         Collections.sort(list, (o1, o2) -> (o1.getValue()).compareTo(o2.getValue()));
 
         // Put data from sorted list to new hashmap
         LinkedHashMap<String, Integer> sorted = new LinkedHashMap<>();
-        for (Map.Entry<String, Integer> aa : list) {
-            sorted.put(aa.getKey(), aa.getValue());
+        for (Map.Entry<String, Integer> entry : list) {
+            sorted.put(entry.getKey(), entry.getValue());
         }
 
         return sorted;
+    }
+
+    private void trim(ArrayList<String> names, ArrayList<Integer> scores) {
+        for (int i = 0; i < names.size(); i++) {
+            if (names.get(i).length() > 5) {
+                if (scores.get(i) > 999) {
+                    names.set(i, names.get(i).substring(0,4) + "..");
+                } else {
+                    names.set(i, names.get(i).substring(0,5) + "..");
+                }
+            }
+        }
     }
 
     public void renderBoundary(ShapeRenderer shapeRenderer, float radius) {

@@ -1,0 +1,308 @@
+@startuml
+
+title __COMPONENTS's Class Diagram__\n
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.AsteroidComponent {
+            {static} + MAPPER : ComponentMapper<AsteroidComponent>
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.AttackingComponent {
+            {static} + MAPPER : ComponentMapper<AttackingComponent>
+            + shooting : boolean
+            + shotDamage : float
+            + shotRadius : float
+            + AttackingComponent()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent {
+            {static} + MAPPER : ComponentMapper<BoundsComponent>
+            + circle : Circle
+            + dimensions : Vector2
+            + BoundsComponent()
+            + getPosition()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.DamageComponent {
+            {static} + MAPPER : ComponentMapper<DamageComponent>
+            + force : float
+            + owner : String
+            + DamageComponent()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.EnergyComponent {
+            {static} + MAPPER : ComponentMapper<EnergyComponent>
+            + energy : int
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.ExplosionComponent {
+            {static} + MAPPER : ComponentMapper<ExplosionComponent>
+            + startTime : long
+            + ExplosionComponent()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.GemComponent {
+            {static} + MAPPER : ComponentMapper<GemComponent>
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.HealthComponent {
+            {static} + MAPPER : ComponentMapper<HealthComponent>
+            + hp : float
+            + owner : String
+            + HealthComponent()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.InvisibleComponent {
+            {static} + MAPPER : ComponentMapper<InvisibleComponent>
+            + time : Instant
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent {
+            {static} + MAPPER : ComponentMapper<NetworkPlayerComponent>
+            + NetworkPlayerComponent()
+            + getPlayerConnection()
+            + setPlayerConnection()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.PickupComponent {
+            {static} + MAPPER : ComponentMapper<PickupComponent>
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent {
+            {static} + MAPPER : ComponentMapper<PlayerComponent>
+            - id : String
+            - name : String
+            - shield : boolean
+            - visible : boolean
+            + PlayerComponent()
+            + getId()
+            + getName()
+            + hasShield()
+            + isVisible()
+            + setId()
+            + setName()
+            + setShield()
+            + setVisible()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.PositionComponent {
+            {static} + MAPPER : ComponentMapper<PositionComponent>
+            + position : Vector2
+            + PositionComponent()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent {
+            {static} + MAPPER : ComponentMapper<PowerupComponent>
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.RotationComponent {
+            {static} + MAPPER : ComponentMapper<RotationComponent>
+            + degrees : float
+            + x : float
+            + y : float
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.ScoreComponent {
+            {static} + MAPPER : ComponentMapper<ScoreComponent>
+            + score : int
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent {
+            {static} + MAPPER : ComponentMapper<ShieldComponent>
+            + hp : int
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.SpaceshipComponent {
+            {static} + MAPPER : ComponentMapper<SpaceshipComponent>
+            + type : int
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.TimeToLiveComponent {
+            {static} + MAPPER : ComponentMapper<TimeToLiveComponent>
+            + timeToDie : long
+            + TimeToLiveComponent()
+        }
+      }
+    }
+  }
+  
+
+  namespace no.ntnu.idi.apollo69server {
+    namespace game_engine {
+      namespace components {
+        class no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent {
+            {static} + MAPPER : ComponentMapper<VelocityComponent>
+            + boosting : boolean
+            + idle : float
+            + scalar : float
+            + velocity : Vector2
+            + VelocityComponent()
+            + setScalar()
+            + setVelocity()
+        }
+      }
+    }
+  }
+  
+
+  no.ntnu.idi.apollo69server.game_engine.components.AsteroidComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.AttackingComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.BoundsComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.DamageComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.EnergyComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.ExplosionComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.GemComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.GemComponent o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType : type
+  no.ntnu.idi.apollo69server.game_engine.components.HealthComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.InvisibleComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.NetworkPlayerComponent o-- no.ntnu.idi.apollo69server.network.PlayerConnection : playerConnection
+  no.ntnu.idi.apollo69server.game_engine.components.PickupComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.PlayerComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.PositionComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.PowerupComponent o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType : type
+  no.ntnu.idi.apollo69server.game_engine.components.RotationComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.ScoreComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.ShieldComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.SpaceshipComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.TimeToLiveComponent .up.|> com.badlogic.ashley.core.Component
+  no.ntnu.idi.apollo69server.game_engine.components.VelocityComponent .up.|> com.badlogic.ashley.core.Component
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
