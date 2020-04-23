@@ -8,12 +8,14 @@ public class PlayerComponent implements Component {
 
     private String id;
     private String name;
+    private int spaceshipType;
     private boolean visible;
     private boolean shield;
 
-    public PlayerComponent(String id, String name, boolean visible, boolean shield) {
+    public PlayerComponent(String id, String name, int spaceshipType, boolean shield, boolean visible) {
         this.id = id;
         this.name = name;
+        this.spaceshipType = spaceshipType;
         this.visible = visible;
         this.shield = false;
     }
@@ -32,6 +34,14 @@ public class PlayerComponent implements Component {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getSpaceshipType() {
+        return spaceshipType;
+    }
+
+    public void setSpaceshipType(int spaceshipType) {
+        this.spaceshipType = spaceshipType;
     }
 
     public boolean isVisible() { return visible; }

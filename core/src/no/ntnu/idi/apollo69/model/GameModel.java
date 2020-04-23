@@ -118,10 +118,10 @@ public class GameModel {
                 rotation = rotationComponent.degrees;
             }
 
-            shipTexture = Assets.getSpaceshipRegion(1);
+            shipTexture = Assets.getSpaceshipRegion(playerDto.spaceshipType);
             if (playerDto.boosting) {
                 int frameNumber = System.currentTimeMillis() % 200 <= 100 ? 1 : 2;
-                shipTexture = Assets.getBoostedSpaceshipRegion(1, frameNumber);
+                shipTexture = Assets.getBoostedSpaceshipRegion(playerDto.spaceshipType, frameNumber);
             }
 
             Color color = spriteBatch.getColor();

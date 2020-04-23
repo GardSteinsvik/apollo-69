@@ -36,22 +36,17 @@ public class PickupSystem extends EntitySystem {
         switch(type) {
             case RUBY:
                 scoreComponent.score = scoreComponent.score + 5;
-                System.out.println("Ruby pickup, current score: " + scoreComponent.score);
                 break;
             case COIN:
                 scoreComponent.score = scoreComponent.score + 1;
-                System.out.println("Coin pickup, current score: " + scoreComponent.score);
                 break;
             case METEORITE:
                 scoreComponent.score = scoreComponent.score + 3;
-                System.out.println("Meteorite pickup, current score: " + scoreComponent.score);
                 break;
             case STAR:
                 scoreComponent.score = scoreComponent.score + 10;
-                System.out.println("Star pickup, current score: " + scoreComponent.score);
                 break;
             case DEFAULT:
-                // Should not happen as default gem is not spawned
                 break;
         }
     }

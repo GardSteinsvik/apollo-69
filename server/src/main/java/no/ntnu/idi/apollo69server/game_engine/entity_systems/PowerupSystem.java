@@ -52,11 +52,9 @@ public class PowerupSystem extends EntitySystem {
         switch(powerupType) {
             case ENERGY:
                 spaceShip.add(new EnergyComponent());
-                System.out.println("Energy powerup");
                 break;
             case SHIELD:
                 spaceShip.add(new ShieldComponent());
-                System.out.println("Shield powerup");
                 break;
             case HEALTH:
                 HealthComponent healthComponent = HealthComponent.MAPPER.get(spaceShip);
@@ -66,11 +64,9 @@ public class PowerupSystem extends EntitySystem {
                 } else {
                     spaceShip.add(new HealthPowerupComponent(healthComponent.hp));
                 }
-                System.out.println("Health powerup");
                 break;
             case INVISIBLE:
                 spaceShip.add(new InvisibleComponent());
-                System.out.println("Invisible powerup");
                 break;
             default:
                 // Should not happen, as DEFAULT powerup is not generated.
@@ -122,7 +118,6 @@ public class PowerupSystem extends EntitySystem {
             playerComponent.setVisible(false);
             Instant compareTime = Instant.now().minusSeconds(15);
             if (invisibleComponent.time.isBefore(compareTime)) {
-                System.out.println("Removed invisibility");
                 entity.remove(InvisibleComponent.class);
                 playerComponent.setVisible(true);
             }
@@ -135,7 +130,6 @@ public class PowerupSystem extends EntitySystem {
             HealthComponent healthComponent = HealthComponent.MAPPER.get(entity);
             Instant compareTime = Instant.now().minusSeconds(5);
             if (healthPowerupComponent.time.isBefore(compareTime)) {
-                System.out.println("Removed health powerup");
                 healthComponent.hp = healthPowerupComponent.previousHealth;
                 entity.remove(HealthPowerupComponent.class);
             } else {
@@ -148,7 +142,6 @@ public class PowerupSystem extends EntitySystem {
         for (Entity entity : energyPowerups) {
             EnergyComponent energyComponent = EnergyComponent.MAPPER.get(entity);
             if (energyComponent.energy == 0) {
-                System.out.println("Removed energy");
                 entity.remove(EnergyComponent.class);
             }
         }

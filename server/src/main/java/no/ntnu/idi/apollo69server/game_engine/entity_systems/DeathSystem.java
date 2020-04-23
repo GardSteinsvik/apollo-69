@@ -35,7 +35,6 @@ public class DeathSystem extends EntitySystem {
             if (healthComponent.hp <= 0) {
                 NetworkPlayerComponent networkPlayerComponent = NetworkPlayerComponent.MAPPER.get(entity);
                 if (networkPlayerComponent != null) {
-                    System.out.println("Sending death message to player " + networkPlayerComponent.getPlayerConnection().getDeviceId());
                     networkPlayerComponent.getPlayerConnection().sendTCP(new PlayerDead());
                 }
 
