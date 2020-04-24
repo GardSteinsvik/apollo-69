@@ -173,14 +173,14 @@ public class LobbyView extends ApplicationAdapter implements Screen, Variables {
 
     private Array getFakeHighScoreList() {
         Array<String> highScores = new Array<>();
-        highScores.add("Gard", "1 million fucking points");
-        highScores.add("Lars", "500000");
-        highScores.add("Tuva", "18");
-        highScores.add("Alexander", "15");
-        highScores.add("Tuva", "18");
-        highScores.add("Alexander", "15");
-        highScores.add("Anders", "0");
-        highScores.add("Anders", "0");
+        highScores.add("Gard", "1 000 000");
+        highScores.add("Lars", "500 000");
+        highScores.add("Tuva", "450 000");
+        highScores.add("Anders", "69 420");
+        highScores.add("Anon", "88");
+        highScores.add("PlayerOne", "15");
+        highScores.add("HelloFirstPLace", "6");
+        highScores.add("Loser", "0");
         return highScores;
     }
 }
