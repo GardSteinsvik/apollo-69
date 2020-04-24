@@ -1,0 +1,357 @@
+@startuml
+
+    namespace no.ntnu.idi.apollo69server {
+        class Apollo69Server {
+            {static} + main()
+        }
+
+        namespace game_engine {
+            class GameEngine {
+                - engine : Engine
+                - id : UUID
+                - playerConnectionList : List<PlayerConnection>
+                - playerConnectionListener : Listener
+                - serverAlive : boolean
+                + GameEngine()
+                + addPlayerToGame()
+                + dispose()
+                + getId()
+                + getPlayerConnectionList()
+                + isFull()
+                + removePlayerFromGame()
+                + run()
+                + stop()
+            }
+            class GameEngineFactory {
+                - GAME_UPDATE_SECONDS : float
+                - NETWORK_UPDATE_SECONDS : float
+                - messageHandlerDelegator : MessageHandlerDelegator
+                + create()
+            }
+
+            namespace components {
+                class AsteroidComponent {
+                    {static} + MAPPER : ComponentMapper<AsteroidComponent>
+                }
+                class AttackingComponent {
+                    {static} + MAPPER : ComponentMapper<AttackingComponent>
+                    + shooting : boolean
+                    + shotDamage : float
+                    + shotRadius : float
+                    + AttackingComponent()
+                }
+                class BoundsComponent {
+                    {static} + MAPPER : ComponentMapper<BoundsComponent>
+                    + circle : Circle
+                    + dimensions : Vector2
+                    + BoundsComponent()
+                    + BoundsComponent()
+                    + getPosition()
+                }
+                class DamageComponent {
+                    {static} + MAPPER : ComponentMapper<DamageComponent>
+                    + damage : float
+                    + owner : String
+                    + DamageComponent()
+                }
+                class EnergyComponent {
+                    {static} + MAPPER : ComponentMapper<EnergyComponent>
+                    + energy : int
+                }
+                class ExplosionComponent {
+                    {static} + MAPPER : ComponentMapper<ExplosionComponent>
+                    + startTime : long
+                    + ExplosionComponent()
+                }
+                class GemComponent {
+                    {static} + MAPPER : ComponentMapper<GemComponent>
+                    + type : GemType
+                }
+                class HealthComponent {
+                    {static} + MAPPER : ComponentMapper<HealthComponent>
+                    + hp : float
+                    + owner : String
+                    + HealthComponent()
+                }
+                class HealthPowerupComponent {
+                    {static} + MAPPER : ComponentMapper<HealthPowerupComponent>
+                    + previousHealth : float
+                    + time : Instant
+                    + HealthPowerupComponent()
+                }
+                class InvisibleComponent {
+                    {static} + MAPPER : ComponentMapper<InvisibleComponent>
+                    + time : Instant
+                }
+                class NetworkPlayerComponent {
+                    {static} + MAPPER : ComponentMapper<NetworkPlayerComponent>
+                    - playerConnection : PlayerConnection
+                    + NetworkPlayerComponent()
+                    + getPlayerConnection()
+                    + setPlayerConnection()
+                }
+                class PickupComponent {
+                    {static} + MAPPER : ComponentMapper<PickupComponent>
+                }
+                class PlayerComponent {
+                    {static} + MAPPER : ComponentMapper<PlayerComponent>
+                    - id : String
+                    - name : String
+                    - shield : boolean
+                    - spaceshipType : int
+                    - visible : boolean
+                    + PlayerComponent()
+                    + getId()
+                    + getName()
+                    + getSpaceshipType()
+                    + hasShield()
+                    + isVisible()
+                    + setId()
+                    + setName()
+                    + setShield()
+                    + setSpaceshipType()
+                    + setVisible()
+                }
+                class PositionComponent {
+                    {static} + MAPPER : ComponentMapper<PositionComponent>
+                    + position : Vector2
+                    + PositionComponent()
+                class PowerupComponent {
+                    {static} + MAPPER : ComponentMapper<PowerupComponent>
+                    + type : PowerupType
+                    + PowerupComponent()
+                }
+                class RotationComponent {
+                    {static} + MAPPER : ComponentMapper<RotationComponent>
+                    + degrees : float
+                    + x : float
+                    + y : float
+                }
+                class ScoreComponent {
+                    {static} + MAPPER : ComponentMapper<ScoreComponent>
+                    + score : int
+                    + ScoreComponent()
+                    + ScoreComponent()
+                }
+                class ShieldComponent {
+                    {static} + MAPPER : ComponentMapper<ShieldComponent>
+                    + hp : int
+                }
+                class ShotComponent {
+                    {static} + MAPPER : ComponentMapper<ShotComponent>
+                }
+                class SpaceshipComponent {
+                    {static} + MAPPER : ComponentMapper<SpaceshipComponent>
+                    + type : int
+                }
+                class TimeToLiveComponent {
+                    {static} + MAPPER : ComponentMapper<TimeToLiveComponent>
+                    + timeToDie : long
+                    + TimeToLiveComponent()
+                }
+                class VelocityComponent {
+                    {static} + MAPPER : ComponentMapper<VelocityComponent>
+                    + boosting : boolean
+                    + idle : float
+                    + scalar : float
+                    + velocity : Vector2
+                    + VelocityComponent()
+                    + setScalar()
+                    + setVelocity()
+                }
+            }
+
+            namespace entity_factories {
+                class AsteroidFactory {
+                    - BASE_SPEED : int
+                    - DAMAGE_OF_ASTEROID : float
+                    - HP_OF_ASTEROID : float
+                    - MAX_EXTRA_SPEED : int
+                    + create()
+                }
+                class ExplosionFactory {
+                    {static} + create()
+                }
+                class GemFactory {
+                    + create()
+                    - createCoinGem()
+                    - createMeteoriteGem()
+                    - createRubyGem()
+                    - createStarGem()
+                    - generalCreate()
+                }
+                class PowerupFactory {
+                    + createRandomPowerup()
+                    - create()
+                }
+                class ShotFactory {
+                    + create()
+                }
+                class SpaceshipFactory {
+                    + create()
+                    - getSpaceShipId()
+                }
+            }
+
+            namespace entity_systems {
+                class AsteroidSystem {
+                    - AMOUNT_OF_ASTEROIDS_TO_KEEP_ON_THE_MAP : int
+                    - asteroids : ImmutableArray<Entity>
+                    + AsteroidSystem()
+                    + addedToEngine()
+                    + update()
+                }
+                class DamageSystem {
+                    - objectsThatCanDealDamage : ImmutableArray<Entity>
+                    - objectsThatCanReceiveDamage : ImmutableArray<Entity>
+                    + DamageSystem()
+                    + addedToEngine()
+                    + update()
+                }
+                class DeathSystem {
+                    - entities : ImmutableArray<Entity>
+                    + DeathSystem()
+                    + addedToEngine()
+                    + update()
+                }
+                class MovementSystem {
+                    - entities : ImmutableArray<Entity>
+                    - interval : float
+                    - timeAccumulator : float
+                    + MovementSystem()
+                    + addedToEngine()
+                    + update()
+                    - move()
+                }
+                class PickupSystem {
+                    - pickups : ImmutableArray<Entity>
+                    - spaceships : ImmutableArray<Entity>
+                    + PickupSystem()
+                    + addedToEngine()
+                    + update()
+                    - handleGemPickup()
+                }
+                class PowerupSystem {
+                    - energyPowerups : ImmutableArray<Entity>
+                    - healthPowerups : ImmutableArray<Entity>
+                    - invisiblePowerups : ImmutableArray<Entity>
+                    - powerups : ImmutableArray<Entity>
+                    - shieldPowerups : ImmutableArray<Entity>
+                    - spaceships : ImmutableArray<Entity>
+                    + PowerupSystem()
+                    + addedToEngine()
+                    + update()
+                    - handlePickup()
+                }
+                class ReceivePlayerInputSystem {
+                    - inputQueue : Queue<PlayerInput>
+                    - players : ImmutableArray<Entity>
+                    + ReceivePlayerInputSystem()
+                    + addedToEngine()
+                    + update()
+                    - processInput()
+                }
+                class SendUpdateSystem {
+                    - asteroids : ImmutableArray<Entity>
+                    - explosions : ImmutableArray<Entity>
+                    - interval : float
+                    - pickups : ImmutableArray<Entity>
+                    - players : ImmutableArray<Entity>
+                    - powerups : ImmutableArray<Entity>
+                    - shots : ImmutableArray<Entity>
+                    - timeAccumulator : float
+                    + SendUpdateSystem()
+                    + addedToEngine()
+                    + update()
+                    - createUpdateMessage()
+                    - sendUpdate()
+                }
+                class ShootingSystem {
+                    - interval : float
+                    - playerEntities : ImmutableArray<Entity>
+                    - shotFactory : ShotFactory
+                    - timeAccumulator : float
+                    + ShootingSystem()
+                    + addedToEngine()
+                    + update()
+                }
+                class SpawnSystem {
+                    - entities : ImmutableArray<Entity>
+                    + SpawnSystem()
+                    + addedToEngine()
+                    + update()
+                }
+                class TimeToLiveSystem {
+                    - entities : ImmutableArray<Entity>
+                    + TimeToLiveSystem()
+                    + addedToEngine()
+                    + update()
+                }
+                class UpdateBoundsSystem {
+                    - entities : ImmutableArray<Entity>
+                    + UpdateBoundsSystem()
+                    + addedToEngine()
+                    + update()
+                }
+            }
+
+        }
+
+        namespace network {
+            class BasePlayerConnectionListener {
+                + connected()
+                + connected()
+                + disconnected()
+                + disconnected()
+                + idle()
+                + idle()
+                + received()
+                + received()
+            }
+            class MatchmakingServer {
+                {static} + MAX_GAME_SERVERS : int
+                {static} + MAX_PLAYERS : int
+                - connections : List<PlayerConnection>
+                - gameEngineList : List<GameEngine>
+                - gameEngineThreadGroup : ThreadGroup
+                - messageHandlerDelegator : MessageHandlerDelegator
+                - server : Server
+                - tcpPort : int
+                - udpPort : int
+                + MatchmakingServer()
+                + run()
+                + stop()
+                ~ addGameServer()
+                ~ getAvailableGameServer()
+                ~ removeEmptyGameServers()
+            }
+            interface MessageHandler {
+                {abstract} + handle()
+            }
+            class MessageHandlerDelegator {
+                - handlers : Map<Class, MessageHandler>
+                + handleMessage()
+                + registerHandler()
+                + unregisterHandler()
+            }
+            class PlayerConnection {
+                - deviceId : String
+                + getDeviceId()
+                + setDeviceId()
+            }
+            class PlayerConnectionListener {
+                - connections : List<PlayerConnection>
+                - handlerDelegator : MessageHandlerDelegator
+                - matchmakingServer : MatchmakingServer
+                - waitingConnections : List<PlayerConnection>
+                + PlayerConnectionListener()
+                + connected()
+                + disconnected()
+                + idle()
+                + received()
+                - matchmakeQueue()
+            }
+        }
+    }
+
+@enduml
