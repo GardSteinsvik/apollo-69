@@ -1,0 +1,31 @@
+@startuml
+
+        class no.ntnu.idi.apollo69.controller.GameController {
+            + GameController()
+            + boostButtonPressed()
+            + boostButtonReleased()
+            + shootButtonPressed()
+            + shootButtonReleased()
+            + touchpadMoved()
+        }
+
+        class no.ntnu.idi.apollo69.controller.LobbyController {
+            + LobbyController()
+            + exitButtonPressed()
+            + joinButtonPressed()
+        }
+
+        class no.ntnu.idi.apollo69.controller.MainMenuController {
+            + MainMenuController()
+            + playButtonPressed()
+        }
+
+        class no.ntnu.idi.apollo69.controller.MatchmakingController {
+            + MatchmakingController()
+            + cancelMatchmaking()
+            + onMatchmakingDone()
+            + onShow()
+            + startMatchmaking()
+        }
+
+@enduml

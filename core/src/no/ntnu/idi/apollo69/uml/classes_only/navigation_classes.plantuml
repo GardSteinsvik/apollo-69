@@ -1,0 +1,18 @@
+@startuml
+
+      class no.ntnu.idi.apollo69.navigation.Navigator {
+          - screen : Screen
+          + changeScreen()
+          + dispose()
+          + getScreen()
+          - setScreen()
+      }
+      enum no.ntnu.idi.apollo69.navigation.ScreenType {
+        GAME
+        LOBBY
+        MAIN_MENU
+        MATCHMAKING
+        SETTINGS
+      }
+
+@enduml

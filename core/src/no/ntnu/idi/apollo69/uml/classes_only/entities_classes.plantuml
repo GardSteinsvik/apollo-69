@@ -1,0 +1,8 @@
+@startuml
+
+        class no.ntnu.idi.apollo69.game_engine.entities.SpaceshipFactory {
+            + create()
+            + createPlayableSpaceship()
+        }
+
+@enduml

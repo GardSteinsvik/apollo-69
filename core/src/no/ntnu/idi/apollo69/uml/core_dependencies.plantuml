@@ -1,0 +1,396 @@
+@startuml
+
+    namespace no.ntnu.idi.apollo69.Apollo69 {
+        class Apollo69 {
+            - deviceId : String
+            + Apollo69()
+            + Apollo69()
+            + create()
+            + dispose()
+            + render()
+        }
+        class Device {
+            {static} + DEVICE_ID : String
+            {static} + NAME : String
+        }
+        interface Variables {
+            {static} + buttonHeight : float
+            {static} + buttonWidth : float
+            {static} + fontScale : float
+            {static} + nicknameHeight : float
+            {static} + spacing : float
+            {static} + textExit : String
+            {static} + textExitGame : String
+            {static} + textJoin : String
+            {static} + textPlay : String
+            {static} + textSettings : String
+        }
+
+        namespace controller {
+            class GameController {
+                + GameController()
+                + boostButtonPressed()
+                + boostButtonReleased()
+                + shootButtonPressed()
+                + shootButtonReleased()
+                + touchpadMoved()
+            }
+            class LobbyController {
+                + LobbyController()
+                + exitButtonPressed()
+                + joinButtonPressed()
+            }
+            class MainMenuController {
+                + MainMenuController()
+                + playButtonPressed()
+            }
+            class MatchmakingController {
+                + MatchmakingController()
+                + cancelMatchmaking()
+                + onMatchmakingDone()
+                + onShow()
+                + startMatchmaking()
+            }
+        }
+
+        namespace model {
+            class GameModel {
+                - HEIGHT : float
+                - SCREEN_HEIGHT : float
+                - SCREEN_WIDTH : float
+                - WIDTH : float
+                - camera : OrthographicCamera
+                - textButtons : HashMap<String, TextButton>
+                + GameModel()
+                + addTextButton()
+                + getCamera()
+                + getGameEngine()
+                + getTextButton()
+                + moveCameraToSpaceship()
+                + navigateToLobby()
+                + renderBackground()
+                + renderBoundary()
+                + renderNetworkBatch()
+                + renderNetworkShapes()
+                - renderAsteroids()
+                - renderExplosions()
+                - renderHealthBar()
+                - renderPickups()
+                - renderPowerups()
+                - renderShieldBar()
+                - renderSpaceships()
+                {static} - sortByValue()
+                - trim()
+                - updatePlayerScores()
+            }
+            class MatchmakingModel {
+                - connecting : boolean
+                - connectingFailed : boolean
+                - matchmakingDone : boolean
+                - matchmakingListener : Listener
+                - positionInQueue : int
+                - queueSize : int
+                + MatchmakingModel()
+                + dispose()
+                + getPositionInQueue()
+                + getQueueSize()
+                + isConnected()
+                + isConnecting()
+                + isConnectingFailed()
+                + isMatchmakingDone()
+                + setConnecting()
+                + setConnectingFailed()
+                + setMatchmakingDone()
+                + setPositionInQueue()
+                + setQueueSize()
+            }
+            class ServerUpdateListener {
+                + received()
+                ~ ServerUpdateListener()
+            }
+            class LobbyModel {
+            }
+            class MainMenuModel {
+            }
+        }
+
+        namespace navigation {
+            class Navigator {
+                - screen : Screen
+                + changeScreen()
+                + dispose()
+                + getScreen()
+                - setScreen()
+            }
+            enum ScreenType {
+                GAME
+                LOBBY
+                MAIN_MENU
+                MATCHMAKING
+                SETTINGS
+            }
+        }
+
+        namespace network {
+              class GameClient {
+                  - client : Client
+                  {static} - clientConnecting : boolean
+                  - serverIp : String
+                  - tcpPort : int
+                  - udpPort : int
+                  + GameClient()
+                  + connectClient()
+                  + disconnectClient()
+                  + getGameState()
+                  {static} + isClientConnecting()
+                  + isConnected()
+                  + sendMessage()
+                  + setGameState()
+              }
+              class NetworkClientSingleton {
+                  - client : Client
+                  - defaultServerHost : String
+                  {static} - networkClientSingleton : NetworkClientSingleton
+                  - tcpPort : int
+                  - udpPort : int
+                  + getClient()
+                  + getGameClient()
+                  {static} + getInstance()
+                  + getTcpPort()
+                  + getUdpPort()
+                  - NetworkClientSingleton()
+                  - getHost()
+              }
+        }
+
+        namespace view {
+            class GameView {
+                - shapeRenderer : ShapeRenderer
+                - spriteBatch : SpriteBatch
+                - stage : Stage
+                + GameView()
+                + hide()
+                + render()
+                + show()
+            }
+            class LobbyView {
+                - backgroundTexture : Texture
+                - spriteBatch : SpriteBatch
+                - stage : Stage
+                - themeMusic : Music
+                + LobbyView()
+                + dispose()
+                + hide()
+                + pause()
+                + render()
+                + resize()
+                + resume()
+                + show()
+                - getFakeHighScoreList()
+            }
+            class MainMenuView {
+                - backgroundTexture : Texture
+                - spriteBatch : SpriteBatch
+                - stage : Stage
+                + MainMenuView()
+                + dispose()
+                + hide()
+                + pause()
+                + render()
+                + resize()
+                + resume()
+                + show()
+            }
+            class MatchmakingView {
+                - bitmapFont : BitmapFont
+                - spriteBatch : SpriteBatch
+                - stage : Stage
+                + MatchmakingView()
+                + dispose()
+                + hide()
+                + pause()
+                + render()
+                + resize()
+                + resume()
+                + show()
+                - handleInput()
+            }
+        }
+
+        namespace game_engine {
+            class Assets {
+                {static} - COMBINED_ATLAS : String
+                {static} - EXPLOSIONS_ATLAS : String
+                {static} - FONT : String
+            }
+            class Background {
+              - backgroundObjects : ArrayList<BackgroundObject>
+              + Background()
+              + render()
+            }
+            class BackgroundObject {
+                - bounds : Vector2
+                - position : Vector3
+                - texture : Texture
+                ~ BackgroundObject()
+            }
+            class GameEngine {
+                - engine : Engine
+                - gameOver : boolean
+                - returningToLobby : boolean
+                - timeAccumulator : float
+                + GameEngine()
+                + dispose()
+                + getEngine()
+                + getPlayer()
+                + getPlayerControlSystem()
+                + isGameOver()
+                + isReturningToLobby()
+                + setGameOver()
+                + update()
+            }
+            class GameEngineFactory {
+                - GAME_UPDATE_SECONDS : float
+                - NETWORK_UPDATE_SECONDS : float
+                + create()
+            }
+
+            namespace components {
+                class BoosterComponent {
+                    {static} + MAPPER : ComponentMapper<BoosterComponent>
+                    + boost : float
+                    + defaultValue : float
+                }
+                class BoundingCircleComponent {
+                    {static} + MAPPER : ComponentMapper<BoundingCircleComponent>
+                    + circle : Circle
+                }
+                class PlayableComponent {
+                    {static} + MAPPER : ComponentMapper<PlayableComponent>
+                }
+                class PositionComponent {
+                    {static} + MAPPER : ComponentMapper<PositionComponent>
+                    + position : Vector2
+                }
+                class RotationComponent {
+                    {static} + MAPPER : ComponentMapper<RotationComponent>
+                    + degrees : float
+                }
+                class VelocityComponent {
+                    {static} + MAPPER : ComponentMapper<VelocityComponent>
+                    + idle : float
+                    + scalar : float
+                    + velocity : Vector2
+                }
+            }
+
+            namespace entities {
+                class SpaceshipFactory {
+                    + create()
+                    + createPlayableSpaceship()
+                }
+            }
+
+            namespace entity_systems {
+                class BoundsSystem {
+                    - entities : ImmutableArray<Entity>
+                    + addedToEngine()
+                    + update()
+                }
+                interface InputHandlerInterface {
+                    {abstract} + boost()
+                    {abstract} + move()
+                    {abstract} + shoot()
+                }
+                class MovementSystem {
+                    - entities : ImmutableArray<Entity>
+                    + addedToEngine()
+                    + update()
+                }
+                class PlayerControlSystem {
+                    - player : Entity
+                    + PlayerControlSystem()
+                    + boost()
+                    + move()
+                    + shoot()
+                }
+                class SendPositionSystem {
+                    - interval : float
+                    - player : Entity
+                    - timeAccumulator : float
+                    + SendPositionSystem()
+                    + addedToEngine()
+                    + update()
+                }
+                class UpdateGameStateSystem {
+                    - interval : float
+                    - players : ImmutableArray<Entity>
+                    - timeAccumulator : float
+                    + UpdateGameStateSystem()
+                    + addedToEngine()
+                    + update()
+                    - parseGameState()
+                }
+            }
+        }
+    }
+
+    no.ntnu.idi.apollo69.controller.GameController o-- no.ntnu.idi.apollo69.model.GameModel
+    no.ntnu.idi.apollo69.controller.LobbyController o-- no.ntnu.idi.apollo69.network.GameClient
+    no.ntnu.idi.apollo69.controller.LobbyController o-- no.ntnu.idi.apollo69.model.LobbyModel
+    no.ntnu.idi.apollo69.controller.LobbyController o-- no.ntnu.idi.apollo69.navigation.Navigator
+    no.ntnu.idi.apollo69.controller.MainMenuController o-- no.ntnu.idi.apollo69.navigation.Navigator
+    no.ntnu.idi.apollo69.controller.MatchmakingController o-- no.ntnu.idi.apollo69.network.GameClient
+    no.ntnu.idi.apollo69.controller.MatchmakingController o-- no.ntnu.idi.apollo69.model.MatchmakingModel
+    no.ntnu.idi.apollo69.controller.MatchmakingController o-- no.ntnu.idi.apollo69.navigation.Navigator
+    no.ntnu.idi.apollo69.game_engine.components.BoosterComponent .up.|> com.badlogic.ashley.core.Component
+    no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent .up.|> com.badlogic.ashley.core.Component
+    no.ntnu.idi.apollo69.game_engine.components.PlayableComponent .up.|> com.badlogic.ashley.core.Component
+    no.ntnu.idi.apollo69.game_engine.components.PositionComponent .up.|> com.badlogic.ashley.core.Component
+    no.ntnu.idi.apollo69.game_engine.components.RotationComponent .up.|> com.badlogic.ashley.core.Component
+    no.ntnu.idi.apollo69.game_engine.components.VelocityComponent .up.|> com.badlogic.ashley.core.Component
+    no.ntnu.idi.apollo69.game_engine.entity_systems.BoundsSystem -up-|> com.badlogic.ashley.core.EntitySystem
+    no.ntnu.idi.apollo69.game_engine.entity_systems.BoundsSystem o-- no.ntnu.idi.apollo69.network.GameClient
+    no.ntnu.idi.apollo69.game_engine.entity_systems.MovementSystem -up-|> com.badlogic.ashley.core.EntitySystem
+    no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem .up.|> no.ntnu.idi.apollo69.game_engine.entity_systems.InputHandlerInterface
+    no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem -up-|> com.badlogic.ashley.core.EntitySystem
+    no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem o-- no.ntnu.idi.apollo69.network.GameClient
+    no.ntnu.idi.apollo69.game_engine.entity_systems.SendPositionSystem -up-|> com.badlogic.ashley.core.EntitySystem
+    no.ntnu.idi.apollo69.game_engine.entity_systems.SendPositionSystem o-- no.ntnu.idi.apollo69.network.GameClient
+    no.ntnu.idi.apollo69.game_engine.entity_systems.UpdateGameStateSystem -up-|> com.badlogic.ashley.core.EntitySystem
+    no.ntnu.idi.apollo69.game_engine.entity_systems.UpdateGameStateSystem o-- no.ntnu.idi.apollo69.network.GameClient
+    no.ntnu.idi.apollo69.game_engine.Background +-down- no.ntnu.idi.apollo69.game_engine.Background.BackgroundObject
+    no.ntnu.idi.apollo69.game_engine.GameEngine .up.|> com.badlogic.gdx.utils.Disposable
+    no.ntnu.idi.apollo69.model.GameModel o-- no.ntnu.idi.apollo69.game_engine.Background
+    no.ntnu.idi.apollo69.model.GameModel o-- no.ntnu.idi.apollo69.network.GameClient
+    no.ntnu.idi.apollo69.model.GameModel o-- no.ntnu.idi.apollo69.game_engine.GameEngine
+    no.ntnu.idi.apollo69.model.GameModel o-- no.ntnu.idi.apollo69.navigation.Navigator
+    no.ntnu.idi.apollo69.model.MatchmakingModel .up.|> com.badlogic.gdx.utils.Disposable
+    no.ntnu.idi.apollo69.model.ServerUpdateListener -up-|> com.esotericsoftware.kryonet.Listener
+    no.ntnu.idi.apollo69.model.ServerUpdateListener o-- no.ntnu.idi.apollo69.game_engine.GameEngine
+    no.ntnu.idi.apollo69.model.ServerUpdateListener o-- no.ntnu.idi.apollo69.navigation.Navigator
+    no.ntnu.idi.apollo69.navigation.Navigator .up.|> com.badlogic.gdx.utils.Disposable
+    no.ntnu.idi.apollo69.network.GameClient o-- no.ntnu.idi.apollo69framework.network_messages.UpdateMessage
+    no.ntnu.idi.apollo69.network.NetworkClientSingleton o-- no.ntnu.idi.apollo69.network.GameClient
+    no.ntnu.idi.apollo69.view.GameView .up.|> com.badlogic.gdx.Screen
+    no.ntnu.idi.apollo69.view.GameView -up-|> com.badlogic.gdx.ApplicationAdapter
+    no.ntnu.idi.apollo69.view.GameView o-- no.ntnu.idi.apollo69.controller.GameController
+    no.ntnu.idi.apollo69.view.GameView o-- no.ntnu.idi.apollo69.model.GameModel
+    no.ntnu.idi.apollo69.view.LobbyView .up.|> com.badlogic.gdx.Screen
+    no.ntnu.idi.apollo69.view.LobbyView .up.|> no.ntnu.idi.apollo69.Variables
+    no.ntnu.idi.apollo69.view.LobbyView -up-|> com.badlogic.gdx.ApplicationAdapter
+    no.ntnu.idi.apollo69.view.LobbyView o-- no.ntnu.idi.apollo69.controller.LobbyController
+    no.ntnu.idi.apollo69.view.LobbyView o-- no.ntnu.idi.apollo69.model.LobbyModel
+    no.ntnu.idi.apollo69.view.MainMenuView .up.|> com.badlogic.gdx.Screen
+    no.ntnu.idi.apollo69.view.MainMenuView .up.|> no.ntnu.idi.apollo69.Variables
+    no.ntnu.idi.apollo69.view.MainMenuView -up-|> com.badlogic.gdx.ApplicationAdapter
+    no.ntnu.idi.apollo69.view.MainMenuView o-- no.ntnu.idi.apollo69.controller.MainMenuController
+    no.ntnu.idi.apollo69.view.MainMenuView o-- no.ntnu.idi.apollo69.model.MainMenuModel
+    no.ntnu.idi.apollo69.view.MatchmakingView .up.|> com.badlogic.gdx.Screen
+    no.ntnu.idi.apollo69.view.MatchmakingView o-- no.ntnu.idi.apollo69.controller.MatchmakingController
+    no.ntnu.idi.apollo69.view.MatchmakingView o-- no.ntnu.idi.apollo69.model.MatchmakingModel
+    no.ntnu.idi.apollo69.Apollo69 -up-|> com.badlogic.gdx.ApplicationAdapter
+    no.ntnu.idi.apollo69.Apollo69 o-- no.ntnu.idi.apollo69.navigation.Navigator
+
+
+@enduml

@@ -1,0 +1,33 @@
+@startuml
+
+      class no.ntnu.idi.apollo69.network.GameClient {
+          - client : Client
+          {static} - clientConnecting : boolean
+          - serverIp : String
+          - tcpPort : int
+          - udpPort : int
+          + GameClient()
+          + connectClient()
+          + disconnectClient()
+          + getGameState()
+          {static} + isClientConnecting()
+          + isConnected()
+          + sendMessage()
+          + setGameState()
+      }
+      class no.ntnu.idi.apollo69.network.NetworkClientSingleton {
+          - client : Client
+          - defaultServerHost : String
+          {static} - networkClientSingleton : NetworkClientSingleton
+          - tcpPort : int
+          - udpPort : int
+          + getClient()
+          + getGameClient()
+          {static} + getInstance()
+          + getTcpPort()
+          + getUdpPort()
+          - NetworkClientSingleton()
+          - getHost()
+      }
+
+@enduml

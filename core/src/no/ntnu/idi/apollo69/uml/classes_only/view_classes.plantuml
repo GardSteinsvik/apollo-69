@@ -1,0 +1,55 @@
+@startuml
+
+      class no.ntnu.idi.apollo69.view.GameView {
+          - shapeRenderer : ShapeRenderer
+          - spriteBatch : SpriteBatch
+          - stage : Stage
+          + GameView()
+          + hide()
+          + render()
+          + show()
+      }
+      class no.ntnu.idi.apollo69.view.LobbyView {
+          - backgroundTexture : Texture
+          - spriteBatch : SpriteBatch
+          - stage : Stage
+          - themeMusic : Music
+          + LobbyView()
+          + dispose()
+          + hide()
+          + pause()
+          + render()
+          + resize()
+          + resume()
+          + show()
+          - getFakeHighScoreList()
+      }
+      class no.ntnu.idi.apollo69.view.MainMenuView {
+          - backgroundTexture : Texture
+          - spriteBatch : SpriteBatch
+          - stage : Stage
+          + MainMenuView()
+          + dispose()
+          + hide()
+          + pause()
+          + render()
+          + resize()
+          + resume()
+          + show()
+      }
+      class no.ntnu.idi.apollo69.view.MatchmakingView {
+          - bitmapFont : BitmapFont
+          - spriteBatch : SpriteBatch
+          - stage : Stage
+          + MatchmakingView()
+          + dispose()
+          + hide()
+          + pause()
+          + render()
+          + resize()
+          + resume()
+          + show()
+          - handleInput()
+      }
+
+@enduml

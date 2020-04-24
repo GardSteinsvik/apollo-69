@@ -1,0 +1,73 @@
+@startuml
+
+title __MODEL's Class Diagram__\n
+
+      class no.ntnu.idi.apollo69.model.GameModel {
+          - HEIGHT : float
+          - SCREEN_HEIGHT : float
+          - SCREEN_WIDTH : float
+          - WIDTH : float
+          - camera : OrthographicCamera
+          - textButtons : HashMap<String, TextButton>
+          + GameModel()
+          + addTextButton()
+          + getCamera()
+          + getGameEngine()
+          + getTextButton()
+          + moveCameraToSpaceship()
+          + navigateToLobby()
+          + renderBackground()
+          + renderBoundary()
+          + renderNetworkBatch()
+          + renderNetworkShapes()
+          - renderAsteroids()
+          - renderExplosions()
+          - renderHealthBar()
+          - renderPickups()
+          - renderPowerups()
+          - renderShieldBar()
+          - renderSpaceships()
+          {static} - sortByValue()
+          - trim()
+          - updatePlayerScores()
+      }
+      class no.ntnu.idi.apollo69.model.LobbyModel {
+      }
+      class no.ntnu.idi.apollo69.model.MainMenuModel {
+      }
+      class no.ntnu.idi.apollo69.model.MatchmakingModel {
+          - connecting : boolean
+          - connectingFailed : boolean
+          - matchmakingDone : boolean
+          - matchmakingListener : Listener
+          - positionInQueue : int
+          - queueSize : int
+          + MatchmakingModel()
+          + dispose()
+          + getPositionInQueue()
+          + getQueueSize()
+          + isConnected()
+          + isConnecting()
+          + isConnectingFailed()
+          + isMatchmakingDone()
+          + setConnecting()
+          + setConnectingFailed()
+          + setMatchmakingDone()
+          + setPositionInQueue()
+          + setQueueSize()
+      }
+      class no.ntnu.idi.apollo69.model.ServerUpdateListener {
+          + received()
+          ~ ServerUpdateListener()
+      }
+  
+  no.ntnu.idi.apollo69.model.GameModel o-- no.ntnu.idi.apollo69.game_engine.Background
+  no.ntnu.idi.apollo69.model.GameModel o-- no.ntnu.idi.apollo69.network.GameClient
+  no.ntnu.idi.apollo69.model.GameModel o-- no.ntnu.idi.apollo69.game_engine.GameEngine
+  no.ntnu.idi.apollo69.model.GameModel o-- no.ntnu.idi.apollo69.navigation.Navigator
+  no.ntnu.idi.apollo69.model.MatchmakingModel .up.|> com.badlogic.gdx.utils.Disposable
+  no.ntnu.idi.apollo69.model.ServerUpdateListener -up-|> com.esotericsoftware.kryonet.Listener
+  no.ntnu.idi.apollo69.model.ServerUpdateListener o-- no.ntnu.idi.apollo69.game_engine.GameEngine
+  no.ntnu.idi.apollo69.model.ServerUpdateListener o-- no.ntnu.idi.apollo69.navigation.Navigator
+
+@enduml

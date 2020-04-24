@@ -1,0 +1,122 @@
+@startuml
+
+    namespace no.ntnu.idi.apollo69.game_engine {
+
+        class Assets {
+            {static} - COMBINED_ATLAS : String
+            {static} - EXPLOSIONS_ATLAS : String
+            {static} - FONT : String
+        }
+        class Background {
+          - backgroundObjects : ArrayList<BackgroundObject>
+          + Background()
+          + render()
+        }
+        class BackgroundObject {
+            - bounds : Vector2
+            - position : Vector3
+            - texture : Texture
+            ~ BackgroundObject()
+        }
+        class GameEngine {
+            - engine : Engine
+            - gameOver : boolean
+            - returningToLobby : boolean
+            - timeAccumulator : float
+            + GameEngine()
+            + dispose()
+            + getEngine()
+            + getPlayer()
+            + getPlayerControlSystem()
+            + isGameOver()
+            + isReturningToLobby()
+            + setGameOver()
+            + update()
+        }
+        class GameEngineFactory {
+            - GAME_UPDATE_SECONDS : float
+            - NETWORK_UPDATE_SECONDS : float
+            + create()
+        }
+
+        namespace components {
+            class BoosterComponent {
+                {static} + MAPPER : ComponentMapper<BoosterComponent>
+                + boost : float
+                + defaultValue : float
+            }
+            class BoundingCircleComponent {
+                {static} + MAPPER : ComponentMapper<BoundingCircleComponent>
+                + circle : Circle
+            }
+            class PlayableComponent {
+                {static} + MAPPER : ComponentMapper<PlayableComponent>
+            }
+            class PositionComponent {
+                {static} + MAPPER : ComponentMapper<PositionComponent>
+                + position : Vector2
+            }
+            class RotationComponent {
+                {static} + MAPPER : ComponentMapper<RotationComponent>
+                + degrees : float
+            }
+            class VelocityComponent {
+                {static} + MAPPER : ComponentMapper<VelocityComponent>
+                + idle : float
+                + scalar : float
+                + velocity : Vector2
+            }
+        }
+
+        namespace entities {
+            class SpaceshipFactory {
+                + create()
+                + createPlayableSpaceship()
+            }
+        }
+
+        namespace entity_systems {
+            class BoundsSystem {
+                - entities : ImmutableArray<Entity>
+                + addedToEngine()
+                + update()
+            }
+            interface InputHandlerInterface {
+                {abstract} + boost()
+                {abstract} + move()
+                {abstract} + shoot()
+            }
+            class MovementSystem {
+                - entities : ImmutableArray<Entity>
+                + addedToEngine()
+                + update()
+            }
+            class PlayerControlSystem {
+                - player : Entity
+                + PlayerControlSystem()
+                + boost()
+                + move()
+                + shoot()
+            }
+            class SendPositionSystem {
+                - interval : float
+                - player : Entity
+                - timeAccumulator : float
+                + SendPositionSystem()
+                + addedToEngine()
+                + update()
+            }
+            class UpdateGameStateSystem {
+                - interval : float
+                - players : ImmutableArray<Entity>
+                - timeAccumulator : float
+                + UpdateGameStateSystem()
+                + addedToEngine()
+                + update()
+                - parseGameState()
+            }
+        }
+
+}
+
+@enduml

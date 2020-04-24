@@ -1,0 +1,41 @@
+@startuml
+
+        class no.ntnu.idi.apollo69.game_engine.components.BoosterComponent {
+            {static} + MAPPER : ComponentMapper<BoosterComponent>
+            + boost : float
+            + defaultValue : float
+        }
+  
+
+        class no.ntnu.idi.apollo69.game_engine.components.BoundingCircleComponent {
+            {static} + MAPPER : ComponentMapper<BoundingCircleComponent>
+            + circle : Circle
+        }
+  
+
+        class no.ntnu.idi.apollo69.game_engine.components.PlayableComponent {
+            {static} + MAPPER : ComponentMapper<PlayableComponent>
+        }
+  
+
+        class no.ntnu.idi.apollo69.game_engine.components.PositionComponent {
+            {static} + MAPPER : ComponentMapper<PositionComponent>
+            + position : Vector2
+        }
+  
+
+        class no.ntnu.idi.apollo69.game_engine.components.RotationComponent {
+            {static} + MAPPER : ComponentMapper<RotationComponent>
+            + degrees : float
+        }
+  
+
+        class no.ntnu.idi.apollo69.game_engine.components.VelocityComponent {
+            {static} + MAPPER : ComponentMapper<VelocityComponent>
+            + idle : float
+            + scalar : float
+            + velocity : Vector2
+        }
+
+
+@enduml

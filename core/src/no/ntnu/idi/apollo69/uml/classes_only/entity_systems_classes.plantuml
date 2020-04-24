@@ -1,0 +1,44 @@
+@startuml
+
+        class no.ntnu.idi.apollo69.game_engine.entity_systems.BoundsSystem {
+            - entities : ImmutableArray<Entity>
+            + addedToEngine()
+            + update()
+        }
+        interface no.ntnu.idi.apollo69.game_engine.entity_systems.InputHandlerInterface {
+            {abstract} + boost()
+            {abstract} + move()
+            {abstract} + shoot()
+        }
+        class no.ntnu.idi.apollo69.game_engine.entity_systems.MovementSystem {
+            - entities : ImmutableArray<Entity>
+            + addedToEngine()
+            + update()
+        }
+        class no.ntnu.idi.apollo69.game_engine.entity_systems.PlayerControlSystem {
+            - player : Entity
+            + PlayerControlSystem()
+            + boost()
+            + move()
+            + shoot()
+        }
+        class no.ntnu.idi.apollo69.game_engine.entity_systems.SendPositionSystem {
+            - interval : float
+            - player : Entity
+            - timeAccumulator : float
+            + SendPositionSystem()
+            + addedToEngine()
+            + update()
+        }
+        class no.ntnu.idi.apollo69.game_engine.entity_systems.UpdateGameStateSystem {
+            - interval : float
+            - players : ImmutableArray<Entity>
+            - timeAccumulator : float
+            + UpdateGameStateSystem()
+            + addedToEngine()
+            + update()
+            - parseGameState()
+        }
+
+
+@enduml

@@ -1,0 +1,28 @@
+@startuml
+
+    class no.ntnu.idi.apollo69.Apollo69 {
+        - deviceId : String
+        + Apollo69()
+        + Apollo69()
+        + create()
+        + dispose()
+        + render()
+    }
+    class no.ntnu.idi.apollo69.Device {
+        {static} + DEVICE_ID : String
+        {static} + NAME : String
+    }
+    interface no.ntnu.idi.apollo69.Variables {
+        {static} + buttonHeight : float
+        {static} + buttonWidth : float
+        {static} + fontScale : float
+        {static} + nicknameHeight : float
+        {static} + spacing : float
+        {static} + textExit : String
+        {static} + textExitGame : String
+        {static} + textJoin : String
+        {static} + textPlay : String
+        {static} + textSettings : String
+    }
+
+@enduml

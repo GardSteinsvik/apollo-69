@@ -1,0 +1,42 @@
+@startuml
+
+title __CONTROLLER's Class Diagram__\n
+
+        class no.ntnu.idi.apollo69.controller.GameController {
+            + GameController()
+            + boostButtonPressed()
+            + boostButtonReleased()
+            + shootButtonPressed()
+            + shootButtonReleased()
+            + touchpadMoved()
+        }
+
+        class no.ntnu.idi.apollo69.controller.LobbyController {
+            + LobbyController()
+            + exitButtonPressed()
+            + joinButtonPressed()
+        }
+
+        class no.ntnu.idi.apollo69.controller.MainMenuController {
+            + MainMenuController()
+            + playButtonPressed()
+        }
+
+        class no.ntnu.idi.apollo69.controller.MatchmakingController {
+            + MatchmakingController()
+            + cancelMatchmaking()
+            + onMatchmakingDone()
+            + onShow()
+            + startMatchmaking()
+        }
+
+   no.ntnu.idi.apollo69.controller.GameController o-- no.ntnu.idi.apollo69.model.GameModel
+   no.ntnu.idi.apollo69.controller.LobbyController o-- no.ntnu.idi.apollo69.network.GameClient
+   no.ntnu.idi.apollo69.controller.LobbyController o-- no.ntnu.idi.apollo69.model.LobbyModel
+   no.ntnu.idi.apollo69.controller.LobbyController o-- no.ntnu.idi.apollo69.navigation.Navigator
+   no.ntnu.idi.apollo69.controller.MainMenuController o-- no.ntnu.idi.apollo69.navigation.Navigator
+   no.ntnu.idi.apollo69.controller.MatchmakingController o-- no.ntnu.idi.apollo69.network.GameClient
+   no.ntnu.idi.apollo69.controller.MatchmakingController o-- no.ntnu.idi.apollo69.model.MatchmakingModel
+   no.ntnu.idi.apollo69.controller.MatchmakingController o-- no.ntnu.idi.apollo69.navigation.Navigator
+
+@enduml

@@ -1,0 +1,79 @@
+@startuml
+
+title __GAME_ENGINE's Class Diagram__\n
+
+      class no.ntnu.idi.apollo69.game_engine.Assets {
+          {static} - COMBINED_ATLAS : String
+          {static} - EXPLOSIONS_ATLAS : String
+          {static} - FONT : String
+          {static} - GAME_ATLAS : String
+          {static} - LASER : String
+          {static} - MUSIC : Class<Music>
+          {static} - SKIN : Class<Skin>
+          {static} - SOUND : Class<Sound>
+          {static} - TEXTURE_ATLAS : Class<TextureAtlas>
+          {static} - THEME : String
+          {static} - UI_SKIN : String
+          {static} - WIDTH : int
+          {static} - assetManager : AssetManager
+          {static} - desktopLargeFont : BitmapFont
+          {static} - desktopSmallFont : BitmapFont
+          {static} - desktopYellowFont : BitmapFont
+          {static} - mobileLargeFont : BitmapFont
+          {static} - mobileSmallFont : BitmapFont
+          {static} - mobileYellowFont : BitmapFont
+          {static} - textureCache : ObjectMap<String, AtlasRegion>
+          {static} + getAsteroidRegion()
+          {static} + getBackgroundMusic()
+          {static} + getBoostedSpaceshipRegion()
+          {static} + getExplosionRegion()
+          {static} + getGameAtlas()
+          {static} + getLargeFont()
+          {static} + getLaserSound()
+          {static} + getPickupRegion()
+          {static} + getPowerupRegion()
+          {static} + getSmallFont()
+          {static} + getSpaceshipRegion()
+          {static} + getUiSkin()
+          {static} + getYellowFont()
+          {static} + load()
+          {static} - getRegion()
+      }
+      class no.ntnu.idi.apollo69.game_engine.Background {
+          - backgroundObjects : ArrayList<BackgroundObject>
+          + Background()
+          + render()
+      }
+      class no.ntnu.idi.apollo69.game_engine.Background.BackgroundObject {
+          - bounds : Vector2
+          - position : Vector3
+          - texture : Texture
+          ~ BackgroundObject()
+      }
+      class no.ntnu.idi.apollo69.game_engine.GameEngine {
+          - engine : Engine
+          - gameOver : boolean
+          - returningToLobby : boolean
+          - timeAccumulator : float
+          + GameEngine()
+          + dispose()
+          + getEngine()
+          + getPlayer()
+          + getPlayerControlSystem()
+          + isGameOver()
+          + isReturningToLobby()
+          + setGameOver()
+          + update()
+      }
+
+      class no.ntnu.idi.apollo69.game_engine.GameEngineFactory {
+          - GAME_UPDATE_SECONDS : float
+          - NETWORK_UPDATE_SECONDS : float
+          + create()
+      }
+  
+
+  no.ntnu.idi.apollo69.game_engine.Background +-down- no.ntnu.idi.apollo69.game_engine.Background.BackgroundObject
+  no.ntnu.idi.apollo69.game_engine.GameEngine .up.|> com.badlogic.gdx.utils.Disposable
+
+@enduml
