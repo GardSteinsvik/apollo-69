@@ -1,0 +1,36 @@
+@startuml
+
+    namespace no.ntnu.idi.apollo69framework {
+        class Apollo69Framework {
+            {static} + getMessageClasses()
+        }
+        class MessageClassListHolder {
+            {static} - CLASSES_SINGLETON : List<Class>
+        }
+        class GameObjectDimensions {
+            {static} + ASTEROID_HEIGHT : float
+            {static} + ASTEROID_WIDTH : float
+            {static} + GAME_RADIUS : int
+            {static} + GEM_HEIGHT : float
+            {static} + GEM_RADIUS : float
+            {static} + GEM_WIDTH : float
+            {static} + INNER_RADIUS : int
+            {static} + POWERUP_HEIGHT : float
+            {static} + POWERUP_RADIUS : float
+            {static} + POWERUP_WIDTH : float
+            {static} + SHOT_HEIGHT : float
+            {static} + SHOT_WIDTH : float
+            {static} + SPACE_SHIP_HEIGHT : float
+            {static} + SPACE_SHIP_WIDTH : float
+        }
+        class HelperMethods {
+            {static} + getRandomNumber()
+            {static} + getRandomPosition()
+        }
+    }
+
+    no.ntnu.idi.apollo69framework.Apollo69Framework +-down- no.ntnu.idi.apollo69framework.Apollo69Framework.MessageClassListHolder
+
+
+
+@enduml

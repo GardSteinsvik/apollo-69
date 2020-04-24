@@ -1,6 +1,5 @@
 @startuml
 
-title __DATA_TRANSFER_OBJECTS's Class Diagram__\n
 
   namespace no.ntnu.idi.apollo69framework {
     namespace network_messages {

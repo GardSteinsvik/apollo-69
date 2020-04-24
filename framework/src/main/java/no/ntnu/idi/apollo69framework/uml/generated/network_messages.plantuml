@@ -13,7 +13,7 @@ title __NETWORK_MESSAGES's Class Diagram__\n
       }
     }
   }
-  
+
 
   namespace no.ntnu.idi.apollo69framework {
     namespace network_messages {
@@ -22,7 +22,7 @@ title __NETWORK_MESSAGES's Class Diagram__\n
       }
     }
   }
-  
+
 
   namespace no.ntnu.idi.apollo69framework {
     namespace network_messages {
@@ -38,7 +38,7 @@ title __NETWORK_MESSAGES's Class Diagram__\n
       }
     }
   }
-  
+
 
   namespace no.ntnu.idi.apollo69framework {
     namespace network_messages {
@@ -68,7 +68,7 @@ title __NETWORK_MESSAGES's Class Diagram__\n
       }
     }
   }
-  
+
 
   namespace no.ntnu.idi.apollo69framework {
     namespace network_messages {
@@ -80,7 +80,7 @@ title __NETWORK_MESSAGES's Class Diagram__\n
       }
     }
   }
-  
+
 
   namespace no.ntnu.idi.apollo69framework {
     namespace network_messages {
@@ -88,7 +88,7 @@ title __NETWORK_MESSAGES's Class Diagram__\n
       }
     }
   }
-  
+
 
   namespace no.ntnu.idi.apollo69framework {
     namespace network_messages {
@@ -107,7 +107,7 @@ title __NETWORK_MESSAGES's Class Diagram__\n
       }
     }
   }
-  
+
 
   namespace no.ntnu.idi.apollo69framework {
     namespace network_messages {
@@ -125,7 +125,7 @@ title __NETWORK_MESSAGES's Class Diagram__\n
       }
     }
   }
-  
+
 
   namespace no.ntnu.idi.apollo69framework {
     namespace network_messages {

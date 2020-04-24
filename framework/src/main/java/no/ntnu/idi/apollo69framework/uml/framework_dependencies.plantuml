@@ -1,0 +1,222 @@
+@startuml
+
+    namespace no.ntnu.idi.apollo69framework {
+        class Apollo69Framework {
+            {static} + getMessageClasses()
+        }
+        class MessageClassListHolder {
+            {static} - CLASSES_SINGLETON : List<Class>
+        }
+        class GameObjectDimensions {
+            {static} + ASTEROID_HEIGHT : float
+            {static} + ASTEROID_WIDTH : float
+            {static} + GAME_RADIUS : int
+            {static} + GEM_HEIGHT : float
+            {static} + GEM_RADIUS : float
+            {static} + GEM_WIDTH : float
+            {static} + INNER_RADIUS : int
+            {static} + POWERUP_HEIGHT : float
+            {static} + POWERUP_RADIUS : float
+            {static} + POWERUP_WIDTH : float
+            {static} + SHOT_HEIGHT : float
+            {static} + SHOT_WIDTH : float
+            {static} + SPACE_SHIP_HEIGHT : float
+            {static} + SPACE_SHIP_WIDTH : float
+        }
+        class no.ntnu.idi.apollo69framework.HelperMethods {
+            {static} + getRandomNumber()
+            {static} + getRandomPosition()
+        }
+
+        namespace network_messages {
+            class DeviceInfo {
+                - deviceId : String
+                + DeviceInfo()
+                + DeviceInfo()
+                + getDeviceId()
+                + setDeviceId()
+            }
+            class PlayerDead {
+                + PlayerDead()
+            }
+            class PlayerInQueue {
+                - position : int
+                - queueSize : int
+                + PlayerInQueue()
+                + PlayerInQueue()
+                + getPosition()
+                + getQueueSize()
+                + setPosition()
+                + setQueueSize()
+            }
+            class PlayerInput {
+                - boosting : boolean
+                - playerId : String
+                - posX : float
+                - posY : float
+                - rotationDegrees : float
+                - shooting : boolean
+                + PlayerInput()
+                + PlayerInput()
+                + getPlayerId()
+                + getPosX()
+                + getPosY()
+                + getRotationDegrees()
+                + getType()
+                + isBoosting()
+                + isShooting()
+                + setBoosting()
+                + setPlayerId()
+                + setPosX()
+                + setPosY()
+                + setRotationDegrees()
+                + setShooting()
+                + setType()
+            }
+            enum PlayerInputType {
+                BOOST
+                MOVE
+                ROTATE
+                SHOOT
+            }
+            class PlayerMatchmade {
+            }
+            class PlayerSpawn {
+                - name : String
+                - playerId : String
+                + PlayerSpawn()
+                + PlayerSpawn()
+                + getName()
+                + getPlayerId()
+                + getPositionDto()
+                + setName()
+                + setPlayerId()
+                + setPositionDto()
+                + toString()
+            }
+            class ServerMessage {
+                - message : String
+                - recipientDeviceId : String
+                + ServerMessage()
+                + ServerMessage()
+                + ServerMessage()
+                + getMessage()
+                + getRecipientDeviceId()
+                + isForDevice()
+                + setMessage()
+                + setRecipientDeviceId()
+            }
+            class UpdateMessage {
+                - asteroidDtoList : List<AsteroidDto>
+                - explosionDtoList : List<ExplosionDto>
+                - pickupDtoList : List<PickupDto>
+                - playerDtoList : List<PlayerDto>
+                - powerupDtoList : List<PowerupDto>
+                - shotDtoList : List<ShotDto>
+                + UpdateMessage()
+                + getAsteroidDtoList()
+                + getExplosionDtoList()
+                + getPickupDtoList()
+                + getPlayerDtoList()
+                + getPowerupDtoList()
+                + getShotDtoList()
+                + setAsteroidDtoList()
+                + setExplosionDtoList()
+                + setPickupDtoList()
+                + setPlayerDtoList()
+                + setPowerupDtoList()
+                + setShotDtoList()
+            }
+
+            namespace data_transfer_objects {
+                class AsteroidDto {
+                    + hp : float
+                    + AsteroidDto()
+                    + AsteroidDto()
+                }
+                class DimensionDto {
+                    + height : float
+                    + width : float
+                    + DimensionDto()
+                    + DimensionDto()
+                    + DimensionDto()
+                }
+                class ExplosionDto {
+                    + frameNumber : int
+                    + ExplosionDto()
+                    + ExplosionDto()
+                }
+                enum GemType {
+                  COIN
+                  DEFAULT
+                  METEORITE
+                  RUBY
+                  STAR
+                }
+                class PickupDto {
+                    + PickupDto()
+                    + PickupDto()
+                }
+                class PlayerDto {
+                    + boosting : boolean
+                    + hp : float
+                    + name : String
+                    + playerId : String
+                    + score : int
+                    + shieldHp : float
+                    + spaceshipType : int
+                    + visible : boolean
+                    + PlayerDto()
+                    + PlayerDto()
+                }
+                class PositionDto {
+                    + x : float
+                    + y : float
+                    + PositionDto()
+                    + PositionDto()
+                    + PositionDto()
+                }
+                class PowerupDto {
+                    + PowerupDto()
+                    + PowerupDto()
+                }
+                enum PowerupType {
+                  ENERGY
+                  HEALTH
+                  INVISIBLE
+                  SHIELD
+                }
+                class RotationDto {
+                    + degrees : float
+                    + x : float
+                    + y : float
+                    + RotationDto()
+                    + RotationDto()
+                }
+                class ShotDto {
+                    + radius : float
+                    + ShotDto()
+                    + ShotDto()
+                }
+
+            }
+
+        }
+
+    }
+
+    no.ntnu.idi.apollo69framework.Apollo69Framework +-down- no.ntnu.idi.apollo69framework.Apollo69Framework.MessageClassListHolder
+    no.ntnu.idi.apollo69framework.network_messages.PlayerInput o-- no.ntnu.idi.apollo69framework.network_messages.PlayerInputType
+    no.ntnu.idi.apollo69framework.network_messages.PlayerSpawn o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto
+    no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.AsteroidDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto
+    no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ExplosionDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.DimensionDto
+    no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ExplosionDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto
+    no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.GemType
+    no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PickupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto
+    no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto
+    no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PlayerDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.RotationDto
+    no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto
+    no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PowerupType
+    no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.ShotDto o-- no.ntnu.idi.apollo69framework.network_messages.data_transfer_objects.PositionDto
+
+@enduml
