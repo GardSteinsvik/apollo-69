@@ -13,4 +13,6 @@ public interface Variables {
     float buttonHeight = 64f * Gdx.graphics.getDensity();
     float buttonWidth = 230f * Gdx.graphics.getDensity();
     float nicknameHeight = 32f * Gdx.graphics.getDensity();
+    float menuCoverWidth = 500f * Gdx.graphics.getDensity();
+    float menuCoverHeight = 260f * Gdx.graphics.getDensity();
 }
