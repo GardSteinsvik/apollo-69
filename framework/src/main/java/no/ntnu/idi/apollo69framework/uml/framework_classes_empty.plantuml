@@ -1,0 +1,63 @@
+@startuml
+
+    namespace no.ntnu.idi.apollo69framework {
+        class Apollo69Framework {
+        }
+        class MessageClassListHolder {
+        }
+        class GameObjectDimensions {
+        }
+        class no.ntnu.idi.apollo69framework.HelperMethods {
+        }
+
+        namespace network_messages {
+            class DeviceInfo {
+            }
+            class PlayerDead {
+            }
+            class PlayerInQueue {
+            }
+            class PlayerInput {
+            }
+            enum PlayerInputType {
+            }
+            class PlayerMatchmade {
+            }
+            class PlayerSpawn {
+            }
+            class ServerMessage {
+            }
+            class UpdateMessage {
+            }
+
+            namespace data_transfer_objects {
+                class AsteroidDto {
+                }
+                class DimensionDto {
+                }
+                class ExplosionDto {
+                }
+                enum GemType {
+                }
+                class PickupDto {
+                }
+                class PlayerDto {
+                }
+                class PositionDto {
+                }
+                class PowerupDto {
+                }
+                enum PowerupType {
+                }
+                class RotationDto {
+                }
+                class ShotDto {
+                }
+
+            }
+
+        }
+
+    }
+
+@enduml

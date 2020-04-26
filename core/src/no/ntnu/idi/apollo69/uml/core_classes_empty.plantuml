@@ -1,0 +1,110 @@
+@startuml
+
+    namespace no.ntnu.idi.apollo69.Apollo69 {
+        class Apollo69 {
+        }
+        class Device {
+        }
+        interface Variables {
+        }
+
+        namespace controller {
+            class GameController {
+            }
+            class LobbyController {
+            }
+            class MainMenuController {
+            }
+            class MatchmakingController {
+            }
+        }
+
+        namespace model {
+            class GameModel {
+            }
+            class MatchmakingModel {
+            }
+            class ServerUpdateListener {
+            }
+            class LobbyModel {
+            }
+            class MainMenuModel {
+            }
+        }
+
+        namespace navigation {
+            class Navigator {
+            }
+            enum ScreenType {
+            }
+        }
+
+        namespace network {
+              class GameClient {
+              }
+              class NetworkClientSingleton {
+              }
+        }
+
+        namespace view {
+            class GameView {
+            }
+            class LobbyView {
+            }
+            class MainMenuView {
+            }
+            class MatchmakingView {
+            }
+        }
+
+        namespace game_engine {
+            class Assets {
+            }
+            class Background {
+            }
+            class BackgroundObject {
+            }
+            class GameEngine {
+            }
+            class GameEngineFactory {
+            }
+
+            namespace components {
+                class BoosterComponent {
+                }
+                class BoundingCircleComponent {
+                }
+                class PlayableComponent {
+                }
+                class PositionComponent {
+                }
+                class RotationComponent {
+                }
+                class VelocityComponent {
+                }
+            }
+
+            namespace entities {
+                class SpaceshipFactory {
+                }
+            }
+
+            namespace entity_systems {
+                class BoundsSystem {
+                }
+                interface InputHandlerInterface {
+                }
+                class MovementSystem {
+                }
+                class PlayerControlSystem {
+                }
+                class SendPositionSystem {
+                }
+                class UpdateGameStateSystem {
+                }
+            }
+        }
+
+    }
+
+@enduml

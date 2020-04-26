@@ -1,0 +1,125 @@
+@startuml
+
+    namespace no.ntnu.idi.apollo69server {
+        class Apollo69Server {
+        }
+
+        namespace game_engine {
+            class GameEngine {
+            }
+            class GameEngineFactory {
+            }
+
+            namespace components {
+                class AsteroidComponent {
+                }
+                class AttackingComponent {
+                }
+                class BoundsComponent {
+                }
+                class DamageComponent {
+                }
+                class EnergyComponent {
+                }
+                class ExplosionComponent {
+                }
+                class GemComponent {
+                }
+                class HealthComponent {
+                }
+                class HealthPowerupComponent {
+                }
+                class InvisibleComponent {
+                }
+                class NetworkPlayerComponent {
+                }
+                class PickupComponent {
+                }
+                class PlayerComponent {
+                }
+                class PositionComponent {
+                }
+                class PowerupComponent {
+                }
+                class RotationComponent {
+                }
+                class ScoreComponent {
+                }
+                class ShieldComponent {
+                }
+                class ShotComponent {
+                }
+                class SpaceshipComponent {
+                }
+                class TimeToLiveComponent {
+                }
+                class VelocityComponent {
+                }
+            }
+
+            namespace entity_factories {
+                class AsteroidFactory {
+                }
+                class ExplosionFactory {
+                }
+                class GemFactory {
+                }
+                class PowerupFactory {
+                }
+                class ShotFactory {
+                }
+                class SpaceshipFactory {
+                }
+            }
+
+            namespace entity_systems {
+                class AsteroidSystem {
+                }
+                class DamageSystem {
+                }
+                class DeathSystem {
+                }
+                class MovementSystem {
+                }
+                class PickupSystem {
+                }
+                class PowerupSystem {
+                }
+                class ReceivePlayerInputSystem {
+                }
+                class SendUpdateSystem {
+                }
+                class ShootingSystem {
+                }
+                class SpawnSystem {
+                }
+                class TimeToLiveSystem {
+                }
+                class UpdateBoundsSystem {
+                }
+            }
+
+        }
+
+        namespace network {
+            class BasePlayerConnectionListener {
+            }
+            class MatchmakingServer {
+            }
+            interface MessageHandler {
+            }
+            class MessageHandlerDelegator {
+            }
+            class PlayerConnection {
+            }
+            class PlayerConnectionListener {
+            }
+        }
+    }
+
+    no.ntnu.idi.apollo69server.Apollo69Server -[hidden]-> no.ntnu.idi.apollo69server.network
+    no.ntnu.idi.apollo69server.game_engine.GameEngineFactory -[hidden]> no.ntnu.idi.apollo69server.game_engine.GameEngine
+    no.ntnu.idi.apollo69server.game_engine.GameEngineFactory -[hidden]-> no.ntnu.idi.apollo69server.game_engine.components
+    no.ntnu.idi.apollo69server.game_engine.entity_systems -[hidden]-> no.ntnu.idi.apollo69server.game_engine.entity_factories
+
+@enduml

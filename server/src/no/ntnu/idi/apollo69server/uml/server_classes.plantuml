@@ -116,6 +116,7 @@
                     {static} + MAPPER : ComponentMapper<PositionComponent>
                     + position : Vector2
                     + PositionComponent()
+                }
                 class PowerupComponent {
                     {static} + MAPPER : ComponentMapper<PowerupComponent>
                     + type : PowerupType
