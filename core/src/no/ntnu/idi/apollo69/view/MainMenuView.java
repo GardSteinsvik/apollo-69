@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -64,9 +65,12 @@ public class MainMenuView extends ApplicationAdapter implements Screen, Variable
         TextButton settings = new TextButton(textSettings, skin);
         settings.getLabel().setFontScale(fontScale);
 
-        TextButton exit = new TextButton(textExitGame, skin);
-        exit.getLabel().setFontScale(fontScale);
-
+        table.add(new Image(new Texture(Gdx.files.internal("menu_cover.png"))))
+                .prefWidth(menuCoverWidth)
+                .prefHeight(menuCoverHeight)
+                .padBottom(spacing)
+                .padLeft(spacing);
+        table.row();
         table.add(play)
                 .prefWidth(buttonWidth)
                 .prefHeight(buttonHeight)
@@ -79,11 +83,6 @@ public class MainMenuView extends ApplicationAdapter implements Screen, Variable
                 .padBottom(spacing)
                 .padLeft(spacing);
         table.row();
-        table.add(exit)
-                .prefWidth(buttonWidth)
-                .prefHeight(buttonHeight)
-                .padBottom(spacing)
-                .padLeft(spacing);
 
         group.setWidth(sizeWidth);
         group.setHeight(sizeHeight);

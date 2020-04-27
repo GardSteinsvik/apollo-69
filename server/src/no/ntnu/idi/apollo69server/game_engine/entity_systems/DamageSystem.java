@@ -59,6 +59,10 @@ public class DamageSystem extends EntitySystem {
                                     ScoreComponent receiverScoreComponent = ScoreComponent.MAPPER.get(damageReceiver);
                                     ScoreComponent giverScoreComponent = ScoreComponent.MAPPER.get(player);
                                     giverScoreComponent.score += receiverScoreComponent.score/2f;
+                                    if (NetworkPlayerComponent.MAPPER.get(damageReceiver) != null) {
+                                        HealthComponent healthComponent = HealthComponent.MAPPER.get(player);
+                                        healthComponent.hp = 100;
+                                    }
                                 }
                             }
                         }
